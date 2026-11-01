@@ -11,6 +11,7 @@ Une ligne = une brique = une session. Ne commencer une brique « à faire » qu'
 - [x] Filtres par catégorie : Histoire, Culture, WTF, Anecdote, Caché ; interface épurée
 - [x] +20 lieux (5 Toulouse insolites, 10 Paris, 5 Charleville) ; 43 tests navigateur
 - [x] Fin du renommage (mémoire du téléphone, cache hors ligne, fichiers générés) ; numéros remplacés par l'icône de catégorie, nom du lieu affiché sur la carte quand on le touche ; 44 tests
+- [x] Plus de liste de villes : vue de la France, pastilles regroupées avec leur nombre, liste = zone affichée, dernière zone mémorisée, localisation relancée si déjà autorisée ; fiche simplifiée (« Écouter » + « Version longue ») ; 49 tests
 
 ## À vérifier par le propriétaire
 - [ ] Tester sur un vrai téléphone : GPS sur place, voix, installation, mise à jour à la 2ᵉ ouverture
@@ -20,11 +21,8 @@ Une ligne = une brique = une session. Ne commencer une brique « à faire » qu'
 - [x] Dépôt GitHub renommé « Halte » (nouvelle adresse du site)
 
 ## Pistes (ne rien faire sans demander)
-- [ ] Parcours thématiques ordonnés (« 1 h dans le vieux Toulouse ») : là, des étapes 1, 2, 3 auraient du sens
-- [ ] Carte : regrouper les pastilles qui se chevauchent quand on dézoome
-- [ ] Fiche plus compacte : un seul bouton « Écouter » (version courte), la version longue en option
-- [ ] Ville choisie automatiquement à la 1ʳᵉ ouverture (la plus proche), au lieu de Toulouse
-- [ ] Fond : coordonnées vérifiées, sources primaires plutôt que miroirs de Wikipédia, 1 lieu caché de plus par ville
+- [ ] Fond (plus tard) : coordonnées vérifiées, sources primaires plutôt que miroirs de Wikipédia, plus de lieux « Caché »
+- [ ] Recherche d'une ville ou d'une adresse sur la carte (utile quand il y aura beaucoup de villes)
 - [ ] iPhone : vérifier que la voix démarre au premier toucher (risque connu)
 - [ ] Plus de lieux WTF / Caché — par lots de 5 (sources → `facts` → récits → verify → relecture humaine)
 - [ ] Voix pré-générées « ambiance podcast » en dialogue (mp3) — script à lancer sur l'ordinateur du propriétaire
@@ -33,4 +31,5 @@ Une ligne = une brique = une session. Ne commencer une brique « à faire » qu'
 - [ ] Plus tard seulement : comptes et partage public (RGPD, modération)
 
 ## Écarté pour l'instant
+- Parcours thématiques ordonnés (l'utilisateur compose lui-même son trajet)
 - Chat en ligne

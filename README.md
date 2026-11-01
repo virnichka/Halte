@@ -2,9 +2,13 @@
 
 Une web app installable (PWA), sans serveur ni compte : des lieux qui sortent de l'ordinaire, classés par catégorie
 (Histoire, Culture, WTF, Anecdote, Caché), dans plusieurs villes (Toulouse 16, Paris 10, Charleville-Mézières 5).
-Chaque lieu a un récit
-« Express » (≈ 30 à 40 s) et un récit « Histoire » (≈ 1 à 2 min), lus à voix haute par la voix de l'appareil.
+Chaque lieu a une version courte
+(« Écouter », ≈ 30 à 40 s) et une « Version longue » (≈ 1 à 2 min), lues à voix haute par la voix de l'appareil.
 Quand vous approchez d'un lieu (rayon de 40 à 80 m), l'app vous le propose.
+
+Pas de liste de villes : **la carte sert de sélecteur**. Au premier lancement, vue de la France (les lieux proches
+sont regroupés en pastilles avec leur nombre) ; ensuite, la dernière zone regardée, ou votre position si la
+localisation est déjà autorisée. La liste montre les lieux de la zone affichée.
 
 ## Essayer tout de suite
 - `dist/halte.html` (créé par `python3 pipeline/build.py`) : un seul fichier, à ouvrir dans un navigateur.
@@ -56,7 +60,8 @@ Reconstruire : `python3 pipeline/build.py`. Tester : `python3 pipeline/e2e_test.
    novembre 2026 (WTF, Caché, Paris, Charleville) ont des **coordonnées approximatives** : à vérifier sur place.
 
 ## Ajouter des lieux ou une ville
-0. Nouvelle ville : l'ajouter dans `cities` (`data/places.json`) avec son centre et sa zone (`bbox`).
+0. Nouvelle ville : l'ajouter dans `cities` (`data/places.json`) avec son centre et sa zone (`bbox`) ;
+   elle sert seulement aux vérifications et au mode démo (pas de liste de villes dans l'app).
 1. Lister les lieux (OpenStreetMap / Wikidata / base Mérimée) avec coordonnées.
 2. Pour chaque lieu, réunir 3 à 5 sources et rédiger la liste `facts` (une affirmation sourcée par ligne).
 3. Faire écrire les récits par un LLM **uniquement à partir de ces notes** (`pipeline/prompt_template.md`) ;

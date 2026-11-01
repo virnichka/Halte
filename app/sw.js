@@ -1,6 +1,6 @@
 /* Service worker : application utilisable hors ligne (texte + voix de l'appareil).
    Les tuiles de carte déjà vues sont mises en cache ; aucun téléchargement en masse. */
-var VER = 'halte-v4';
+var VER = 'halte-v5';
 var TILES = 'halte-tiles-v1';
 var MAX_TILES = 600;
 var SHELL = ['./', 'index.html', 'styles.css', 'app.js', 'map.js', 'data/lieux.json',

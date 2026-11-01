@@ -2,7 +2,8 @@
 
 Audioguide géolocalisé en PWA statique (sans serveur ni compte) : 31 lieux « hors des clous »
 (Toulouse 16, Paris 10, Charleville-Mézières 5), filtrables par catégorie (Histoire, Culture, WTF, Anecdote, Caché),
-récits « express » (~30-40 s) et « histoire » (~1-2 min) lus par la voix du téléphone.
+récits « express » (~30-40 s, bouton « Écouter ») et « histoire » (~1-2 min, « Version longue ») lus par la voix du téléphone.
+Pas de liste de villes : la carte (vue France, pastilles regroupées) sert de sélecteur.
 Le propriétaire n'est pas programmeur : explique simplement, sans jargon inutile.
 
 ## Règles de travail
@@ -29,7 +30,7 @@ Le propriétaire n'est pas programmeur : explique simplement, sans jargon inutil
 | `app/sw.js` | Service worker (hors ligne). Stratégie cache d'abord + mise à jour en arrière-plan. |
 | `pipeline/verify.py` | Chaque chiffre/date/siècle d'un récit doit figurer dans `facts` ; lieu dans la zone de sa ville ; catégories connues. |
 | `pipeline/build.py` | verify → `app/data/lieux.json` → `dist/` (fichier unique + zip, ignorés par git). |
-| `pipeline/e2e_test.py` | 44 tests navigateur (carte, filtres, villes, GPS simulé, proximité, lecteur, pause/reprise). |
+| `pipeline/e2e_test.py` | 49 tests navigateur (vue France, regroupements, liste qui suit la carte, filtres, GPS simulé, proximité, lecteur, pause/reprise). |
 | `pipeline/prompt_template.md` | Consigne pour rédiger un récit à partir de notes. |
 | `.github/workflows/deploy.yml` | CI : build + tests sur toute branche/PR ; publication GitHub Pages sur `main` seulement. |
 

@@ -16,7 +16,7 @@
   };
   // Ancien nom du projet (préfixe « ta. ») : on récupère les réglages et lieux écoutés une seule fois.
   try {
-    ['city', 'cat', 'visited', 'auto', 'rate', 'voice'].forEach(function (k) {
+    ['cat', 'visited', 'auto', 'rate', 'voice'].forEach(function (k) {
       var old = localStorage.getItem('ta.' + k);
       if (old != null && localStorage.getItem('halte.' + k) == null) localStorage.setItem('halte.' + k, old);
       localStorage.removeItem('ta.' + k);
@@ -28,7 +28,6 @@
     places: [],
     cities: [],
     cats: [],
-    city: store.get('city', ''),
     cat: store.get('cat', 'all'),
     pos: null,          // { lat, lon, acc, sim }
     simId: '',
@@ -84,19 +83,18 @@
   function init(data) {
     S.cities = data.cities;
     S.cats = data.categories;
-    var perCity = {};
-    S.places = data.places.map(function (p) {
-      perCity[p.city] = (perCity[p.city] || 0) + 1;
-      p.order = perCity[p.city];
+    S.places = data.places.map(function (p, i) {
+      p.order = i;
       p.expressSec = Math.round(words(p.express) / 2.5);
       p.histoireSec = Math.round(words(p.histoire) / 2.5);
       p._d = null;
       return p;
     });
-    if (!cityById(S.city)) S.city = S.cities[0].id;
+    try { localStorage.removeItem('halte.city'); } catch (_) {}
 
-    var c0 = cityById(S.city);
-    map = new TileMap($('#map'), { lat: c0.lat, lon: c0.lon, zoom: 15 });
+    // Pas de liste de villes : la carte sert de sélecteur. Vue de la France au premier lancement,
+    // puis la dernière zone regardée ; position de l'utilisateur dès qu'elle est connue.
+    map = new TileMap($('#map'), { lat: 46.6, lon: 2.4, zoom: 6, minZoom: 5, onMove: onMapMove });
     S.places.forEach(function (p) {
       map.addMarker(p.id, {
         lat: p.lat, lon: p.lon, label: p.name, html: markerHtml(p),
@@ -105,22 +103,24 @@
       });
     });
 
-    $('#city').innerHTML = S.cities.map(function (c) {
-      return '<option value="' + esc(c.id) + '">' + esc(c.name) + '</option>';
-    }).join('');
-    $('#city').addEventListener('change', function () { setCity(this.value, true); });
     $('#cats').addEventListener('click', function (e) {
       var b = e.target.closest('button[data-cat]');
       if (b) setCat(b.getAttribute('data-cat'));
     });
-    applyFilter(true);
-    requestAnimationFrame(function () { map._measure(); map.fitPoints(visiblePlaces()); });
+    var view = store.get('view', null);
+    applyFilter(false);
+    requestAnimationFrame(function () {
+      map._measure();
+      if (view && isFinite(view.lat) && isFinite(view.z)) map.setView(view.lat, view.lon, view.z);
+      else map.fitPoints(filtered());
+      refreshList(true);
+    });
 
     $('#zin').addEventListener('click', function () { map.zoomBy(1); });
     $('#zout').addEventListener('click', function () { map.zoomBy(-1); });
     $('#recenter').addEventListener('click', function () {
-      if (S.pos && nearCity(S.pos) === S.city) map.setView(S.pos.lat, S.pos.lon, Math.max(map.z, 16));
-      else map.fitPoints(visiblePlaces());
+      if (S.pos) map.setView(S.pos.lat, S.pos.lon, Math.max(map.z, 16));
+      else map.fitPoints(filtered());
     });
     $('#btn-locate').addEventListener('click', toggleTracking);
     $('#btn-settings').addEventListener('click', function () { openSettings(); });
@@ -131,7 +131,15 @@
     if ('serviceWorker' in navigator && !window.__INLINE__ && /^https?:$/.test(location.protocol)) {
       navigator.serviceWorker.register('sw.js').catch(function () {});
     }
-    window.__halte = { S: S, setPosition: setPosition, startPlayback: startPlayback };
+    // Localisation déjà autorisée lors d'une visite précédente : on la relance sans demander.
+    try {
+      if (navigator.permissions && navigator.permissions.query) {
+        navigator.permissions.query({ name: 'geolocation' }).then(function (r) {
+          if (r.state === 'granted' && !S.tracking) toggleTracking();
+        }).catch(function () {});
+      }
+    } catch (_) {}
+    window.__halte = { S: S, map: map, setPosition: setPosition, startPlayback: startPlayback };
   }
 
   /* ---------- Écran allumé ---------- */
@@ -155,11 +163,7 @@
     if (document.visibilityState === 'visible' && (S.tracking || S.player.state === 'playing')) keepAwake(true);
   });
 
-  /* ---------- Villes et catégories ---------- */
-  function cityById(id) {
-    for (var i = 0; i < S.cities.length; i++) if (S.cities[i].id === id) return S.cities[i];
-    return null;
-  }
+  /* ---------- Catégories et zone affichée ---------- */
   function catById(id) {
     for (var i = 0; i < S.cats.length; i++) if (S.cats[i].id === id) return S.cats[i];
     return null;
@@ -174,28 +178,27 @@
     return '<span class="tm-ico" aria-hidden="true">' + icon(p) + '</span><span class="tm-label">' + esc(p.name) + '</span>';
   }
 
-  // Ville la plus proche d'une position (à moins de 40 km), sinon null.
-  function nearCity(pos) {
-    var best = null, bd = Infinity;
-    S.cities.forEach(function (c) {
-      var d = haversine(pos, c);
-      if (d < bd) { bd = d; best = c; }
-    });
-    return bd < 40000 ? best.id : null;
+  // Tous les lieux de la catégorie choisie, partout.
+  function filtered() {
+    return S.places.filter(function (p) { return S.cat === 'all' || p.cats.indexOf(S.cat) >= 0; });
   }
+  // Ceux qui sont dans la zone affichée par la carte.
   function visiblePlaces() {
-    return S.places.filter(function (p) {
-      return p.city === S.city && (S.cat === 'all' || p.cats.indexOf(S.cat) >= 0);
-    });
+    return filtered().filter(function (p) { return map.inView(p.lat, p.lon, 8); });
   }
-  function cityPlaces() {
-    return S.places.filter(function (p) { return p.city === S.city; });
+  // Le plus proche d'un point (position ou centre de la carte), parmi la catégorie choisie.
+  function nearestFrom(ref) {
+    var best = null;
+    filtered().forEach(function (p) {
+      var d = haversine(ref, p);
+      if (!best || d < best.d) best = { p: p, d: d };
+    });
+    return best;
   }
 
   function renderChips() {
-    var inCity = cityPlaces();
     var used = S.cats.filter(function (c) {
-      return inCity.some(function (p) { return p.cats.indexOf(c.id) >= 0; });
+      return S.places.some(function (p) { return p.cats.indexOf(c.id) >= 0; });
     });
     if (S.cat !== 'all' && !used.some(function (c) { return c.id === S.cat; })) S.cat = 'all';
     $('#cats').innerHTML = '<button type="button" data-cat="all" aria-pressed="' + (S.cat === 'all') + '">Tout</button>' +
@@ -206,23 +209,15 @@
   }
 
   function applyFilter(fit) {
-    $('#city').value = S.city;
     renderChips();
     var vis = {};
-    visiblePlaces().forEach(function (p) { vis[p.id] = true; });
+    filtered().forEach(function (p) { vis[p.id] = true; });
     S.places.forEach(function (p) { map.setMarkerVisible(p.id, !!vis[p.id]); });
     if (S.selected && !vis[S.selected]) { map.setMarkerClass(S.selected, 'sel', false); S.selected = null; }
-    if (fit) map.fitPoints(visiblePlaces());
-    renderListKeepScroll();
-    defaultStatus();
+    if (fit) map.fitPoints(filtered());
+    refreshList(true);
   }
 
-  function setCity(id, fit) {
-    if (!cityById(id) || id === S.city) return;
-    S.city = id; store.set('city', id);
-    S.offered = {};
-    applyFilter(fit);
-  }
   function setCat(id) {
     S.cat = id; store.set('cat', id);
     S.offered = {};
@@ -230,24 +225,43 @@
     $('#list').scrollTop = 0;
   }
 
+  // Appelé à chaque mouvement de la carte : on attend qu'elle s'arrête pour mettre la liste à jour.
+  var moveT = null;
+  function onMapMove() {
+    if (!map) return;
+    clearTimeout(moveT);
+    moveT = setTimeout(function () {
+      var c = map.center();
+      store.set('view', { lat: +c.lat.toFixed(5), lon: +c.lon.toFixed(5), z: map.z });
+      refreshList(false);
+    }, 150);
+  }
+
   function defaultStatus() {
     if (S.pos) { posStatus(); return; }
-    var n = cityPlaces().length;
-    setStatus(n + ' lieux');
+    var n = visiblePlaces().length;
+    setStatus(n ? n + (n > 1 ? ' lieux' : ' lieu') + ' dans cette zone' : 'aucun lieu dans cette zone');
   }
 
   /* ---------- Liste ---------- */
   function ctaHtml() {
-    var arr = sortedPlaces();
-    if (!arr.length) return '';
-    if (S.pos && arr[0]._d != null && arr[0]._d < 40000) {
-      var n = arr[0];
-      return '<button type="button" class="cta" data-act="nearest">▶ Écouter le plus proche' +
-        '<span class="cta-sub">' + esc(n.name) + ' · ' + fmtDist(n._d) + '</span></button>';
+    if (S.pos) {
+      var n = nearestFrom(S.pos);
+      if (!n) return '';
+      if (n.d < 40000) {
+        return '<button type="button" class="cta" data-act="nearest">▶ Écouter le plus proche' +
+          '<span class="cta-sub">' + esc(n.p.name) + ' · ' + fmtDist(n.d) + '</span></button>';
+      }
+      return '<button type="button" class="cta" data-act="goto" data-id="' + esc(n.p.id) + '">Aucun lieu près de vous' +
+        '<span class="cta-sub">Le plus proche : ' + esc(n.p.name) + ' · ' + fmtDist(n.d) + '</span></button>';
     }
-    if (S.pos) return '';
     return '<button type="button" class="cta" data-act="locate">Me localiser pour commencer' +
       '<span class="cta-sub">L\'app vous propose chaque lieu quand vous en approchez</span></button>';
+  }
+  function ctaKey() {
+    if (!S.pos) return 'locate';
+    var n = nearestFrom(S.pos);
+    return n ? (n.d < 40000 ? 'near:' : 'far:') + n.p.id : '';
   }
 
   function sortedPlaces() {
@@ -275,11 +289,16 @@
         '<div class="card-title"><h2>' + esc(p.name) + '</h2><p>' + esc(p.tagline) + '</p>' +
         '<div class="tags">' + tagsHtml(p) + '</div></div>' + dist + '</div>' +
         '<div class="card-actions">' +
-        '<button type="button" data-act="play" data-mode="express">▶ Express<small>' + fmtDur(p.expressSec) + '</small></button>' +
-        '<button type="button" class="alt" data-act="play" data-mode="histoire">▶ Histoire<small>' + fmtDur(p.histoireSec) + '</small></button></div>' +
+        '<button type="button" data-act="play" data-mode="express">▶ Écouter<small>' + fmtDur(p.expressSec) + '</small></button>' +
+        '<button type="button" class="more" data-act="play" data-mode="histoire">Version longue · ' + fmtDur(p.histoireSec) + '</button></div>' +
         '</article>';
     }).join('');
-    if (!list.length) html = '<p class="empty">Aucun lieu dans cette catégorie ici.</p>';
+    if (!list.length) {
+      var n = nearestFrom(S.pos || map.center());
+      html = '<p class="empty">Aucun lieu dans cette zone de la carte.</p>' + (n
+        ? '<button type="button" class="goto" data-act="goto" data-id="' + esc(n.p.id) + '">Voir le plus proche : ' +
+          esc(n.p.name) + ' · ' + fmtDist(n.d) + '</button>' : '');
+    }
     $('#list').innerHTML = ctaHtml() + html;
   }
 
@@ -289,7 +308,8 @@
     if (!btn) { if (card) select(card.getAttribute('data-id'), true); return; }
     var act = btn.getAttribute('data-act');
     if (act === 'locate') { toggleTracking(); return; }
-    if (act === 'nearest') { startPlayback(sortedPlaces()[0].id, 'express'); return; }
+    if (act === 'nearest') { var n = nearestFrom(S.pos); if (n) startPlayback(n.p.id, 'express'); return; }
+    if (act === 'goto') { select(btn.getAttribute('data-id'), true); return; }
     if (act === 'play' && card) startPlayback(card.getAttribute('data-id'), btn.getAttribute('data-mode'));
   }
 
@@ -335,8 +355,9 @@
       S.pos = null;
       map.setUser(null);
       S.places.forEach(function (p) { p._d = null; });
-      renderList();
-      if (!keepStatus) defaultStatus();
+      var msg = $('#status').textContent;
+      renderListKeepScroll();
+      if (keepStatus) setStatus(msg);
     }
   }
 
@@ -345,50 +366,46 @@
     S.pos = { lat: lat, lon: lon, acc: acc || 0, sim: !!sim };
     S.places.forEach(function (p) { p._d = haversine(S.pos, p); });
     map.setUser(lat, lon, acc);
-    // Si l'on est dans une autre ville du guide, on y bascule (une fois par changement de ville).
-    var here = nearCity(S.pos);
-    if (here && here !== S.city && here !== S.lastAutoCity) { S.lastAutoCity = here; setCity(here, false); }
-    else if (here) S.lastAutoCity = here;
-    var nearest = sortedPlaces()[0];
+    var nearest = nearestFrom(S.pos);
     if (firstFix || sim) {
       firstFix = false;
-      if (nearest && nearest._d < 5000) map.setView(lat, lon, 16);
+      if (nearest && nearest.d < 5000) map.setView(lat, lon, 16);
+      else if (nearest) map.fitPoints([S.pos, nearest.p], 50);
+      else map.setView(lat, lon, 14);
     }
-    posStatus();
-    updateList();
+    refreshList(false);
     checkProximity();
   }
 
   function posStatus() {
-    var nearest = sortedPlaces()[0];
-    var c = cityById(S.city);
+    var nearest = nearestFrom(S.pos);
     if (!nearest) setStatus('');
-    else if (nearest._d > 40000) setStatus('à ' + fmtDist(haversine(S.pos, c)));
+    else if (nearest.d > 40000) setStatus('le lieu le plus proche est à ' + fmtDist(nearest.d));
     else if (S.pos.acc > 80 && !S.pos.sim) setStatus('position imprécise…');
     else setStatus(S.pos.sim ? 'mode démo' : 'vous êtes localisé');
   }
 
-  // Met à jour les distances sur place ; ne reconstruit la liste que si l'ordre change.
-  function updateList() {
-    var order = sortedPlaces().map(function (p) { return p.id; }).join(',');
-    var cards = document.querySelectorAll('.card');
-    var domOrder = Array.prototype.map.call(cards, function (c) { return c.getAttribute('data-id'); }).join(',');
-    var wantCta = !!(S.pos && sortedPlaces()[0] && sortedPlaces()[0]._d < 40000);
-    if (order !== domOrder || !!document.querySelector('[data-act="nearest"]') !== wantCta ||
-        (wantCta && !document.querySelector('.card .dist'))) { renderListKeepScroll(); return; }
-    Array.prototype.forEach.call(cards, function (c) {
-      var p = byId(c.getAttribute('data-id')), d = c.querySelector('.dist');
-      if (d) d.innerHTML = fmtDist(p._d) + (fmtWalk(p._d) ? '<small>' + fmtWalk(p._d) + '</small>' : '');
-    });
-    var cs = document.querySelector('[data-act="nearest"] .cta-sub'), n0 = sortedPlaces()[0];
-    if (cs && n0) cs.textContent = n0.name + ' · ' + fmtDist(n0._d);
+  // Met à jour la liste : reconstruite seulement si son contenu change, sinon distances mises à jour sur place.
+  var listKey = '';
+  function refreshList(force) {
+    if (!map) return;
+    var key = sortedPlaces().map(function (p) { return p.id; }).join(',') + '|' + ctaKey();
+    if (force || key !== listKey) {
+      listKey = key;
+      var l = $('#list'), top = l.scrollTop;
+      renderList();
+      l.scrollTop = force ? 0 : top;
+    } else {
+      Array.prototype.forEach.call(document.querySelectorAll('.card'), function (c) {
+        var p = byId(c.getAttribute('data-id')), d = c.querySelector('.dist');
+        if (d && p._d != null) d.innerHTML = fmtDist(p._d) + (fmtWalk(p._d) ? '<small>' + fmtWalk(p._d) + '</small>' : '');
+      });
+      var cs = document.querySelector('.cta .cta-sub'), n0 = S.pos && nearestFrom(S.pos);
+      if (cs && n0) cs.textContent = (n0.d < 40000 ? '' : 'Le plus proche : ') + n0.p.name + ' · ' + fmtDist(n0.d);
+    }
+    defaultStatus();
   }
-
-  function renderListKeepScroll() {
-    var l = $('#list'), top = l.scrollTop;
-    renderList();
-    l.scrollTop = top;
-  }
+  function renderListKeepScroll() { listKey = ''; refreshList(false); }
 
   function setStatus(t) { $('#status').textContent = t; }
 
@@ -397,7 +414,7 @@
     if (!S.autoOffer || !S.pos) return;
     if (S.pos.acc > 80 && !S.pos.sim) return;
     var best = null;
-    visiblePlaces().forEach(function (p) {
+    filtered().forEach(function (p) {
       if (p._d <= p.radius) {
         if (!S.offered[p.id] && (!best || p._d < best._d)) best = p;
       } else if (p._d > p.radius * 2) {
@@ -415,8 +432,8 @@
     var b = $('#banner');
     b.hidden = false;
     b.innerHTML = '<strong>Vous êtes près de : ' + esc(p.name) + '</strong>' +
-      '<div class="row"><button type="button" data-b="express">▶ Express ' + fmtDur(p.expressSec) + '</button>' +
-      '<button type="button" data-b="histoire">▶ Histoire ' + fmtDur(p.histoireSec) + '</button>' +
+      '<div class="row"><button type="button" data-b="express">▶ Écouter · ' + fmtDur(p.expressSec) + '</button>' +
+      '<button type="button" class="alt" data-b="histoire">Version longue · ' + fmtDur(p.histoireSec) + '</button>' +
       '<button type="button" class="alt" data-b="later">Plus tard</button></div>';
     b.onclick = function (e) {
       var t = e.target.closest('button[data-b]');
@@ -426,7 +443,10 @@
       if (m !== 'later') startPlayback(p.id, m);
     };
     select(p.id, false);
-    try { if (navigator.vibrate) navigator.vibrate(180); } catch (_) {}
+    try {
+      var ua = navigator.userActivation;
+      if (navigator.vibrate && (!ua || ua.hasBeenActive)) navigator.vibrate(180);
+    } catch (_) {}
   }
 
   /* ---------- Lecture vocale ---------- */
@@ -589,8 +609,8 @@
   }
 
   function nextPlace() {
-    var cur = byId(S.player.placeId), ref = (S.pos && nearCity(S.pos) === S.city) ? S.pos : cur, best = null;
-    visiblePlaces().forEach(function (p) {
+    var cur = byId(S.player.placeId), ref = S.pos || cur, best = null;
+    filtered().forEach(function (p) {
       if (p.id === S.player.placeId || S.visited.has(p.id)) return;
       var d = haversine(ref, p);
       if (!best || d < best.d) best = { p: p, d: d };
@@ -602,7 +622,7 @@
     var pl = S.player;
     if ($('#player').hidden) return;
     var p = byId(pl.placeId);
-    var label = pl.mode === 'express' ? 'Express' : 'Histoire';
+    var label = pl.mode === 'express' ? 'Version courte' : 'Version longue';
     var stateTxt = { playing: 'lecture', paused: 'en pause', done: 'terminé', error: 'texte seul', idle: '' }[pl.state] || '';
     var meta = $('#pl-meta');
     if (meta && p) meta.textContent = label + ' · ' + stateTxt + ' · ' + Math.min(pl.i + 1, pl.chunks.length) + '/' + pl.chunks.length;
@@ -650,16 +670,13 @@
       if (S.simId) {
         var p = byId(S.simId);
         S.offered = {};
-        if (S.cat !== 'all' && p.cats.indexOf(S.cat) < 0) { S.cat = 'all'; store.set('cat', 'all'); }
-        if (p.city !== S.city) setCity(p.city, false); else applyFilter(false);
-        S.lastAutoCity = p.city;
+        if (S.cat !== 'all' && p.cats.indexOf(S.cat) < 0) setCat('all');
         setPosition(p.lat + 0.00008, p.lon, 10, true);
         d.close();
       } else {
         S.pos = null; map.setUser(null);
         S.places.forEach(function (q) { q._d = null; });
-        renderList();
-        defaultStatus();
+        renderListKeepScroll();
         if (S.tracking) { stopTracking(true); toggleTracking(); }
       }
     });

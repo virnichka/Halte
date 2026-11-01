@@ -1,4 +1,4 @@
-/* Mini carte à tuiles (sans dépendance) : glisser, zoom, marqueurs, position utilisateur. */
+/* Mini carte à tuiles (sans dépendance) : glisser, zoom, marqueurs regroupés, position utilisateur. */
 (function (global) {
   'use strict';
   var TILE = 256;
@@ -26,6 +26,11 @@
     this.tiles = {};
     this.markers = {};
     this.userPos = null;
+    this.onMove = opts.onMove || null;
+    this.clusterRadius = opts.clusterRadius || 34;
+    this._clusters = [];
+    this._clusterKey = '';
+    this._clusterEls = [];
 
     el.classList.add('tm');
     this.tilePane = document.createElement('div');
@@ -123,7 +128,7 @@
       return Math.hypot(a.x - b.x, a.y - b.y);
     }
     el.addEventListener('pointerdown', function (e) {
-      if (e.target.closest('.tm-ctrl') || e.target.closest('.tm-marker')) return;
+      if (e.target.closest('.tm-ctrl') || e.target.closest('.tm-marker') || e.target.closest('.tm-cluster')) return;
       try { el.setPointerCapture(e.pointerId); } catch (_) {}
       if (!pts[e.pointerId]) count++;
       pts[e.pointerId] = { x: e.clientX, y: e.clientY };
@@ -158,7 +163,7 @@
       self.zoomBy(e.deltaY < 0 ? 1 : -1, e.clientX, e.clientY);
     }, { passive: false });
     el.addEventListener('dblclick', function (e) {
-      if (e.target.closest('.tm-ctrl') || e.target.closest('.tm-marker')) return;
+      if (e.target.closest('.tm-ctrl') || e.target.closest('.tm-marker') || e.target.closest('.tm-cluster')) return;
       self.zoomBy(1, e.clientX, e.clientY);
     });
   };
@@ -172,18 +177,21 @@
     if (o.onClick) b.addEventListener('click', function (e) { e.stopPropagation(); o.onClick(id); });
     this.overlay.appendChild(b);
     this.markers[id] = { el: b, lat: o.lat, lon: o.lon };
+    this._clusterKey = '';
     this.render();
     return b;
   };
 
   TileMap.prototype.setMarkerClass = function (id, cls, on) {
     var m = this.markers[id];
-    if (m) m.el.classList.toggle(cls, !!on);
+    if (!m) return;
+    m.el.classList.toggle(cls, !!on);
+    if (cls === 'sel') { this._clusterKey = ''; this.render(); }
   };
 
   TileMap.prototype.setMarkerVisible = function (id, on) {
     var m = this.markers[id];
-    if (m) m.el.hidden = !on;
+    if (m && m.el.hidden !== !on) { m.el.hidden = !on; this._clusterKey = ''; this.render(); }
   };
 
   TileMap.prototype.setMarkerHtml = function (id, html) {
@@ -194,6 +202,65 @@
   TileMap.prototype.setUser = function (lat, lon, acc) {
     this.userPos = lat == null ? null : { lat: lat, lon: lon, acc: acc || 0 };
     this.render();
+  };
+
+  // Regroupe les marqueurs trop proches à l'écran en une pastille « nombre ».
+  // Calcul en coordonnées du monde au zoom courant : il ne change pas quand on fait glisser la carte.
+  TileMap.prototype._cluster = function () {
+    var z = this.z, R = this.clusterRadius, groups = [], ids = Object.keys(this.markers);
+    for (var i = 0; i < ids.length; i++) {
+      var m = this.markers[ids[i]];
+      if (m.el.hidden) continue;
+      var x = lon2x(m.lon, z), y = lat2y(m.lat, z);
+      if (m.el.classList.contains('sel')) { groups.push({ ids: [ids[i]], x: x, y: y, solo: true }); continue; }
+      var g = null;
+      for (var j = 0; j < groups.length; j++) {
+        if (!groups[j].solo && Math.abs(groups[j].x - x) < R && Math.abs(groups[j].y - y) < R) { g = groups[j]; break; }
+      }
+      if (g) {
+        g.ids.push(ids[i]);
+        g.x += (x - g.x) / g.ids.length; g.y += (y - g.y) / g.ids.length;
+      } else groups.push({ ids: [ids[i]], x: x, y: y });
+    }
+    this._clusters = groups.filter(function (g) { return g.ids.length > 1; });
+    var inCluster = {};
+    this._clusters.forEach(function (g) { g.ids.forEach(function (id) { inCluster[id] = true; }); });
+    for (var k in this.markers) this.markers[k].el.classList.toggle('clustered', !!inCluster[k]);
+    var self = this;
+    while (this._clusterEls.length < this._clusters.length) {
+      (function () {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'tm-cluster';
+        b.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var g = b._group;
+          if (!g) return;
+          var pts = g.ids.map(function (id) { return self.markers[id]; });
+          var z0 = self.z;
+          self.fitPoints(pts, 60);
+          if (self.z <= z0) self.setView(y2lat(g.y, z0), x2lon(g.x, z0), z0 + 2);
+        });
+        self.overlay.appendChild(b);
+        self._clusterEls.push(b);
+      })();
+    }
+    this._clusterEls.forEach(function (b, i) {
+      var g = self._clusters[i];
+      b._group = g || null;
+      b.hidden = !g;
+      if (g) {
+        b.textContent = g.ids.length;
+        b.setAttribute('aria-label', g.ids.length + ' lieux : zoomer');
+      }
+    });
+  };
+
+  // Marqueurs dans la zone affichée (hors filtres), en tenant compte d'une petite marge.
+  TileMap.prototype.inView = function (lat, lon, pad) {
+    var p = this.project(lat, lon);
+    pad = pad || 0;
+    return p.x >= -pad && p.y >= -pad && p.x <= this.w + pad && p.y <= this.h + pad;
   };
 
   TileMap.prototype.render = function () {
@@ -231,6 +298,11 @@
       var m = this.markers[id], p = this.project(m.lat, m.lon);
       m.el.style.transform = 'translate(' + p.x.toFixed(1) + 'px,' + p.y.toFixed(1) + 'px)';
     }
+    if (this._clusterKey !== String(z)) { this._clusterKey = String(z); this._cluster(); }
+    for (var c = 0; c < this._clusters.length; c++) {
+      var g = this._clusters[c];
+      this._clusterEls[c].style.transform = 'translate(' + (g.x - left).toFixed(1) + 'px,' + (g.y - top).toFixed(1) + 'px)';
+    }
     if (this.userPos) {
       var u = this.project(this.userPos.lat, this.userPos.lon);
       var mpp = 156543.03392 * Math.cos(this.userPos.lat * Math.PI / 180) / n;
@@ -244,6 +316,7 @@
       this.dotEl.hidden = true;
       this.accEl.hidden = true;
     }
+    if (this.onMove) this.onMove();
   };
 
   global.TileMap = TileMap;
