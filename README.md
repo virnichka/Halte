@@ -7,7 +7,7 @@ Chaque lieu a un récit
 Quand vous approchez d'un lieu (rayon de 40 à 80 m), l'app vous le propose.
 
 ## Essayer tout de suite
-- `dist/audioguide.html` (créé par `python3 pipeline/build.py`) : un seul fichier, à ouvrir dans un navigateur.
+- `dist/halte.html` (créé par `python3 pipeline/build.py`) : un seul fichier, à ouvrir dans un navigateur.
 - **Mode démo** : ⚙ Réglages → « Mode démo » pour se placer près d'un lieu, dans n'importe quelle ville.
 
 ## Mettre en ligne (automatique)
@@ -23,7 +23,7 @@ Sur le téléphone, la nouvelle version arrive à la 2ᵉ ouverture de l'app (le
 d'abord la version en cache, puis se met à jour en arrière-plan).
 
 Mise en ligne manuelle (secours) : `python3 pipeline/build.py`, puis déposer le contenu de `app/`
-(ou `dist/audioguide-app.zip`) sur un hébergement statique en HTTPS.
+(ou `dist/halte-app.zip`) sur un hébergement statique en HTTPS.
 
 ## Contenu
 | Fichier | Rôle |
@@ -48,7 +48,7 @@ Reconstruire : `python3 pipeline/build.py`. Tester : `python3 pipeline/e2e_test.
 4. **Fiabilité des récits** : rédigés par une IA à partir de sources web publiques, puis recoupés
    automatiquement sur les chiffres. Ce n'est pas une preuve : **relire avant de diffuser**. Certaines sources sont
    des miroirs de Wikipédia (licence CC BY-SA, attribution requise) ; privilégier les sources primaires
-   (Mérimée / POP du ministère de la Culture, Ville de Toulouse) pour une version publique.
+   (Mérimée / POP du ministère de la Culture, sites des villes) pour une version publique.
 5. **Données ouvertes** : les dates varient parfois selon les sources (ex. création du port Saint-Sauveur) ;
    le récit le signale plutôt que de trancher.
 6. **Musée des Augustins** : en réouverture progressive à la date de rédaction ; vérifier avant de s'y rendre.

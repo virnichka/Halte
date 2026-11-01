@@ -10,10 +10,18 @@
   }
   var store = {
     get: function (k, d) {
-      try { var v = localStorage.getItem('ta.' + k); return v == null ? d : JSON.parse(v); } catch (_) { return d; }
+      try { var v = localStorage.getItem('halte.' + k); return v == null ? d : JSON.parse(v); } catch (_) { return d; }
     },
-    set: function (k, v) { try { localStorage.setItem('ta.' + k, JSON.stringify(v)); } catch (_) {} }
+    set: function (k, v) { try { localStorage.setItem('halte.' + k, JSON.stringify(v)); } catch (_) {} }
   };
+  // Ancien nom du projet (préfixe « ta. ») : on récupère les réglages et lieux écoutés une seule fois.
+  try {
+    ['city', 'cat', 'visited', 'auto', 'rate', 'voice'].forEach(function (k) {
+      var old = localStorage.getItem('ta.' + k);
+      if (old != null && localStorage.getItem('halte.' + k) == null) localStorage.setItem('halte.' + k, old);
+      localStorage.removeItem('ta.' + k);
+    });
+  } catch (_) {}
 
   /* ---------- État ---------- */
   var S = {
@@ -91,7 +99,7 @@
     map = new TileMap($('#map'), { lat: c0.lat, lon: c0.lon, zoom: 15 });
     S.places.forEach(function (p) {
       map.addMarker(p.id, {
-        lat: p.lat, lon: p.lon, label: p.name, html: String(p.order),
+        lat: p.lat, lon: p.lon, label: p.name, html: markerHtml(p),
         className: S.visited.has(p.id) ? 'done' : '',
         onClick: function (id) { select(id, true); }
       });
@@ -123,7 +131,7 @@
     if ('serviceWorker' in navigator && !window.__INLINE__ && /^https?:$/.test(location.protocol)) {
       navigator.serviceWorker.register('sw.js').catch(function () {});
     }
-    window.__ta = { S: S, setPosition: setPosition, startPlayback: startPlayback };
+    window.__halte = { S: S, setPosition: setPosition, startPlayback: startPlayback };
   }
 
   /* ---------- Écran allumé ---------- */
@@ -156,6 +164,16 @@
     for (var i = 0; i < S.cats.length; i++) if (S.cats[i].id === id) return S.cats[i];
     return null;
   }
+  // Pastille d'un lieu : icône de sa catégorie principale (✓ une fois écouté).
+  function icon(p) {
+    if (S.visited.has(p.id)) return '✓';
+    var c = catById(p.cats[0]);
+    return c ? c.icon : '•';
+  }
+  function markerHtml(p) {
+    return '<span class="tm-ico" aria-hidden="true">' + icon(p) + '</span><span class="tm-label">' + esc(p.name) + '</span>';
+  }
+
   // Ville la plus proche d'une position (à moins de 40 km), sinon null.
   function nearCity(pos) {
     var best = null, bd = Infinity;
@@ -253,12 +271,12 @@
       var dist = p._d == null || p._d > 40000 ? '' :
         '<div class="dist">' + fmtDist(p._d) + (fmtWalk(p._d) ? '<small>' + fmtWalk(p._d) + '</small>' : '') + '</div>';
       return '<article class="card' + (done ? ' done' : '') + (S.selected === p.id ? ' sel' : '') + '" data-id="' + esc(p.id) + '">' +
-        '<div class="card-head"><span class="num">' + (done ? '✓' : p.order) + '</span>' +
+        '<div class="card-head"><span class="num" aria-hidden="true">' + icon(p) + '</span>' +
         '<div class="card-title"><h2>' + esc(p.name) + '</h2><p>' + esc(p.tagline) + '</p>' +
         '<div class="tags">' + tagsHtml(p) + '</div></div>' + dist + '</div>' +
         '<div class="card-actions">' +
         '<button type="button" data-act="play" data-mode="express">▶ Express<small>' + fmtDur(p.expressSec) + '</small></button>' +
-        '<button type="button" data-act="play" data-mode="histoire">▶ Histoire<small>' + fmtDur(p.histoireSec) + '</small></button></div>' +
+        '<button type="button" class="alt" data-act="play" data-mode="histoire">▶ Histoire<small>' + fmtDur(p.histoireSec) + '</small></button></div>' +
         '</article>';
     }).join('');
     if (!list.length) html = '<p class="empty">Aucun lieu dans cette catégorie ici.</p>';
@@ -507,6 +525,7 @@
     S.visited.add(pl.placeId);
     store.set('visited', Array.from(S.visited));
     map.setMarkerClass(pl.placeId, 'done', true);
+    map.setMarkerHtml(pl.placeId, markerHtml(byId(pl.placeId)));
     updatePlayer();
     renderListKeepScroll();
   }
@@ -646,7 +665,7 @@
     });
     $('#btn-reset').addEventListener('click', function () {
       S.visited = new Set(); store.set('visited', []);
-      S.places.forEach(function (p) { map.setMarkerClass(p.id, 'done', false); });
+      S.places.forEach(function (p) { map.setMarkerClass(p.id, 'done', false); map.setMarkerHtml(p.id, markerHtml(p)); });
       renderListKeepScroll();
     });
     if ('speechSynthesis' in window) speechSynthesis.addEventListener('voiceschanged', fillVoices);

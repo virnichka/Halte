@@ -3,8 +3,8 @@
 
 1. vérifie les chiffres (verify.py) ; arrêt si un point est à revoir ;
 2. écrit app/data/lieux.json (sans les notes de sources internes) ;
-3. produit dist/audioguide.html (un seul fichier, pour un aperçu rapide)
-   et dist/audioguide-app.zip (le dossier à héberger tel quel).
+3. produit dist/halte.html (un seul fichier, pour un aperçu rapide)
+   et dist/halte-app.zip (le dossier à héberger tel quel).
 
 Usage : python3 pipeline/build.py
 """
@@ -59,16 +59,16 @@ def main() -> int:
 
     dist = ROOT / "dist"
     dist.mkdir(exist_ok=True)
-    (dist / "audioguide.html").write_text(html, encoding="utf-8")
+    (dist / "halte.html").write_text(html, encoding="utf-8")
 
     # --- zip à héberger ---
-    zpath = dist / "audioguide-app.zip"
+    zpath = dist / "halte-app.zip"
     with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED) as z:
         for f in sorted(app.rglob("*")):
             if f.is_file():
                 z.write(f, f.relative_to(app))
     print(f"\nOK : {len(public['places'])} lieux")
-    print(f"  {dist / 'audioguide.html'} ({(dist / 'audioguide.html').stat().st_size // 1024} Ko)")
+    print(f"  {dist / 'halte.html'} ({(dist / 'halte.html').stat().st_size // 1024} Ko)")
     print(f"  {zpath} ({zpath.stat().st_size // 1024} Ko)")
     return 0
 
