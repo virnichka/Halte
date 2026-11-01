@@ -30,7 +30,7 @@ Le propriétaire n'est pas programmeur : explique simplement, sans jargon inutil
 | `.github/workflows/deploy.yml` | CI : build + tests sur toute branche/PR ; publication GitHub Pages sur `main` seulement. |
 
 ## Mise en ligne
-Automatique à chaque fusion dans `main` → https://virnichka.github.io/toulouse-a-lecoute/
+Automatique à chaque fusion dans `main` → https://virnichka.github.io/Halte/ (l'ancienne adresse `/toulouse-a-lecoute/` ne marche plus)
 (dépôt public, GitHub Pages gratuit). L'ancien déploiement manuel Cloudflare Pages existe encore.
 
 ## Pistes futures — ne rien commencer sans demander
