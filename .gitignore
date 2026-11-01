@@ -1,0 +1,6 @@
+# Fichiers générés par pipeline/build.py (reconstruits par la CI)
+dist/
+
+__pycache__/
+*.pyc
+.DS_Store
