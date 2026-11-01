@@ -35,6 +35,60 @@ def main():
 
     with sync_playwright() as p:
         b = p.chromium.launch()
+
+        # --- Phase 0 : premier lancement sans localisation → vue de la France ---
+        ctx0 = b.new_context(viewport={"width": 390, "height": 800}, device_scale_factor=2, is_mobile=True, has_touch=True, locale="fr-FR")
+        p0 = ctx0.new_page()
+        p0.on("pageerror", lambda e: errors.append(str(e)))
+        p0.goto(f"http://127.0.0.1:{port}/index.html")
+        p0.wait_for_selector(".card")
+        p0.wait_for_timeout(300)
+        check("nouveau nom « Halte »", "Halte" in p0.inner_text("h1") and p0.title() == "Halte")
+        check("plus de liste de villes", p0.locator("#city").count() == 0)
+        check("bouton principal « Me localiser pour commencer »", "Me localiser pour commencer" in p0.inner_text(".cta"))
+        check("vue de la France : les 31 lieux dans la liste", p0.locator(".card").count() == 31)
+        check("31 marqueurs (aucun filtré)", p0.locator(".tm-marker:not([hidden])").count() == 31)
+        check("pastilles regroupées avec un nombre", p0.locator(".tm-cluster:not([hidden])").count() >= 3)
+        nums = p0.locator(".tm-cluster:not([hidden])").all_inner_texts()
+        check("total des regroupements cohérent", sum(int(n) for n in nums) + p0.locator(".tm-marker:not([hidden]):not(.clustered)").count() == 31)
+        check("pastilles : icône de catégorie, plus de numéros", not any(t.strip().isdigit() for t in p0.locator(".tm-marker .tm-ico").all_inner_texts() + p0.locator(".card .num").all_inner_texts()))
+        check("fiche simple : « Écouter » + « Version longue »", "Écouter" in p0.locator(".card").first.inner_text() and "Version longue" in p0.locator(".card").first.inner_text())
+        check("tuiles demandées", p0.locator(".tm-tile").count() > 0)
+        p0.screenshot(path=str(OUT / "0_france.png"))
+
+        z0 = p0.evaluate("window.__halte.map.z")
+        p0.locator(".tm-cluster:not([hidden])").first.click()
+        p0.wait_for_timeout(300)
+        check("toucher un regroupement zoome dessus", p0.evaluate("window.__halte.map.z") > z0)
+
+        # Zoomer sur Paris : la liste suit la carte
+        p0.evaluate("""(function(h){var pts=h.S.places.filter(function(p){return p.city==='paris';});h.map.fitPoints(pts);})(window.__halte)""")
+        p0.wait_for_timeout(300)
+        check("carte sur Paris : 10 lieux dans la liste", p0.locator(".card").count() == 10)
+        check("statut : lieux dans cette zone", "10 lieux dans cette zone" in p0.inner_text("#status"))
+        p0.screenshot(path=str(OUT / "1c_paris.png"))
+        p0.click("#cats button[data-cat='wtf']")
+        check("filtre WTF à Paris", 0 < p0.locator(".card").count() < 10)
+        check("filtre WTF : 9 marqueurs au total", p0.locator(".tm-marker:not([hidden])").count() == 9)
+        check("filtre WTF : bouton actif", p0.get_attribute("#cats button[data-cat='wtf']", "aria-pressed") == "true")
+        p0.click("#cats button[data-cat='all']")
+        # Zone sans lieu : on propose le plus proche
+        p0.evaluate("window.__halte.map.setView(45.76, 4.84, 13)")
+        p0.wait_for_timeout(300)
+        check("zone vide (Lyon) : message + lieu le plus proche", p0.locator(".card").count() == 0 and p0.locator("button.goto").count() == 1)
+        p0.screenshot(path=str(OUT / "1d_zone_vide.png"))
+        p0.click("button.goto")
+        p0.wait_for_timeout(300)
+        check("« Voir le plus proche » amène sur le lieu", p0.locator(".card.sel").count() == 1)
+        # Réouverture : on retrouve la dernière zone regardée
+        zsaved = p0.evaluate("window.__halte.map.z")
+        p0.reload()
+        p0.wait_for_selector(".card")
+        p0.wait_for_timeout(300)
+        check("réouverture : dernière zone conservée", p0.evaluate("window.__halte.map.z") == zsaved)
+        ctx0.close()
+
+        # --- Phase A : localisation déjà autorisée (au Capitole) ---
         ctx = b.new_context(
             viewport={"width": 390, "height": 800},
             device_scale_factor=2,
@@ -50,42 +104,15 @@ def main():
         page.goto(f"http://127.0.0.1:{port}/index.html")
         page.wait_for_selector(".card")
 
-        check("nouveau nom « Halte »", "Halte" in page.inner_text("h1") and page.title() == "Halte")
-        check("bouton principal « Me localiser pour commencer »", "Me localiser pour commencer" in page.inner_text(".cta"))
-        check("Toulouse par défaut : 16 lieux affichés", page.locator(".card").count() == 16)
-        check("16 marqueurs visibles (sur 31)", page.locator(".tm-marker:not([hidden])").count() == 16 and page.locator(".tm-marker").count() == 31)
-        check("pastilles : icône de catégorie, plus de numéros", not any(t.strip().isdigit() for t in page.locator(".tm-marker .tm-ico").all_inner_texts() + page.locator(".card .num").all_inner_texts()))
-        check("tuiles demandées", page.locator(".tm-tile").count() > 0)
-        check("catégories affichées sur les fiches", page.locator(".card .tag").count() >= 16)
-        page.screenshot(path=str(OUT / "1_accueil.png"))
-
-        # Filtre par catégorie
-        page.click("#cats button[data-cat='wtf']")
-        check("filtre WTF : 3 lieux à Toulouse", page.locator(".card").count() == 3)
-        check("filtre WTF : 3 marqueurs visibles", page.locator(".tm-marker:not([hidden])").count() == 3)
-        check("filtre WTF : bouton actif", page.get_attribute("#cats button[data-cat='wtf']", "aria-pressed") == "true")
-        page.screenshot(path=str(OUT / "1b_filtre_wtf.png"))
-        page.click("#cats button[data-cat='all']")
-        check("filtre Tout : 16 lieux", page.locator(".card").count() == 16)
-
-        # Changement de ville
-        page.select_option("#city", "paris")
-        check("Paris : 10 lieux", page.locator(".card").count() == 10 and page.input_value("#city") == "paris")
-        check("Paris : 10 marqueurs visibles", page.locator(".tm-marker:not([hidden])").count() == 10)
-        page.screenshot(path=str(OUT / "1c_paris.png"))
-        page.select_option("#city", "charleville")
-        check("Charleville-Mézières : 5 lieux", page.locator(".card").count() == 5)
-        page.select_option("#city", "toulouse")
-        check("retour à Toulouse", page.locator(".card").count() == 16)
-
         # Géolocalisation réelle (mockée) au Capitole
-        page.click("#btn-locate")
         page.wait_for_selector(".banner:not([hidden])", timeout=8000)
+        check("localisation relancée toute seule (déjà autorisée)", page.evaluate("window.__halte.S.tracking"))
         check("bandeau de proximité sur le Capitole", "Le Capitole" in page.inner_text("#banner"))
         check("bouton principal : lieu le plus proche", "Le Capitole" in page.inner_text(".cta-sub"))
         check("liste triée : Capitole en premier", "Le Capitole" in page.locator(".card").first.inner_text())
         check("point utilisateur visible", page.locator(".tm-user").is_visible())
         page.screenshot(path=str(OUT / "2_proximite.png"))
+        page.screenshot(path=str(OUT / "1_accueil.png"))
 
         # Lecture sans voix (cas réel du navigateur de test) : repli propre en « texte seul »
         page.click("#banner button[data-b='express']")
@@ -114,15 +141,17 @@ def main():
         check("récit long découpé en plusieurs segments", n >= 4)
         page.click("#pl-stop")
 
-        # Mode démo dans une autre ville : bascule automatique sur Paris
+        # Mode démo dans une autre ville : la carte s'y déplace
         page.click("#btn-settings")
         page.select_option("#opt-sim", "paris-zouave")
         page.wait_for_selector(".banner:not([hidden])")
-        check("démo Paris : bascule sur la ville", page.input_value("#city") == "paris" and page.locator(".card").count() == 10)
+        page.wait_for_timeout(300)
+        check("démo Paris : la carte suit", "Zouave" in page.locator(".card").first.inner_text())
         check("démo Paris : bandeau Zouave", "Zouave" in page.inner_text("#banner"))
         page.click("#banner button[data-b='later']")
         page.click("#cats button[data-cat='secret']")
-        check("filtre Caché à Paris : lieux triés par distance", page.locator(".card").count() == 3 and page.locator(".card .dist").count() == 3)
+        page.wait_for_timeout(300)
+        check("filtre Caché à Paris : le plus proche proposé, distances affichées", "Écouter le plus proche" in page.inner_text(".cta") and page.locator(".card .dist").count() == page.locator(".card").count())
         page.click("#cats button[data-cat='all']")
         page.screenshot(path=str(OUT / "5b_demo_paris.png"))
 
