@@ -59,6 +59,20 @@ Reconstruire : `python3 pipeline/build.py`. Tester : `python3 pipeline/e2e_test.
 7. **Lieux** : 31 lieux (la place Saint-Georges a été écartée faute de sources fiables). Les 20 lieux ajoutés en
    novembre 2026 (WTF, Caché, Paris, Charleville) ont des **coordonnées approximatives** : à vérifier sur place.
 
+## Design system de l'interface (direction « Pop »)
+Vitrine : `maquettes/design-system.html` (ouvrir dans un navigateur ; mode sombre = celui du système).
+Les styles (`maquettes/design-system.css`) seront repris en tête de `app/styles.css` lors de la refonte.
+- **Couleurs** : encre violet nuit `#1a1538` (texte, bouton principal), fonds très clairs ; une couleur par catégorie
+  (Histoire bleu canard, Culture framboise, WTF ambre, Anecdote vert, Caché violet) ; version sombre complète.
+  Contrastes vérifiés dans la vitrine (niveau AA).
+- **Typo** : police du téléphone (arrondie sur iPhone, Roboto sur Android) ; 6 tailles, de 13 à 26 px.
+- **Formes** : espacements multiples de 4 px ; rayons 10 / 14 / 18 / 30 px ; 4 ombres ; cibles tactiles ≥ 44 px.
+- **Composants** : bouton (principal, secondaire), bouton rond et flottant, puce de filtre, étiquette de catégorie,
+  badge « Vous y êtes », anneau de progression, tuile de catégorie, pastille de carte et regroupement, ligne de lieu,
+  panneau du bas, mini-lecteur, lecteur (barre, boutons), contrôle segmenté, champ de choix.
+- **Icônes** : SVG dessinées pour Halte (plus d'émojis). **Carte** : tuiles OpenStreetMap adoucies par un filtre (gratuit).
+- **Mouvement** : animations courtes, coupées si le téléphone demande moins d'animations.
+
 ## Ajouter des lieux ou une ville
 0. Nouvelle ville : l'ajouter dans `cities` (`data/places.json`) avec son centre et sa zone (`bbox`) ;
    elle sert seulement aux vérifications et au mode démo (pas de liste de villes dans l'app).
