@@ -1,0 +1,326 @@
+{
+  "city": "Toulouse",
+  "generated_by": "Récits rédigés par une IA à partir des sources listées pour chaque lieu. Les chiffres sont vérifiés automatiquement contre les notes de sources (pipeline/verify.py).",
+  "places": [
+    {
+      "id": "saint-sernin",
+      "name": "Basilique Saint-Sernin",
+      "tagline": "La plus grande église romane conservée d'Europe",
+      "lat": 43.6084,
+      "lon": 1.4420,
+      "radius": 60,
+      "express": "Voici la basilique Saint-Sernin, la plus grande église romane conservée d'Europe. Elle a été bâtie pour abriter les reliques de saint Saturnin, que l'on appelle Sernin en occitan, premier évêque de Toulouse, martyrisé vers 250. La construction de l'église actuelle commence vers 1080 et elle est consacrée en 1096. Regardez le clocher octogonal, qui culmine à 65 mètres, et les matériaux : de la brique de Toulouse associée à de la pierre blanche. Située sur un chemin de pèlerinage vers Compostelle, la basilique est inscrite à l'UNESCO.",
+      "histoire": "Vous êtes devant Saint-Sernin, la plus grande église romane conservée en Europe.\n\nTout part d'un martyr. Saturnin, que l'occitan a transformé en Sarni puis en Sernin, est le premier évêque de Toulouse, mis à mort vers 250. Son corps est enterré hors des remparts et sa tombe est d'abord abritée sous un modeste oratoire en bois. Une basilique est ensuite entreprise vers la fin du IVᵉ siècle. L'édifice que vous voyez date d'une autre époque : sa construction commence vers 1080 et il est consacré en 1096.\n\nÀ ce moment-là, Toulouse est devenue une étape incontournable sur le chemin de Compostelle, et l'église accueille les pèlerins : deux passages servaient à leur circulation, l'un pour entrer, l'autre pour sortir. Près de la porte des Comtes, une niche abrite les restes de quatre comtes de Toulouse.\n\nObservez les matériaux : de la brique de Toulouse et de la pierre blanche. La nef mesure 115 mètres de long, et le clocher octogonal s'élève à 65 mètres.\n\nPendant la Révolution, le chapitre de Saint-Sernin est supprimé, mais l'église n'est ni transformée ni saccagée. Elle reste une simple collégiale jusqu'en 1878, date à laquelle elle reçoit le titre de basilique mineure. En 1889 sont achevées ses grandes orgues, signées Aristide Cavaillé-Coll, réputées dans le monde entier. Classée monument historique depuis 1840, la basilique fait partie des biens inscrits à l'UNESCO au titre des chemins de Saint-Jacques-de-Compostelle.",
+      "sources": [
+        {"title": "Basilique Saint-Sernin de Toulouse (Techno-Science, d'après Wikipédia)", "url": "https://www.techno-science.net/fr/definitions/basilique-saint-sernin-de-toulouse"},
+        {"title": "Basilica of Saint-Sernin, Toulouse (Wikipedia)", "url": "https://en.wikipedia.org/wiki/Basilica_of_Saint-Sernin,_Toulouse"},
+        {"title": "Dépliant de la basilique Saint-Sernin", "url": "https://basilique-saint-sernin.fr/wp-content/uploads/2023/02/FR_DEPLIANT_TOURISME_ST_SERNIN_WEB.pdf"},
+        {"title": "St. Sernin Basilica (Sacred Destinations)", "url": "https://www.sacred-destinations.com/france/toulouse-st-sernin"}
+      ],
+      "facts": [
+        "La basilique est un sanctuaire bâti pour abriter les reliques de saint Saturnin, évêque de Toulouse, martyrisé en 250. Saint-Sernin est la plus grande église romane conservée en Europe.",
+        "Saturninus devient Sarni en occitan, puis Sernin; premier évêque de Toulouse mis à mort.",
+        "Le corps du saint fut enterré par la communauté chrétienne hors des remparts; sa tombe fut recouverte d'un modeste oratoire en bois.",
+        "Saint Sylvius, évêque de Toulouse, commence la construction de la basilique vers la fin du IVᵉ siècle.",
+        "Basilique actuelle commencée vers 1080; consécration de la basilique contemporaine en 1096.",
+        "L'essor du pèlerinage de Compostelle fait de Toulouse une étape incontournable.",
+        "Deux passages étaient utilisés pour la circulation des pèlerins, l'un servant d'entrée et l'autre de sortie.",
+        "La porte des Comtes tient son nom d'une niche où reposent les restes de quatre comtes de Toulouse.",
+        "La basilique est construite en brique de Toulouse et en pierre blanche. La nef est longue de 115 mètres.",
+        "Un clocher octogonal; hauteur à la flèche du clocher: 65 m.",
+        "À la Révolution, le chapitre séculier est supprimé mais la basilique n'est ni modifiée ni saccagée.",
+        "Saint-Sernin resta une simple église collégiale jusqu'en 1878, date à laquelle elle reçut le titre de basilique mineure.",
+        "Les grandes orgues, réputées dans le monde entier, ont été achevées en 1889 par la maison Aristide Cavaillé-Coll.",
+        "Classement au titre des monuments historiques depuis 1840.",
+        "Inscription UNESCO 1998 au titre des chemins de Saint-Jacques-de-Compostelle en France."
+      ]
+    },
+    {
+      "id": "jacobins",
+      "name": "Couvent des Jacobins",
+      "tagline": "Chef-d'œuvre du gothique méridional",
+      "lat": 43.6035,
+      "lon": 1.4402,
+      "radius": 50,
+      "express": "Vous êtes aux Jacobins, un chef-d'œuvre du gothique méridional. Tout commence à Toulouse en 1215, quand saint Dominique fonde une petite communauté de prêcheurs pour combattre l'hérésie cathare. La construction de l'église débute en 1230 et elle est consacrée en 1285. À l'intérieur, la voûte en forme de palmier est célèbre. Depuis 1369, l'église abrite le corps de saint Thomas d'Aquin. Le couvent a aussi accueilli l'Université de Toulouse, fondée en 1229.",
+      "histoire": "Vous êtes devant le couvent des Jacobins, chef-d'œuvre du gothique méridional.\n\nEn 1215, saint Dominique fonde à Toulouse une petite communauté de frères prêcheurs pour lutter contre l'hérésie cathare, alors puissante dans la région. Les dominicains s'installent sur des terrains acquis en 1229, grâce à l'argent donné par un riche capitoul, Pons de Capdenier. En 1230, ils commencent à bâtir une petite église ; le couvent sera construit en plusieurs campagnes, et l'église est consacrée en 1285.\n\nPourquoi « Jacobins » ? En France, les dominicains portent ce nom parce que leur premier couvent parisien se trouvait rue Saint-Jacques. On considère parfois le couvent de Toulouse comme l'église-mère de l'ordre, même s'il n'est pas le premier qu'ils aient construit.\n\nÀ l'intérieur, la voûte en forme de palmier est l'un des visages les plus célèbres du lieu, et le clocher octogonal compte sept étages. Depuis 1369, l'église abrite le corps de saint Thomas d'Aquin. Et dans ces bâtiments s'est aussi installée, pour plusieurs siècles, l'Université de Toulouse, fondée en 1229.\n\nLa Révolution chasse les dominicains : le couvent devient une caserne et un dépôt. Les reliques de Thomas d'Aquin sont transférées à Saint-Sernin et ne reviendront aux Jacobins qu'en 1974. Ne manquez pas la chapelle Saint-Antonin, dont le plafond est orné de fresques apocalyptiques du XIVᵉ siècle.",
+      "sources": [
+        {"title": "Church of the Jacobins (Wikipedia)", "url": "https://en.wikipedia.org/wiki/Church_of_the_Jacobins"},
+        {"title": "Ensemble conventuel des Jacobins (Techno-Science, d'après Wikipédia)", "url": "https://www.techno-science.net/fr/definitions/ensemble-conventuel-des-jacobins"},
+        {"title": "Couvent des Jacobins (Lonely Planet)", "url": "https://www.lonelyplanet.com/pois/1192995"},
+        {"title": "Appel à projets, Couvent des Jacobins (Ville de Toulouse)", "url": "https://metropole.toulouse.fr/sites/toulouse-fr/files/2026-08/aap-jacobins-rc.pdf"}
+      ],
+      "facts": [
+        "En 1215, le futur saint Dominique fonde à Toulouse une petite communauté de prêcheurs pour combattre l'hérésie, forte et croissante.",
+        "À partir de 1230, les frères commencent la construction d'une petite église.",
+        "Les travaux de l'église sont officiellement achevés à sa consécration en 1285.",
+        "Le couvent a été construit en quatre fois sur des terrains acquis en 1229, avec l'argent donné par un riche capitoul, Pons de Capdenier.",
+        "Les dominicains sont appelés jacobins car le premier couvent de Paris était situé rue Saint-Jacques. Le couvent de Toulouse est parfois considéré comme l'église-mère de l'ordre, bien qu'il n'ait pas été le premier couvent construit.",
+        "Voûte en forme de palmier; clocher octogonal de sept étages.",
+        "L'église abrite depuis 1369 le corps de saint Thomas d'Aquin.",
+        "L'Université de Toulouse a été établie dans ces bâtiments pendant plusieurs siècles depuis sa fondation en 1229.",
+        "Sous la Révolution, le couvent est confisqué comme bien national et utilisé comme caserne et comme dépôt.",
+        "Les reliques, déplacées à Saint-Sernin à la Révolution, sont revenues aux Jacobins en 1974.",
+        "La chapelle Saint-Antonin est connue pour ses fresques apocalyptiques au plafond datant du XIVᵉ siècle."
+      ]
+    },
+    {
+      "id": "capitole",
+      "name": "Le Capitole",
+      "tagline": "Le pouvoir municipal depuis plus de 800 ans",
+      "lat": 43.6045,
+      "lon": 1.4440,
+      "radius": 70,
+      "express": "Vous êtes place du Capitole, au cœur du pouvoir toulousain depuis plus de huit siècles. Tout commence en 1190, quand les consuls de la ville cherchent un bâtiment pour abriter leur maison commune. Le nom vient de « capítol », le chapitre en occitan, c'est-à-dire l'assemblée des capitouls qui gouvernaient la cité. La grande façade que vous voyez date du XVIIIᵉ siècle, mais derrière elle se cachent un donjon du XVIᵉ siècle et la cour Henri IV. Le bâtiment abrite toujours la mairie, ainsi que le Théâtre du Capitole, installé là depuis 1737.",
+      "histoire": "Vous êtes devant le Capitole, siège du pouvoir municipal depuis plus de huit cents ans. Son histoire commence en 1190, quand les consuls de Toulouse cherchent un bâtiment pour héberger la maison commune.\n\nLe nom a une double histoire. En occitan, le chapitre, l'assemblée des magistrats qui dirigeaient la ville, se dit « capítol » : ces magistrats sont les capitouls. Et en 1522, le greffier Pierre Salmon baptise le lieu Capitole, pour rappeler le Capitole de la Rome antique.\n\nLes siècles ont laissé leurs couches. La tour des archives, le donjon, est construite en 1525 pour protéger les archives et abriter le conseil des capitouls. Dans la cour Henri IV, le portail de Nicolas Bachelier date de 1546. Quant à la grande façade néoclassique, elle est l'œuvre de l'architecte Guillaume Cammas et s'achève en 1760. De toutes ces constructions successives, il ne reste que le donjon du XVIᵉ siècle, les galeries de la cour Henri IV du XVIIᵉ et cette façade du XVIIIᵉ.\n\nEn 1737, une salle de spectacle est aménagée : de là naîtront le Théâtre du Capitole et l'Orchestre national du Capitole de Toulouse. Le lieu a aussi été le témoin de grands épisodes : les troubles de 1562, quand les huguenots l'ont tenu avec des canons pris à l'ennemi, l'affaire Jean Calas en 1762, la Libération de la ville en 1944. Classé monument historique dès 1840, le donjon a été restauré au XIXᵉ siècle par Viollet-le-Duc.\n\nCherchez le donjon : c'est la partie la plus ancienne encore debout.",
+      "sources": [
+        {"title": "Capitole de Toulouse (Wikipedia)", "url": "https://en.wikipedia.org/wiki/Capitole_de_Toulouse"},
+        {"title": "Les secrets du Capitole, livret-jeu (Ville de Toulouse)", "url": "https://metropole.toulouse.fr/sites/toulouse-fr/files/2026-09/explorateurs_capitole.pdf"},
+        {"title": "Capitole de Toulouse (Techno-Science, d'après Wikipédia)", "url": "https://www.techno-science.net/fr/definitions/capitole-de-toulouse"},
+        {"title": "Capitole de Toulouse (Wikipedia, miroir)", "url": "https://wiki.riteme.site/wiki/Place_du_Capitole"},
+        {"title": "Capitole de Toulouse (Audiala)", "url": "https://audiala.com/en/france/toulouse/capitol-gate"}
+      ],
+      "facts": [
+        "L'histoire de cet édifice commence en 1190 quand les consuls de Toulouse recherchent un bâtiment pour héberger la maison commune.",
+        "Le Capitole est le lieu du pouvoir municipal depuis plus de 800 ans.",
+        "Le nom de Capitole vient du mot chapitre (capítol en occitan). Le chapitre était l'assemblée des capitouls qui gérait la ville.",
+        "Le site a été nommé Capitole par le greffier Pierre Salmon en 1522 pour rappeler le Capitole romain.",
+        "1525: construction de la tour des archives. Elle protège les archives et abrite le conseil des capitouls.",
+        "1546: portail de Nicolas Bachelier dans la cour Henri IV.",
+        "Architecte de la façade: Guillaume Cammas; style néoclassique; achevé en 1760.",
+        "Aujourd'hui subsistent la tour des archives ou donjon datant du XVIᵉ siècle, les galeries de la cour Henri IV du XVIIᵉ siècle et la façade de l'hôtel de ville du XVIIIᵉ siècle.",
+        "La salle de spectacle, d'où sont issus le Théâtre du Capitole et l'Orchestre national du Capitole de Toulouse, a été créée en 1737. Depuis 1737 il abrite le Théâtre du Capitole dans son aile droite.",
+        "Le Capitole a été le centre des troubles de 1562 à Toulouse, les forces huguenotes le tenant avec des canons capturés.",
+        "Témoin d'événements majeurs, du procès de Jean Calas en 1762 à la libération de la ville en 1944.",
+        "Monument historique depuis 1840; restauration au XIXᵉ siècle par Viollet-le-Duc sur le donjon."
+      ]
+    },
+    {
+      "id": "augustins",
+      "name": "Musée des Augustins",
+      "tagline": "Un couvent devenu l'un des plus anciens musées de France",
+      "lat": 43.6010,
+      "lon": 1.4460,
+      "radius": 50,
+      "express": "Le musée des Augustins occupe un ancien couvent construit à partir de 1309. Supprimé sous la Révolution, en 1793, il ouvre au public le 27 août 1795, très peu de temps après le Louvre : c'est l'un des plus anciens musées de France. Il conserve l'une des plus riches collections de sculpture romane au monde. Dans le cloître, cherchez un graffiti gravé pendant la Révolution : « Poulou 1792 ».",
+      "histoire": "Vous êtes devant le musée des Augustins, le musée des beaux-arts de Toulouse, installé dans un ancien couvent.\n\nLes frères de l'ordre des ermites de saint Augustin bâtissent ce couvent à partir de 1309, avec l'autorisation du pape Clément V. Le cloître est achevé en 1396. La Révolution supprime le couvent en 1793. Deux ans plus tard, le 27 août 1795, le lieu ouvre comme musée, très peu de temps après le Louvre, ce qui en fait l'un des plus anciens musées de France. L'église est alors transformée en « Temple des Arts ».\n\nLe monument est classé en 1840. Dans le grand cloître, cherchez un graffiti de la Révolution gravé dans la pierre : « Poulou 1792 ». On y a aussi recréé un jardin médiéval, et on y voit des gargouilles venues du couvent des Cordeliers.\n\nLe musée conserve plus de 4 000 œuvres, du Moyen Âge au début du XXᵉ siècle, et l'une des plus riches collections de chapiteaux et de sculptures romanes au monde. Il a fait l'objet d'un important chantier de rénovation et rouvre progressivement ses espaces : vérifiez ce qui est accessible avant d'y entrer.",
+      "sources": [
+        {"title": "Histoire du musée (musée des Augustins)", "url": "https://augustins.toulouse.fr/en/?p=5946"},
+        {"title": "Musée des Augustins (Techno-Science, d'après Wikipédia)", "url": "https://www.techno-science.net/fr/definitions/musee-des-augustins"},
+        {"title": "Le musée des Augustins (Toulouse Tourisme)", "url": "https://www.toulouse-tourisme.com/nos-incontournables/le-musee-des-augustins/"},
+        {"title": "Musée des Augustins (Wikipedia)", "url": "https://en.wikipedia.org/wiki/Mus%C3%A9e_des_Augustins"},
+        {"title": "Le musée des Augustins (Lonely Planet)", "url": "https://www.lonelyplanet.fr/destinations/france/toulouse/que-faire/le-musee-des-augustins"}
+      ],
+      "facts": [
+        "Le couvent des Augustins de Toulouse fut construit en 1309 avec l'autorisation du pape Clément V; maison de l'ordre des ermites de saint Augustin.",
+        "La construction de l'ensemble conventuel s'est terminée en 1396 avec l'achèvement du cloître.",
+        "Le couvent fut sécularisé en 1793; le musée a ouvert le 27 août 1795, peu de temps après le Louvre: l'un des plus anciens musées de France.",
+        "L'église du musée a été convertie en Temple des Arts.",
+        "Graffiti datant de la Révolution gravé dans le cloître principal: Poulou 1792.",
+        "Bâtiment classé monument historique en 1840. Le cloître abrite un jardin médiéval reconstitué.",
+        "Le musée conserve les gargouilles du couvent des Cordeliers exposées dans le cloître.",
+        "Le musée conserve plus de 4 000 œuvres retraçant l'histoire de l'art du Moyen Âge au début du XXᵉ siècle.",
+        "Il conserve l'une des collections les plus riches au monde de chapiteaux et sculptures de l'époque romane.",
+        "Après plusieurs années de restauration, le musée a rouvert une partie de ses espaces et est en cours de réouverture progressive."
+      ]
+    },
+    {
+      "id": "assezat",
+      "name": "Hôtel d'Assézat",
+      "tagline": "Une demeure Renaissance bâtie sur la fortune du pastel",
+      "lat": 43.6004,
+      "lon": 1.4420,
+      "radius": 40,
+      "express": "L'hôtel d'Assézat est l'un des plus beaux hôtels particuliers de la Renaissance toulousaine, parmi les soixante-quatorze construits à Toulouse au XVIᵉ siècle. Il est édifié à partir de 1555 sur les plans de Nicolas Bachelier pour Pierre d'Assézat, un riche marchand de pastel devenu capitoul. Le pastel, une plante tinctoriale, a enrichi ces marchands avant que l'arrivée de l'indigo des Indes ne provoque son déclin. Aujourd'hui, l'hôtel abrite la fondation Bemberg.",
+      "histoire": "Vous êtes devant l'hôtel d'Assézat, un joyau de la Renaissance toulousaine.\n\nPierre d'Assézat a fait fortune dans le pastel, une plante tinctoriale, puis a gravi les échelons de la société toulousaine jusqu'à devenir capitoul. Il fait bâtir cet hôtel à partir de 1555, sur les plans de Nicolas Bachelier, le plus grand architecte toulousain de la Renaissance. Son fils Dominique achève l'ouvrage entre 1560 et 1562. Pierre d'Assézat, lui, n'a pu profiter que par moments de sa demeure.\n\nDans la cour, la superposition des ordres d'architecture antiques fait référence au Colisée et au théâtre de Marcellus. Cet hôtel compte parmi les soixante-quatorze hôtels particuliers construits à Toulouse au XVIᵉ siècle, et il se distingue par sa taille et son décor exceptionnel.\n\nLe pastel, lui, connaît son déclin au XVIIᵉ siècle, quand l'indigo venu des Indes arrive en Europe. L'hôtel traverse les siècles : légué à la Ville de Toulouse par Théodore Ozenne en 1895, il accueille alors les sociétés savantes, dont l'Académie des Jeux floraux. Depuis l'ouverture au public de la collection en 1995, il abrite aussi la fondation Bemberg, qui présente la collection du riche collectionneur argentin Georges Bemberg : peintures, sculptures, arts graphiques et objets d'art du XVᵉ au milieu du XXᵉ siècle.",
+      "sources": [
+        {"title": "Collection Bemberg, Hôtel d'Assézat (Ville de Toulouse)", "url": "https://metropole.toulouse.fr/annuaire/collection-bemberg-hotel-dassezat"},
+        {"title": "L'hôtel d'Assézat et la fondation Bemberg (Lonely Planet)", "url": "https://www.lonelyplanet.fr/destinations/france/toulouse/que-faire/lhotel-dassezat-et-la-fondation-bemberg"},
+        {"title": "Hôtel d'Assézat (Wikipedia)", "url": "https://en.wikipedia.org/wiki/H%C3%B4tel_d%27Ass%C3%A9zat"},
+        {"title": "L'hotel d'Assézat (Toulouse Tourisme)", "url": "https://www.toulouse-tourisme.com/it/?p=194159"},
+        {"title": "La Renaissance à Toulouse (Muñoz et Debuiche, Université de Lausanne)", "url": "https://serval.unil.ch/resource/serval:BIB_0A756D1C13C5.S001/REF"}
+      ],
+      "facts": [
+        "Parmi les 74 hôtels particuliers construits au XVIᵉ siècle à Toulouse, l'hôtel d'Assézat fait partie des plus beaux.",
+        "Hôtel élevé en 1555-1557 sur les plans de Nicolas Bachelier, le plus grand architecte toulousain de la Renaissance, pour Pierre d'Assézat, riche marchand de pastel.",
+        "Après avoir fait fortune dans le pastel, ce riche marchand a gravi les échelons de la société toulousaine et accédé au capitoulat.",
+        "L'hôtel a été terminé entre 1560 et 1562 par son fils Dominique Bachelier.",
+        "Pierre d'Assézat n'a pu profiter de son hôtel qu'occasionnellement.",
+        "La superposition des ordres fait référence au Colisée et au théâtre de Marcellus.",
+        "L'arrivée de l'indigo des Indes au XVIIᵉ siècle provoqua le déclin de la culture du pastel.",
+        "Il a été légué à la Ville de Toulouse par Théodore Ozenne en 1895; il abrite alors les sociétés savantes. Siège de l'Académie des Jeux floraux.",
+        "Il accueille depuis 1993 la Collection Bemberg (ouverture au public en 1995): collection de l'Argentin Georges Bemberg.",
+        "Peintures, sculptures, arts graphiques, mobilier et objets d'art du XVᵉ à la moitié du XXᵉ siècle."
+      ]
+    },
+    {
+      "id": "daurade",
+      "name": "Basilique Notre-Dame de la Daurade",
+      "tagline": "L'église aux mosaïques dorées et à la Vierge noire",
+      "lat": 43.6008,
+      "lon": 1.4397,
+      "radius": 40,
+      "express": "Voici la basilique Notre-Dame de la Daurade, au bord de la Garonne. C'est l'une des plus anciennes églises de Toulouse : elle apparaît dans les textes dès le Vᵉ siècle. Son nom vient du latin « deaurata », dorée, à cause des mosaïques à fond d'or qui décoraient l'église primitive. À l'intérieur, la Vierge noire, surnommée Notre-Dame la Noire, est considérée comme la protectrice de la ville, particulièrement des femmes enceintes.",
+      "histoire": "Vous êtes devant la basilique Notre-Dame de la Daurade, au bord de la Garonne, l'une des plus anciennes églises de Toulouse.\n\nD'après la tradition, elle remonte à l'année 410, quand l'empereur Honorius autorise la transformation des temples païens en églises ; le bâtiment d'origine aurait été un temple d'Apollon. L'église est ensuite décorée de mosaïques à fond d'or, d'où son nom, tiré du latin « deaurata », dorée. Au IXᵉ siècle, des moines bénédictins bâtissent un monastère à ses côtés.\n\nSon trésor le plus célèbre est une Vierge noire. Connue dès le Xᵉ siècle sous le nom de Notre-Dame la Brune, elle a été noircie par les nombreuses chandelles : dès le XVIᵉ siècle, on l'appelle Notre-Dame la Noire. La statue d'origine a brûlé et, en 1807, une nouvelle statue a été sculptée d'après les souvenirs que l'on en avait. La Vierge est considérée comme la protectrice de la ville, en particulier des femmes enceintes. En 2009 et 2010, des couturiers lui ont offert des robes, dont Christian Lacroix et Jean-Charles de Castelbajac.\n\nAu XVIIIᵉ siècle, un projet de reconstruction lancé en 1764 est arrêté pour permettre la construction des quais de la Garonne, car la basilique débordait sur leur emplacement. Élevée au rang de basilique mineure par Pie IX en 1876, classée monument historique en 1963, elle abrite aussi les restes du poète Pierre Goudouli.",
+      "sources": [
+        {"title": "Basilique de la Daurade (Techno-Science, d'après Wikipédia)", "url": "https://www.techno-science.net/fr/definitions/basilique-de-la-daurade"},
+        {"title": "Notre-Dame de la Daurade (Structurae, d'après Wikipedia)", "url": "https://structurae.net/en/structures/eglise-notre-dame-de-la-daurade"},
+        {"title": "Basilique Notre-Dame de la Daurade (Routard)", "url": "https://www.routard.com/fr/guide/france/midi-toulousain-occitanie/toulouse/rives-de-la-garonne/basilique-notre-dame-de-la-daurade"},
+        {"title": "Basilique de la Daurade (Cityzeum)", "url": "https://www.cityzeum.com/basilique-de-la-daurade-notre-dame-de-la-daurade-sainte-marie-de-la-daurade-12748"},
+        {"title": "Notre-Dame de la Daurade (Visit Occitanie)", "url": "https://visit-occitanie.com/en/fiche/patrimoine-culturel/basilique-notre-dame-de-la-daurade-toulouse_TFOPCUMID031FS00961"}
+      ],
+      "facts": [
+        "L'église Notre-Dame de la Daurade est une basilique toulousaine le long des quais de la Garonne.",
+        "Elle apparaît dans la documentation dès le Vᵉ siècle; l'une des plus anciennes églises de Toulouse.",
+        "Fondée en 410 quand l'empereur Honorius autorisa la conversion des temples païens; le bâtiment d'origine était un temple dédié à Apollon.",
+        "Connue sous le nom de Daurade à cause de ses mosaïques à fonds dorés; deaurata, mot latin pour doré.",
+        "Au IXᵉ siècle, un groupe de moines bénédictins construit un monastère attaché à l'église.",
+        "Vierge noire: copie d'une vierge brune connue au Xᵉ siècle; les chandelles ont noirci la statue; dès le XVIᵉ siècle Notre-Dame la Noire.",
+        "En 1807, une nouvelle statue fut sculptée d'après les souvenirs que l'on avait de l'ancienne vierge brûlée.",
+        "Protectrice de la ville et particulièrement des femmes enceintes.",
+        "Robes de la Vierge en 2009-2010 par des dons de couturiers actuels, dont Christian Lacroix et Jean-Charles de Castelbajac.",
+        "Un projet de reconstruction débuté en 1764 (XVIIIᵉ siècle) est arrêté pour permettre la construction des quais de la Garonne.",
+        "Élevée au rang de basilique mineure par le pape Pie IX en 1876; classée monument historique en 1963.",
+        "La Daurade abrite les restes du poète Pierre Goudouli."
+      ]
+    },
+    {
+      "id": "pont-neuf",
+      "name": "Le Pont-Neuf",
+      "tagline": "Le plus ancien pont de Toulouse sur la Garonne",
+      "lat": 43.5993,
+      "lon": 1.4387,
+      "radius": 80,
+      "express": "Le Pont-Neuf, malgré son nom, est le plus ancien pont encore debout sur la Garonne à Toulouse. Sa construction commence au milieu du XVIᵉ siècle, et il ne sera achevé qu'en 1632, après près de quatre-vingt-dix ans de travaux, par l'architecte parisien Jacques Lemercier. Long de 220 mètres, il repose sur sept arches. Contrairement aux ponts médiévaux, il n'a ni maisons ni boutiques sur son tablier. Dès le départ, il a été étudié pour résister aux assauts de la Garonne.",
+      "histoire": "Vous êtes devant le Pont-Neuf, qui, malgré son nom, est le plus ancien pont encore debout sur la Garonne à Toulouse.\n\nAvant lui, la ville n'avait que des ponts de bois, dont le pont couvert de la Daurade, sans cesse endommagé par les crues. Un vestige d'une pile de ce pont est encore visible à côté du Pont-Neuf. Pour changer d'échelle, on lance au milieu du XVIᵉ siècle un chantier en pierre : les travaux débutent en 1541, ou en 1542 selon les sources, et ne s'achèveront qu'en 1632, près de quatre-vingt-dix ans plus tard. Commencé par des artisans toulousains, le pont est terminé par l'architecte parisien Jacques Lemercier.\n\nIl mesure 220 mètres de long et compte sept arches. C'est un pont d'avant-garde : comme le Pont-Neuf de Paris, il est libéré des maisons et des boutiques qui encombraient les ponts médiévaux. Dès le début, il a été étudié pour résister aux assauts de la Garonne.\n\nÀ son entrée se dressait autrefois un arc de triomphe de Jules Hardouin-Mansart, détruit en 1860. L'ingénieur en chef des Ponts et Chaussées Fernand de Dartein jugeait que c'était l'un des plus beaux ponts de France, et le plus beau du Midi.\n\nPlacez-vous au milieu du pont et observez les piles : certaines sont percées d'un oculus.",
+      "sources": [
+        {"title": "Pont-Neuf de Toulouse (Techno-Science, d'après Wikipédia)", "url": "https://www.techno-science.net/fr/definitions/pont-neuf-de-toulouse"},
+        {"title": "Pont-Neuf (Structurae, d'après Wikipédia)", "url": "https://structurae.net/fr/ouvrages/pont-neuf-1632"},
+        {"title": "Pont Neuf, Toulouse (Wikiwand)", "url": "https://www.wikiwand.com/en/articles/Pont_Neuf,_Toulouse"},
+        {"title": "Pont Neuf (Structurae, version allemande)", "url": "https://structurae.net/de/bauwerke/20004650"},
+        {"title": "Pont Neuf (AAA TripCanvas)", "url": "https://www.aaa.com/tripcanvas/attraction/pont-neuf-VA2265"}
+      ],
+      "facts": [
+        "Le Pont-Neuf est la plus ancienne pont encore conservé sur la Garonne à Toulouse (die älteste noch erhaltene Brücke).",
+        "La construction du Pont-Neuf débuta en 1541; planification en 1542; achevé en 1632 (90 ans plus tard).",
+        "Commencé au XVIᵉ siècle par des artisans toulousains, il fut achevé par l'architecte parisien Jacques Lemercier.",
+        "Longueur: 220 m; nombre d'arches: 7; sept arches.",
+        "Comme le Pont-Neuf de Paris, il est libre des maisons et boutiques qui encombraient les ponts médiévaux.",
+        "Dès le début, le Pont-Neuf fut étudié afin de résister aux assauts de la Garonne.",
+        "Toulouse avait des ponts de bois, dont le pont de la Daurade, pont couvert détruit par les crues; on peut voir encore le vestige d'une pile du pont de la Daurade à côté du Pont-Neuf.",
+        "Le Pont-Neuf conduisait à l'entrée de la cité symbolisée par un arc de triomphe construit par Jules Hardouin-Mansart; l'arc a été détruit en 1860.",
+        "Fernand de Dartein, ingénieur en chef des Ponts et Chaussées: l'un des plus beaux ponts de France, et le plus beau du Midi.",
+        "Détail d'une pile avec oculus."
+      ]
+    },
+    {
+      "id": "hotel-dieu",
+      "name": "Hôtel-Dieu Saint-Jacques",
+      "tagline": "Hôpital de pèlerins devenu site UNESCO",
+      "lat": 43.5992,
+      "lon": 1.4364,
+      "radius": 60,
+      "express": "Sur la rive gauche de la Garonne, l'Hôtel-Dieu Saint-Jacques est un ancien hôpital qui a accueilli pauvres et pèlerins pendant des siècles. Il naît vers 1130, quand le prieur de la Daurade fonde l'hôpital Sainte-Marie pour les pauvres. Toulouse étant sur le chemin de Saint-Jacques-de-Compostelle, le lieu s'ouvre aux pèlerins, d'où les coquilles Saint-Jacques qui le décorent encore. Le dernier malade est parti en 1987 ; aujourd'hui, c'est le centre administratif du CHU, et l'on y trouve le musée d'histoire de la médecine. L'UNESCO l'a inscrit en 1998.",
+      "histoire": "Vous voyez l'Hôtel-Dieu Saint-Jacques, sur la rive gauche de la Garonne, avec sa majestueuse façade de brique.\n\nTout commence vers 1130, quand le prieur de la Daurade fonde l'hôpital Sainte-Marie pour accueillir les pauvres. Il est relié au monastère par le pont de la Daurade, construit en 1179, aujourd'hui disparu. Au XIIIᵉ siècle, un second établissement, l'hôpital Novel, est géré par la confrérie de Saint-Jacques pour recevoir les pèlerins en route vers Compostelle. Les deux sont réunis au XIVᵉ siècle sous le nom d'hôpital Saint-Jacques.\n\nSelon certaines sources, c'est vers 1554, quand l'abandon du pont de la Daurade suit la construction du Pont-Neuf, que le site prend le nom d'Hôtel-Dieu. Aux XVIIᵉ et XVIIIᵉ siècles, il s'agrandit et devient le plus grand hôpital de Toulouse. Regardez bien les murs : de nombreuses coquilles Saint-Jacques le décorent encore.\n\nEn 1987, le dernier malade quitte les lieux, et l'Hôtel-Dieu devient le centre administratif du CHU de Toulouse. Il abrite aussi le musée d'histoire de la médecine. Depuis 1998, il fait partie des sites inscrits par l'UNESCO au titre des chemins de Compostelle.",
+      "sources": [
+        {"title": "Hôtel-Dieu Saint-Jacques (Ville de Toulouse)", "url": "https://metropole.toulouse.fr/annuaire/hotel-dieu-saint-jacques"},
+        {"title": "Hôtel Dieu, Toulouse (RYO)", "url": "https://ryo.co/fr/destinations/france/lieux/hotel-dieu-toulouse/"},
+        {"title": "Hôtel-Dieu (Musée du Patrimoine)", "url": "https://museedupatrimoine.fr/hotel-dieu-haute-garonne/42366.html?lang=fr"},
+        {"title": "Hôtel-Dieu, salles patrimoniales (Guide Tourisme France)", "url": "https://www.guide-tourisme-france.com/VISITER/hotel-dieu-saint-jacques-salles-patrimoniales-chapelle--29187.htm"},
+        {"title": "Toulouse, Hôtel-Dieu (Ipernity)", "url": "https://www.ipernity.com/tag/323415/keyword/599355"}
+      ],
+      "facts": [
+        "Situé sur la rive gauche de la Garonne, l'Hôtel-Dieu Saint-Jacques doit son origine à la fondation vers 1130, par le prieur de la Daurade, de l'hôpital Sainte-Marie destiné à l'accueil des pauvres.",
+        "La construction du pont de la Daurade en 1179 confirme la fonction d'hospitalité pour les pèlerins en chemin vers Saint-Jacques de Compostelle.",
+        "L'hôpital Novel, géré par la confrérie de Saint-Jacques pour l'accueil des pèlerins, est bâti au XIIIᵉ siècle. Les deux établissements sont réunis au XIVᵉ siècle sous le nom d'hôpital Saint-Jacques.",
+        "En 1554, avec l'abandon du pont de la Daurade dû à la construction du pont Neuf, les deux hospices sont reliés et prennent le nom d'Hôtel-Dieu (selon une source).",
+        "Entre le XVIIᵉ et le XVIIIᵉ siècle, expansion majeure, devenant le plus grand hôpital de Toulouse.",
+        "L'Hôtel-Dieu est encore décoré de nombreuses coquilles Saint-Jacques.",
+        "Au départ du dernier malade en 1987, l'Hôtel-Dieu devient le centre administratif des Hôpitaux de Toulouse (CHU); il abrite le musée de l'histoire de la médecine.",
+        "Inscrit au patrimoine mondial par l'UNESCO en 1998 au titre des chemins de Saint-Jacques de Compostelle."
+      ]
+    },
+    {
+      "id": "abattoirs",
+      "name": "Les Abattoirs",
+      "tagline": "D'anciens abattoirs devenus musée d'art contemporain",
+      "lat": 43.6009,
+      "lon": 1.4295,
+      "radius": 70,
+      "express": "Les Abattoirs, aujourd'hui musée d'art moderne et contemporain, étaient bien à l'origine des abattoirs. Le bâtiment est construit entre 1828 et 1831 par l'architecte Urbain Vitry, qui s'est inspiré de la basilique Saint-Sernin. En 1991, la Ville et la Région décident d'en faire un espace d'art, inauguré en 2000. Il réunit un musée et le Frac, la collection régionale d'art contemporain, soit environ 3 880 œuvres.",
+      "histoire": "Vous êtes devant les Abattoirs, un musée d'art moderne et contemporain qui était bien, à l'origine, un abattoir.\n\nEn 1828, l'architecte Urbain Vitry, qui deviendra plus tard architecte en chef de la ville de Toulouse, reçoit la commande d'un grand bâtiment en bordure de la Garonne. Les travaux durent de 1828 à 1831. Le plan est simple et efficace : un bâtiment principal avec un grand espace couvert au centre, des pavillons d'entrée, des bouveries et des bergeries de chaque côté, et un hémicycle de toitures en sheds à l'arrière. Selon le parcours officiel du musée, Vitry a conçu l'ensemble sur le modèle de la basilique Saint-Sernin.\n\nLe 2 décembre 1991, la Ville de Toulouse et la Région Midi-Pyrénées décident d'y créer un espace d'art moderne et contemporain. Les architectes Antoine Stinco et Rémi Papillault préservent l'unité extérieure du bâtiment, mémoire du lieu, et adaptent l'intérieur aux contraintes d'un musée. Le lieu est inauguré le 23 juin 2000. Il réunit un musée et le Frac Occitanie, une collection régionale d'art contemporain, soit environ 3 880 œuvres. Ses espaces hauts et ouverts se prêtent à l'exposition d'œuvres monumentales.",
+      "sources": [
+        {"title": "Parcours d'œuvres autour des Abattoirs (Les Abattoirs, 2026)", "url": "https://www.lesabattoirs.org/wp-content/uploads/2026/05/parcours-exterieur-maj-mars-2026.pdf"},
+        {"title": "Les Abattoirs (Cityzeum)", "url": "https://www.cityzeum.com/les-abattoirs"},
+        {"title": "Les Abattoirs (Wikipedia)", "url": "https://en.wikipedia.org/wiki/Les_Abattoirs"},
+        {"title": "Les abattoirs (Lonely Planet)", "url": "https://www.lonelyplanet.fr/destinations/france/toulouse/que-faire/les-abattoirs"},
+        {"title": "A historical monument (Les Abattoirs)", "url": "https://lesabattoirs.org/en/a-historical-monument"}
+      ],
+      "facts": [
+        "Les Abattoirs, Musée - Frac Occitanie Toulouse, combine un musée d'art moderne et contemporain et une collection régionale d'art contemporain (Frac); environ 3 880 œuvres.",
+        "La construction d'un unique bâtiment pour abriter les abattoirs de Toulouse fut confiée à Urbain Vitry et se déroula de 1828 à 1831.",
+        "En 1828, l'architecte Urbain Vitry, qui deviendra plus tard architecte en chef de la ville de Toulouse, reçoit un projet de grand bâtiment en bordure de la Garonne.",
+        "Plan simple: bâtiment principal avec grand espace couvert central, pavillons d'entrée, bouveries et bergeries de part et d'autre, hémicycle de toits en sheds à l'arrière.",
+        "À l'origine le bâtiment a été conçu par Urbain Vitry sur le modèle de la basilique Saint-Sernin.",
+        "Le 2 décembre 1991, la Ville de Toulouse et la Région Midi-Pyrénées décident de transformer le site; architectes Antoine Stinco et Rémi Papillault préservent l'unité extérieure du bâtiment.",
+        "Inauguration officielle le 23 juin 2000 (2000); ouverture en 2000.",
+        "Espaces hauts, rationnels et ouverts qui se prêtent à l'exposition d'œuvres monumentales."
+      ]
+    },
+    {
+      "id": "cathedrale",
+      "name": "Cathédrale Saint-Étienne",
+      "tagline": "La cathédrale inachevée",
+      "lat": 43.5999,
+      "lon": 1.4504,
+      "radius": 60,
+      "express": "La cathédrale Saint-Étienne est la cathédrale inachevée de Toulouse, et cela se voit : le chœur a été construit sans tenir compte de la nef, qui devait être détruite, ce qui donne un ensemble très hétérogène. La nef, de style gothique méridional, date du début du XIIIᵉ siècle. Le chœur, d'inspiration gothique du nord, est commencé après 1275. Levez les yeux vers l'orgue, suspendu à 20 mètres de hauteur comme un nid d'hirondelle.",
+      "histoire": "Vous êtes devant la cathédrale Saint-Étienne, que l'on pourrait surnommer la cathédrale inachevée de Toulouse.\n\nSes origines sont mal connues, mais son histoire est faite de reconstructions. Au début du XIIIᵉ siècle, on élève la nef, dite raymondine, dans le style gothique méridional, sur les vestiges de la cathédrale romane. Quelques décennies plus tard, l'évêque Bertrand de L'Isle-Jourdain veut une cathédrale qui rivaliserait avec les grandes églises gothiques du nord de la France. Un chœur monumental est lancé après 1275, mais sans tenir compte de la nef existante, qui devait être détruite. Le résultat est un ensemble très hétérogène, que les siècles suivants ont tenté de terminer, notamment au XVIIIᵉ siècle.\n\nCherchez trois détails. L'orgue d'abord, suspendu à 20 mètres de haut « en nid d'hirondelle », avec un buffet du début du XVIIᵉ siècle, le plus ancien de Toulouse. Les vitraux ensuite : c'est la seule église de la ville à avoir conservé ses vitraux d'origine, dont les plus anciens datent du XIVᵉ siècle. Et le clocher roman fortifié, qui abrite un carillon.\n\nDu cloître, détruit à la Révolution, les chapiteaux les plus remarquables sont aujourd'hui conservés au musée des Augustins. Classée monument historique en 1862, la cathédrale est aussi, dit-on, le lieu de repos de Pierre-Paul Riquet, le créateur du canal du Midi.",
+      "sources": [
+        {"title": "Cathédrale Saint-Étienne (Ville de Toulouse)", "url": "https://metropole.toulouse.fr/annuaire/cathedrale-saint-etienne"},
+        {"title": "Cathédrale Saint-Étienne de Toulouse (Techno-Science, d'après Wikipédia)", "url": "https://www.techno-science.net/fr/definitions/cathedrale-saint-etienne-de-toulouse"},
+        {"title": "Cathédrale Saint-Étienne (ministère de la Culture)", "url": "https://www.culture.gouv.fr/switchToLanguage/104913/fre-FR"},
+        {"title": "Cathédrale Saint-Étienne (Monumentum, base Mérimée)", "url": "https://monumentum.fr/monument-historique/PA00094498/toulouse-cathedrale-saint-etienne/edit-localisation"},
+        {"title": "Toulouse Cathedral (Wikipedia)", "url": "https://en.wikipedia.org/wiki/Toulouse_Cathedral"}
+      ],
+      "facts": [
+        "L'histoire de cette église est tellement émaillée de modifications qu'on pourrait la surnommer la cathédrale inachevée. On ne connaît pas les origines de la cathédrale.",
+        "Début XIIIᵉ siècle: construction de la nef raymondine de style gothique méridional, sur les vestiges de la cathédrale romane.",
+        "L'évêque projette une cathédrale qui rivaliserait avec les grands édifices gothiques du nord de la France.",
+        "Chœur gothique après 1275; le chœur a été construit sans prendre en compte la nef qui devait être détruite; aspect peu homogène.",
+        "Le XVIIIᵉ siècle est marqué par des travaux cherchant à terminer la cathédrale.",
+        "Orgue en nid d'hirondelle suspendu à 20 m de hauteur; buffet début XVIIᵉ siècle, le plus ancien à Toulouse.",
+        "Seule église de Toulouse à avoir conservé ses vitraux originaux, datant du XIVᵉ siècle pour les plus vieux.",
+        "Clocher roman fortifié qui abrite un carillon.",
+        "Cloître détruit à la Révolution; les chapiteaux les plus remarquables sont conservés au musée des Augustins.",
+        "Classée au titre des monuments historiques en 1862.",
+        "Lieu de repos de Pierre-Paul Riquet, créateur du canal du Midi."
+      ]
+    },
+    {
+      "id": "port-saint-sauveur",
+      "name": "Port Saint-Sauveur",
+      "tagline": "Le canal du Midi en plein centre-ville",
+      "lat": 43.5953,
+      "lon": 1.4563,
+      "radius": 70,
+      "express": "Vous êtes au port Saint-Sauveur, sur le canal du Midi, ce chef-d'œuvre de l'ingénieur Pierre-Paul Riquet qui relie l'Atlantique à la Méditerranée. Le canal est construit sous Louis XIV, entre 1666 et 1681. Le port est développé à partir de 1830, quand le port voisin de Saint-Étienne, devenu trop petit, ne suffit plus au trafic. On y chargeait et déchargeait des marchandises. Aujourd'hui, il accueille plaisanciers et cyclotouristes.",
+      "histoire": "Vous êtes au port Saint-Sauveur, l'un des deux ports de Toulouse sur le canal du Midi, classé au patrimoine mondial de l'UNESCO.\n\nLe canal, conçu par l'ingénieur Pierre-Paul Riquet sous Louis XIV, est construit entre 1666 et 1681 pour relier l'Atlantique à la Méditerranée. À Toulouse, le canal est élargi en 1708 pour créer le port Saint-Étienne. Le port Saint-Sauveur, son prolongement naturel, est développé à partir de 1830, quand le premier devient trop petit pour tout le trafic. Les sources divergent sur la date exacte de sa première création.\n\nOn y chargeait et déchargeait les marchandises, et des charpentiers y réparaient les bateaux. Le port tient son nom de la chapelle Saint-Sauveur, toute proche, où les bateliers venaient prier. Un orphelinat tenu par des sœurs franciscaines y est construit en 1862, pour accueillir les enfants dont les parents naviguaient sur le canal.\n\nLe transport sur le canal décline vers le milieu du XIXᵉ siècle : la Compagnie du canal du Midi met fin au service de navigation accélérée en 1858. Aujourd'hui, le port est tourné vers les loisirs : il accueille plaisanciers et cyclotouristes en plein centre-ville.",
+      "sources": [
+        {"title": "Port Saint-Sauveur (canal-du-midi.com)", "url": "https://www.canal-du-midi.com/en/explore/along-the-waters/toulouse-to-naurouze/port-st-sauveur"},
+        {"title": "Les douze visages du canal du Midi (Archives de Toulouse)", "url": "https://www.archives.toulouse.fr/documents/10184/331515/12visagesducanal_dossierdepresse.pdf/1b9f2d46-3da9-4101-aa78-75fa5c83203a"},
+        {"title": "Port Saint-Sauveur (Audiala)", "url": "https://audiala.com/en/france/toulouse/port-saint-sauveur/"},
+        {"title": "Port Saint-Sauveur (franco.wiki, d'après Wikipédia)", "url": "https://franco.wiki/fr/Port_Saint-Sauveur.html"}
+      ],
+      "facts": [
+        "Le canal du Midi a été conçu sous Louis XIV et réalisé par Pierre-Paul Riquet; construit entre 1666 et 1681; il relie l'océan Atlantique à la mer Méditerranée.",
+        "En 1708, le canal est élargi pour créer le port Saint-Étienne. Son extension naturelle, le port Saint-Sauveur, réalisé à la fin du siècle puis agrandi au XIXᵉ siècle (port aménagé en 1685).",
+        "Le port Saint-Sauveur a été créé en 1830 pour soutenir le port Saint-Étienne devenu trop petit pour accueillir tous les bateaux (XIXᵉ siècle).",
+        "On y chargeait et déchargeait des marchandises; des charpentiers y réparaient les bateaux.",
+        "Le port doit son nom à la chapelle Saint-Sauveur voisine où les bateliers venaient prier; un orphelinat tenu par les sœurs franciscaines y fut construit en 1862 pour accueillir les enfants dont les parents naviguaient sur le canal.",
+        "Le transport sur le canal a connu un déclin rapide et la Compagnie du canal du Midi a mis fin au service de navigation accélérée en 1858 (XIXᵉ siècle).",
+        "Le port Saint-Sauveur accueille aujourd'hui les plaisanciers et les cyclotouristes; canal classé au patrimoine mondial de l'UNESCO."
+      ]
+    }
+  ]
+}

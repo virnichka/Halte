@@ -1,0 +1,65 @@
+# Vérifie les récits, construit, teste, puis publie sur GitHub Pages.
+# - Sur toute branche et toute pull request : vérification + build + tests (rien n'est publié).
+# - Sur main uniquement : publication si tout est vert.
+name: Vérifier, tester, publier
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Vérifier les chiffres puis construire (verify.py → build.py)
+        run: python3 pipeline/build.py
+
+      - name: Installer Playwright + Chromium
+        run: |
+          pip install playwright
+          python3 -m playwright install --with-deps chromium
+
+      - name: Tests de bout en bout
+        run: python3 pipeline/e2e_test.py
+
+      - name: Captures d'écran des tests
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: captures-tests
+          path: /tmp/shots
+          if-no-files-found: ignore
+
+      - name: Préparer le site (dossier app/)
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: app
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
