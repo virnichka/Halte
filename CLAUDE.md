@@ -11,7 +11,11 @@ Le propriétaire n'est pas programmeur : explique simplement, sans jargon inutil
 - Toujours `python3 pipeline/build.py` (qui lance `verify.py`) avant de proposer un changement ;
   ne jamais contourner un échec de `verify.py` : ajouter la note de source manquante dans `facts`, ou corriger le récit.
 - Lancer `python3 pipeline/e2e_test.py` si l'app (`app/`) est touchée (Playwright requis).
-- Travailler sur une **branche**, ouvrir une pull request, **demander l'accord avant de fusionner**.
+- Travailler sur une **branche** et ouvrir une pull request. **Fusionner soi-même** dès que la CI est verte
+  (app, documentation, nouveaux lieux), puis dire au propriétaire ce qui est en ligne et lister les récits
+  nouveaux ou modifiés à relire.
+- **Demander l'accord avant** : tout ce qui est payant ; supprimer des lieux ou des données ; modifier le texte
+  d'un récit déjà relu par le propriétaire ; un gros changement de l'interface.
 - **Rien de payant** sans accord (API, hébergement, fournisseur de tuiles…).
 - Dire clairement ce qui n'a pas pu être vérifié (ex. vrai téléphone, GPS, voix, iPhone).
 - En fin de session : mettre à jour `ROADMAP.md`.
