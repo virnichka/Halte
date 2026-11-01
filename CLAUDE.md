@@ -4,6 +4,8 @@ Audioguide géolocalisé en PWA statique (sans serveur ni compte) : 31 lieux « 
 (Toulouse 16, Paris 10, Charleville-Mézières 5), filtrables par catégorie (Histoire, Culture, WTF, Anecdote, Caché),
 récits « express » (~30-40 s, bouton « Écouter ») et « histoire » (~1-2 min, « Version longue ») lus par la voix du téléphone.
 Pas de liste de villes : la carte (vue France, pastilles regroupées) sert de sélecteur.
+Interface « Pop » (refonte nov. 2026) : carte plein écran, panneau du bas à 3 hauteurs, fiche lieu, mini-lecteur + lecteur
+plein écran, « Vous y êtes » dans le panneau. **Pas d'alerte de proximité** (choix du propriétaire).
 Le propriétaire n'est pas programmeur : explique simplement, sans jargon inutile.
 
 ## Règles de travail
@@ -26,11 +28,12 @@ Le propriétaire n'est pas programmeur : explique simplement, sans jargon inutil
 |---|---|
 | `data/places.json` | **Source de vérité** : `cities` (centre + zone), `categories`, lieux (`city`, `cats`), coordonnées, rayon, récits, `sources`, `facts` (notes sourcées). On modifie ici. |
 | `app/data/lieux.json` | **Généré** par `build.py` (sans `facts`). Ne pas éditer à la main. |
-| `app/index.html`, `styles.css`, `app.js`, `map.js` | L'app (HTML/CSS/JS sans bibliothèque ni framework). |
-| `app/sw.js` | Service worker (hors ligne). Stratégie cache d'abord + mise à jour en arrière-plan. |
+| `app/index.html`, `styles.css`, `app.js`, `map.js` | L'app (HTML/CSS/JS sans bibliothèque ni framework). `styles.css` commence par le design system (jetons clair/sombre, composants) ; icônes SVG dans `index.html`. |
+| `app/sw.js` | Service worker (hors ligne). Stratégie cache d'abord + mise à jour en arrière-plan. **Changer `VER` à chaque modification de l'app.** |
 | `pipeline/verify.py` | Chaque chiffre/date/siècle d'un récit doit figurer dans `facts` ; lieu dans la zone de sa ville ; catégories connues. |
 | `pipeline/build.py` | verify → `app/data/lieux.json` → `dist/` (fichier unique + zip, ignorés par git). |
-| `pipeline/e2e_test.py` | 49 tests navigateur (vue France, regroupements, liste qui suit la carte, filtres, GPS simulé, proximité, lecteur, pause/reprise). |
+| `pipeline/e2e_test.py` | 81 tests navigateur (accueil, vue France, panneau 3 hauteurs, regroupements, liste qui suit la carte, filtres, fiche, bouton retour, GPS simulé, « Vous y êtes », mini-lecteur et lecteur, pause/reprise, réglages, mode sombre, 360 px, cibles ≥ 44 px). |
+| `maquettes/` | Audit, maquettes, vitrine du design system (`design-system.html`), captures avant/après. Non publié. |
 | `pipeline/prompt_template.md` | Consigne pour rédiger un récit à partir de notes. |
 | `.github/workflows/deploy.yml` | CI : build + tests sur toute branche/PR ; publication GitHub Pages sur `main` seulement. |
 
