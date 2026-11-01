@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#a8452f">
-  <title>Toulouse à l'écoute</title>
+  <title>Les murs parlent</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-192.png">
@@ -14,8 +14,8 @@
   <div id="app">
     <header class="top">
       <div class="top-text">
-        <h1>Toulouse à l'écoute</h1>
-        <p class="sub" id="status">Position non activée</p>
+        <h1>Les murs parlent</h1>
+        <p class="sub"><select id="city" aria-label="Ville"></select><span id="status"></span></p>
       </div>
       <div class="top-actions">
         <button id="btn-locate" class="pill" type="button">Me localiser</button>
@@ -32,6 +32,10 @@
       <div class="tm-attr">© les contributeurs d'<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a></div>
     </section>
 
+    <nav id="filters" class="filters" aria-label="Filtres">
+      <div id="cats" class="chips" role="group" aria-label="Catégories"></div>
+    </nav>
+
     <div id="banner" class="banner" hidden role="status" aria-live="polite"></div>
 
     <main id="list" class="list" aria-label="Lieux à écouter"></main>
@@ -45,10 +49,6 @@
       <label class="row">
         <input type="checkbox" id="opt-auto" checked>
         <span>Me proposer un lieu quand j'en approche</span>
-      </label>
-      <label class="row">
-        <input type="checkbox" id="opt-awake" checked>
-        <span>Garder l'écran allumé pendant l'écoute</span>
       </label>
       <label class="col">
         <span>Voix</span>
@@ -64,13 +64,13 @@
         </select>
       </label>
       <label class="col">
-        <span>Mode démo : simuler ma position</span>
+        <span>Mode démo : me placer près d'un lieu</span>
         <select id="opt-sim"></select>
       </label>
       <button type="button" id="btn-reset" class="ghost">Effacer les lieux déjà écoutés</button>
       <details class="about">
         <summary>À propos</summary>
-        <p>Prototype. Les textes sont rédigés par une IA à partir de sources publiques citées pour chaque lieu (Wikipédia et miroirs, ministère de la Culture, Ville de Toulouse, offices et sites officiels). Ils peuvent contenir des erreurs : vérifiez avant de les citer. Les passages inspirés de Wikipédia sont sous licence CC BY-SA. Fond de carte © contributeurs d'OpenStreetMap.</p>
+        <p>Prototype. Des récits courts sur des lieux qui sortent de l'ordinaire, lus par la voix de votre téléphone. Les textes sont rédigés par une IA à partir de sources publiques citées pour chaque lieu (Wikipédia et miroirs, ministère de la Culture, villes, offices de tourisme et sites officiels). Ils peuvent contenir des erreurs : vérifiez avant de les citer. Les passages inspirés de Wikipédia sont sous licence CC BY-SA. Fond de carte © contributeurs d'OpenStreetMap.</p>
       </details>
       <menu><button value="close" class="primary">Fermer</button></menu>
     </form>

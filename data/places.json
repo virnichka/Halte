@@ -1,21 +1,107 @@
 {
-  "city": "Toulouse",
+  "app": "Les murs parlent",
   "generated_by": "Récits rédigés par une IA à partir des sources listées pour chaque lieu. Les chiffres sont vérifiés automatiquement contre les notes de sources (pipeline/verify.py).",
+  "categories": [
+    {
+      "id": "histoire",
+      "label": "Histoire",
+      "icon": "🏛",
+      "hint": "Les grandes heures"
+    },
+    {
+      "id": "culture",
+      "label": "Culture",
+      "icon": "🎨",
+      "hint": "Art, musées, littérature"
+    },
+    {
+      "id": "wtf",
+      "label": "WTF",
+      "icon": "🤯",
+      "hint": "Bizarre, absurde, inattendu"
+    },
+    {
+      "id": "anecdote",
+      "label": "Anecdote",
+      "icon": "💬",
+      "hint": "Petites histoires et légendes"
+    },
+    {
+      "id": "secret",
+      "label": "Caché",
+      "icon": "🔦",
+      "hint": "Souterrains, vestiges, lieux oubliés"
+    }
+  ],
+  "cities": [
+    {
+      "id": "toulouse",
+      "name": "Toulouse",
+      "lat": 43.6045,
+      "lon": 1.443,
+      "bbox": [
+        43.5,
+        43.7,
+        1.3,
+        1.6
+      ]
+    },
+    {
+      "id": "paris",
+      "name": "Paris",
+      "lat": 48.8566,
+      "lon": 2.343,
+      "bbox": [
+        48.8,
+        48.92,
+        2.22,
+        2.48
+      ]
+    },
+    {
+      "id": "charleville",
+      "name": "Charleville-Mézières",
+      "lat": 49.772,
+      "lon": 4.72,
+      "bbox": [
+        49.73,
+        49.81,
+        4.66,
+        4.78
+      ]
+    }
+  ],
   "places": [
     {
       "id": "saint-sernin",
+      "city": "toulouse",
+      "cats": [
+        "histoire"
+      ],
       "name": "Basilique Saint-Sernin",
       "tagline": "La plus grande église romane conservée d'Europe",
       "lat": 43.6084,
-      "lon": 1.4420,
+      "lon": 1.442,
       "radius": 60,
       "express": "Voici la basilique Saint-Sernin, la plus grande église romane conservée d'Europe. Elle a été bâtie pour abriter les reliques de saint Saturnin, que l'on appelle Sernin en occitan, premier évêque de Toulouse, martyrisé vers 250. La construction de l'église actuelle commence vers 1080 et elle est consacrée en 1096. Regardez le clocher octogonal, qui culmine à 65 mètres, et les matériaux : de la brique de Toulouse associée à de la pierre blanche. Située sur un chemin de pèlerinage vers Compostelle, la basilique est inscrite à l'UNESCO.",
       "histoire": "Vous êtes devant Saint-Sernin, la plus grande église romane conservée en Europe.\n\nTout part d'un martyr. Saturnin, que l'occitan a transformé en Sarni puis en Sernin, est le premier évêque de Toulouse, mis à mort vers 250. Son corps est enterré hors des remparts et sa tombe est d'abord abritée sous un modeste oratoire en bois. Une basilique est ensuite entreprise vers la fin du IVᵉ siècle. L'édifice que vous voyez date d'une autre époque : sa construction commence vers 1080 et il est consacré en 1096.\n\nÀ ce moment-là, Toulouse est devenue une étape incontournable sur le chemin de Compostelle, et l'église accueille les pèlerins : deux passages servaient à leur circulation, l'un pour entrer, l'autre pour sortir. Près de la porte des Comtes, une niche abrite les restes de quatre comtes de Toulouse.\n\nObservez les matériaux : de la brique de Toulouse et de la pierre blanche. La nef mesure 115 mètres de long, et le clocher octogonal s'élève à 65 mètres.\n\nPendant la Révolution, le chapitre de Saint-Sernin est supprimé, mais l'église n'est ni transformée ni saccagée. Elle reste une simple collégiale jusqu'en 1878, date à laquelle elle reçoit le titre de basilique mineure. En 1889 sont achevées ses grandes orgues, signées Aristide Cavaillé-Coll, réputées dans le monde entier. Classée monument historique depuis 1840, la basilique fait partie des biens inscrits à l'UNESCO au titre des chemins de Saint-Jacques-de-Compostelle.",
       "sources": [
-        {"title": "Basilique Saint-Sernin de Toulouse (Techno-Science, d'après Wikipédia)", "url": "https://www.techno-science.net/fr/definitions/basilique-saint-sernin-de-toulouse"},
-        {"title": "Basilica of Saint-Sernin, Toulouse (Wikipedia)", "url": "https://en.wikipedia.org/wiki/Basilica_of_Saint-Sernin,_Toulouse"},
-        {"title": "Dépliant de la basilique Saint-Sernin", "url": "https://basilique-saint-sernin.fr/wp-content/uploads/2023/02/FR_DEPLIANT_TOURISME_ST_SERNIN_WEB.pdf"},
-        {"title": "St. Sernin Basilica (Sacred Destinations)", "url": "https://www.sacred-destinations.com/france/toulouse-st-sernin"}
+        {
+          "title": "Basilique Saint-Sernin de Toulouse (Techno-Science, d'après Wikipédia)",
+          "url": "https://www.techno-science.net/fr/definitions/basilique-saint-sernin-de-toulouse"
+        },
+        {
+          "title": "Basilica of Saint-Sernin, Toulouse (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Basilica_of_Saint-Sernin,_Toulouse"
+        },
+        {
+          "title": "Dépliant de la basilique Saint-Sernin",
+          "url": "https://basilique-saint-sernin.fr/wp-content/uploads/2023/02/FR_DEPLIANT_TOURISME_ST_SERNIN_WEB.pdf"
+        },
+        {
+          "title": "St. Sernin Basilica (Sacred Destinations)",
+          "url": "https://www.sacred-destinations.com/france/toulouse-st-sernin"
+        }
       ],
       "facts": [
         "La basilique est un sanctuaire bâti pour abriter les reliques de saint Saturnin, évêque de Toulouse, martyrisé en 250. Saint-Sernin est la plus grande église romane conservée en Europe.",
@@ -37,6 +123,11 @@
     },
     {
       "id": "jacobins",
+      "city": "toulouse",
+      "cats": [
+        "histoire",
+        "culture"
+      ],
       "name": "Couvent des Jacobins",
       "tagline": "Chef-d'œuvre du gothique méridional",
       "lat": 43.6035,
@@ -45,10 +136,22 @@
       "express": "Vous êtes aux Jacobins, un chef-d'œuvre du gothique méridional. Tout commence à Toulouse en 1215, quand saint Dominique fonde une petite communauté de prêcheurs pour combattre l'hérésie cathare. La construction de l'église débute en 1230 et elle est consacrée en 1285. À l'intérieur, la voûte en forme de palmier est célèbre. Depuis 1369, l'église abrite le corps de saint Thomas d'Aquin. Le couvent a aussi accueilli l'Université de Toulouse, fondée en 1229.",
       "histoire": "Vous êtes devant le couvent des Jacobins, chef-d'œuvre du gothique méridional.\n\nEn 1215, saint Dominique fonde à Toulouse une petite communauté de frères prêcheurs pour lutter contre l'hérésie cathare, alors puissante dans la région. Les dominicains s'installent sur des terrains acquis en 1229, grâce à l'argent donné par un riche capitoul, Pons de Capdenier. En 1230, ils commencent à bâtir une petite église ; le couvent sera construit en plusieurs campagnes, et l'église est consacrée en 1285.\n\nPourquoi « Jacobins » ? En France, les dominicains portent ce nom parce que leur premier couvent parisien se trouvait rue Saint-Jacques. On considère parfois le couvent de Toulouse comme l'église-mère de l'ordre, même s'il n'est pas le premier qu'ils aient construit.\n\nÀ l'intérieur, la voûte en forme de palmier est l'un des visages les plus célèbres du lieu, et le clocher octogonal compte sept étages. Depuis 1369, l'église abrite le corps de saint Thomas d'Aquin. Et dans ces bâtiments s'est aussi installée, pour plusieurs siècles, l'Université de Toulouse, fondée en 1229.\n\nLa Révolution chasse les dominicains : le couvent devient une caserne et un dépôt. Les reliques de Thomas d'Aquin sont transférées à Saint-Sernin et ne reviendront aux Jacobins qu'en 1974. Ne manquez pas la chapelle Saint-Antonin, dont le plafond est orné de fresques apocalyptiques du XIVᵉ siècle.",
       "sources": [
-        {"title": "Church of the Jacobins (Wikipedia)", "url": "https://en.wikipedia.org/wiki/Church_of_the_Jacobins"},
-        {"title": "Ensemble conventuel des Jacobins (Techno-Science, d'après Wikipédia)", "url": "https://www.techno-science.net/fr/definitions/ensemble-conventuel-des-jacobins"},
-        {"title": "Couvent des Jacobins (Lonely Planet)", "url": "https://www.lonelyplanet.com/pois/1192995"},
-        {"title": "Appel à projets, Couvent des Jacobins (Ville de Toulouse)", "url": "https://metropole.toulouse.fr/sites/toulouse-fr/files/2026-08/aap-jacobins-rc.pdf"}
+        {
+          "title": "Church of the Jacobins (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Church_of_the_Jacobins"
+        },
+        {
+          "title": "Ensemble conventuel des Jacobins (Techno-Science, d'après Wikipédia)",
+          "url": "https://www.techno-science.net/fr/definitions/ensemble-conventuel-des-jacobins"
+        },
+        {
+          "title": "Couvent des Jacobins (Lonely Planet)",
+          "url": "https://www.lonelyplanet.com/pois/1192995"
+        },
+        {
+          "title": "Appel à projets, Couvent des Jacobins (Ville de Toulouse)",
+          "url": "https://metropole.toulouse.fr/sites/toulouse-fr/files/2026-08/aap-jacobins-rc.pdf"
+        }
       ],
       "facts": [
         "En 1215, le futur saint Dominique fonde à Toulouse une petite communauté de prêcheurs pour combattre l'hérésie, forte et croissante.",
@@ -66,19 +169,39 @@
     },
     {
       "id": "capitole",
+      "city": "toulouse",
+      "cats": [
+        "histoire",
+        "culture"
+      ],
       "name": "Le Capitole",
       "tagline": "Le pouvoir municipal depuis plus de 800 ans",
       "lat": 43.6045,
-      "lon": 1.4440,
+      "lon": 1.444,
       "radius": 70,
       "express": "Vous êtes place du Capitole, au cœur du pouvoir toulousain depuis plus de huit siècles. Tout commence en 1190, quand les consuls de la ville cherchent un bâtiment pour abriter leur maison commune. Le nom vient de « capítol », le chapitre en occitan, c'est-à-dire l'assemblée des capitouls qui gouvernaient la cité. La grande façade que vous voyez date du XVIIIᵉ siècle, mais derrière elle se cachent un donjon du XVIᵉ siècle et la cour Henri IV. Le bâtiment abrite toujours la mairie, ainsi que le Théâtre du Capitole, installé là depuis 1737.",
       "histoire": "Vous êtes devant le Capitole, siège du pouvoir municipal depuis plus de huit cents ans. Son histoire commence en 1190, quand les consuls de Toulouse cherchent un bâtiment pour héberger la maison commune.\n\nLe nom a une double histoire. En occitan, le chapitre, l'assemblée des magistrats qui dirigeaient la ville, se dit « capítol » : ces magistrats sont les capitouls. Et en 1522, le greffier Pierre Salmon baptise le lieu Capitole, pour rappeler le Capitole de la Rome antique.\n\nLes siècles ont laissé leurs couches. La tour des archives, le donjon, est construite en 1525 pour protéger les archives et abriter le conseil des capitouls. Dans la cour Henri IV, le portail de Nicolas Bachelier date de 1546. Quant à la grande façade néoclassique, elle est l'œuvre de l'architecte Guillaume Cammas et s'achève en 1760. De toutes ces constructions successives, il ne reste que le donjon du XVIᵉ siècle, les galeries de la cour Henri IV du XVIIᵉ et cette façade du XVIIIᵉ.\n\nEn 1737, une salle de spectacle est aménagée : de là naîtront le Théâtre du Capitole et l'Orchestre national du Capitole de Toulouse. Le lieu a aussi été le témoin de grands épisodes : les troubles de 1562, quand les huguenots l'ont tenu avec des canons pris à l'ennemi, l'affaire Jean Calas en 1762, la Libération de la ville en 1944. Classé monument historique dès 1840, le donjon a été restauré au XIXᵉ siècle par Viollet-le-Duc.\n\nCherchez le donjon : c'est la partie la plus ancienne encore debout.",
       "sources": [
-        {"title": "Capitole de Toulouse (Wikipedia)", "url": "https://en.wikipedia.org/wiki/Capitole_de_Toulouse"},
-        {"title": "Les secrets du Capitole, livret-jeu (Ville de Toulouse)", "url": "https://metropole.toulouse.fr/sites/toulouse-fr/files/2026-09/explorateurs_capitole.pdf"},
-        {"title": "Capitole de Toulouse (Techno-Science, d'après Wikipédia)", "url": "https://www.techno-science.net/fr/definitions/capitole-de-toulouse"},
-        {"title": "Capitole de Toulouse (Wikipedia, miroir)", "url": "https://wiki.riteme.site/wiki/Place_du_Capitole"},
-        {"title": "Capitole de Toulouse (Audiala)", "url": "https://audiala.com/en/france/toulouse/capitol-gate"}
+        {
+          "title": "Capitole de Toulouse (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Capitole_de_Toulouse"
+        },
+        {
+          "title": "Les secrets du Capitole, livret-jeu (Ville de Toulouse)",
+          "url": "https://metropole.toulouse.fr/sites/toulouse-fr/files/2026-09/explorateurs_capitole.pdf"
+        },
+        {
+          "title": "Capitole de Toulouse (Techno-Science, d'après Wikipédia)",
+          "url": "https://www.techno-science.net/fr/definitions/capitole-de-toulouse"
+        },
+        {
+          "title": "Capitole de Toulouse (Wikipedia, miroir)",
+          "url": "https://wiki.riteme.site/wiki/Place_du_Capitole"
+        },
+        {
+          "title": "Capitole de Toulouse (Audiala)",
+          "url": "https://audiala.com/en/france/toulouse/capitol-gate"
+        }
       ],
       "facts": [
         "L'histoire de cet édifice commence en 1190 quand les consuls de Toulouse recherchent un bâtiment pour héberger la maison commune.",
@@ -97,19 +220,38 @@
     },
     {
       "id": "augustins",
+      "city": "toulouse",
+      "cats": [
+        "culture"
+      ],
       "name": "Musée des Augustins",
       "tagline": "Un couvent devenu l'un des plus anciens musées de France",
-      "lat": 43.6010,
-      "lon": 1.4460,
+      "lat": 43.601,
+      "lon": 1.446,
       "radius": 50,
       "express": "Le musée des Augustins occupe un ancien couvent construit à partir de 1309. Supprimé sous la Révolution, en 1793, il ouvre au public le 27 août 1795, très peu de temps après le Louvre : c'est l'un des plus anciens musées de France. Il conserve l'une des plus riches collections de sculpture romane au monde. Dans le cloître, cherchez un graffiti gravé pendant la Révolution : « Poulou 1792 ».",
       "histoire": "Vous êtes devant le musée des Augustins, le musée des beaux-arts de Toulouse, installé dans un ancien couvent.\n\nLes frères de l'ordre des ermites de saint Augustin bâtissent ce couvent à partir de 1309, avec l'autorisation du pape Clément V. Le cloître est achevé en 1396. La Révolution supprime le couvent en 1793. Deux ans plus tard, le 27 août 1795, le lieu ouvre comme musée, très peu de temps après le Louvre, ce qui en fait l'un des plus anciens musées de France. L'église est alors transformée en « Temple des Arts ».\n\nLe monument est classé en 1840. Dans le grand cloître, cherchez un graffiti de la Révolution gravé dans la pierre : « Poulou 1792 ». On y a aussi recréé un jardin médiéval, et on y voit des gargouilles venues du couvent des Cordeliers.\n\nLe musée conserve plus de 4 000 œuvres, du Moyen Âge au début du XXᵉ siècle, et l'une des plus riches collections de chapiteaux et de sculptures romanes au monde. Il a fait l'objet d'un important chantier de rénovation et rouvre progressivement ses espaces : vérifiez ce qui est accessible avant d'y entrer.",
       "sources": [
-        {"title": "Histoire du musée (musée des Augustins)", "url": "https://augustins.toulouse.fr/en/?p=5946"},
-        {"title": "Musée des Augustins (Techno-Science, d'après Wikipédia)", "url": "https://www.techno-science.net/fr/definitions/musee-des-augustins"},
-        {"title": "Le musée des Augustins (Toulouse Tourisme)", "url": "https://www.toulouse-tourisme.com/nos-incontournables/le-musee-des-augustins/"},
-        {"title": "Musée des Augustins (Wikipedia)", "url": "https://en.wikipedia.org/wiki/Mus%C3%A9e_des_Augustins"},
-        {"title": "Le musée des Augustins (Lonely Planet)", "url": "https://www.lonelyplanet.fr/destinations/france/toulouse/que-faire/le-musee-des-augustins"}
+        {
+          "title": "Histoire du musée (musée des Augustins)",
+          "url": "https://augustins.toulouse.fr/en/?p=5946"
+        },
+        {
+          "title": "Musée des Augustins (Techno-Science, d'après Wikipédia)",
+          "url": "https://www.techno-science.net/fr/definitions/musee-des-augustins"
+        },
+        {
+          "title": "Le musée des Augustins (Toulouse Tourisme)",
+          "url": "https://www.toulouse-tourisme.com/nos-incontournables/le-musee-des-augustins/"
+        },
+        {
+          "title": "Musée des Augustins (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Mus%C3%A9e_des_Augustins"
+        },
+        {
+          "title": "Le musée des Augustins (Lonely Planet)",
+          "url": "https://www.lonelyplanet.fr/destinations/france/toulouse/que-faire/le-musee-des-augustins"
+        }
       ],
       "facts": [
         "Le couvent des Augustins de Toulouse fut construit en 1309 avec l'autorisation du pape Clément V; maison de l'ordre des ermites de saint Augustin.",
@@ -126,19 +268,38 @@
     },
     {
       "id": "assezat",
+      "city": "toulouse",
+      "cats": [
+        "culture"
+      ],
       "name": "Hôtel d'Assézat",
       "tagline": "Une demeure Renaissance bâtie sur la fortune du pastel",
       "lat": 43.6004,
-      "lon": 1.4420,
+      "lon": 1.442,
       "radius": 40,
       "express": "L'hôtel d'Assézat est l'un des plus beaux hôtels particuliers de la Renaissance toulousaine, parmi les soixante-quatorze construits à Toulouse au XVIᵉ siècle. Il est édifié à partir de 1555 sur les plans de Nicolas Bachelier pour Pierre d'Assézat, un riche marchand de pastel devenu capitoul. Le pastel, une plante tinctoriale, a enrichi ces marchands avant que l'arrivée de l'indigo des Indes ne provoque son déclin. Aujourd'hui, l'hôtel abrite la fondation Bemberg.",
       "histoire": "Vous êtes devant l'hôtel d'Assézat, un joyau de la Renaissance toulousaine.\n\nPierre d'Assézat a fait fortune dans le pastel, une plante tinctoriale, puis a gravi les échelons de la société toulousaine jusqu'à devenir capitoul. Il fait bâtir cet hôtel à partir de 1555, sur les plans de Nicolas Bachelier, le plus grand architecte toulousain de la Renaissance. Son fils Dominique achève l'ouvrage entre 1560 et 1562. Pierre d'Assézat, lui, n'a pu profiter que par moments de sa demeure.\n\nDans la cour, la superposition des ordres d'architecture antiques fait référence au Colisée et au théâtre de Marcellus. Cet hôtel compte parmi les soixante-quatorze hôtels particuliers construits à Toulouse au XVIᵉ siècle, et il se distingue par sa taille et son décor exceptionnel.\n\nLe pastel, lui, connaît son déclin au XVIIᵉ siècle, quand l'indigo venu des Indes arrive en Europe. L'hôtel traverse les siècles : légué à la Ville de Toulouse par Théodore Ozenne en 1895, il accueille alors les sociétés savantes, dont l'Académie des Jeux floraux. Depuis l'ouverture au public de la collection en 1995, il abrite aussi la fondation Bemberg, qui présente la collection du riche collectionneur argentin Georges Bemberg : peintures, sculptures, arts graphiques et objets d'art du XVᵉ au milieu du XXᵉ siècle.",
       "sources": [
-        {"title": "Collection Bemberg, Hôtel d'Assézat (Ville de Toulouse)", "url": "https://metropole.toulouse.fr/annuaire/collection-bemberg-hotel-dassezat"},
-        {"title": "L'hôtel d'Assézat et la fondation Bemberg (Lonely Planet)", "url": "https://www.lonelyplanet.fr/destinations/france/toulouse/que-faire/lhotel-dassezat-et-la-fondation-bemberg"},
-        {"title": "Hôtel d'Assézat (Wikipedia)", "url": "https://en.wikipedia.org/wiki/H%C3%B4tel_d%27Ass%C3%A9zat"},
-        {"title": "L'hotel d'Assézat (Toulouse Tourisme)", "url": "https://www.toulouse-tourisme.com/it/?p=194159"},
-        {"title": "La Renaissance à Toulouse (Muñoz et Debuiche, Université de Lausanne)", "url": "https://serval.unil.ch/resource/serval:BIB_0A756D1C13C5.S001/REF"}
+        {
+          "title": "Collection Bemberg, Hôtel d'Assézat (Ville de Toulouse)",
+          "url": "https://metropole.toulouse.fr/annuaire/collection-bemberg-hotel-dassezat"
+        },
+        {
+          "title": "L'hôtel d'Assézat et la fondation Bemberg (Lonely Planet)",
+          "url": "https://www.lonelyplanet.fr/destinations/france/toulouse/que-faire/lhotel-dassezat-et-la-fondation-bemberg"
+        },
+        {
+          "title": "Hôtel d'Assézat (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/H%C3%B4tel_d%27Ass%C3%A9zat"
+        },
+        {
+          "title": "L'hotel d'Assézat (Toulouse Tourisme)",
+          "url": "https://www.toulouse-tourisme.com/it/?p=194159"
+        },
+        {
+          "title": "La Renaissance à Toulouse (Muñoz et Debuiche, Université de Lausanne)",
+          "url": "https://serval.unil.ch/resource/serval:BIB_0A756D1C13C5.S001/REF"
+        }
       ],
       "facts": [
         "Parmi les 74 hôtels particuliers construits au XVIᵉ siècle à Toulouse, l'hôtel d'Assézat fait partie des plus beaux.",
@@ -155,6 +316,10 @@
     },
     {
       "id": "daurade",
+      "city": "toulouse",
+      "cats": [
+        "histoire"
+      ],
       "name": "Basilique Notre-Dame de la Daurade",
       "tagline": "L'église aux mosaïques dorées et à la Vierge noire",
       "lat": 43.6008,
@@ -163,11 +328,26 @@
       "express": "Voici la basilique Notre-Dame de la Daurade, au bord de la Garonne. C'est l'une des plus anciennes églises de Toulouse : elle apparaît dans les textes dès le Vᵉ siècle. Son nom vient du latin « deaurata », dorée, à cause des mosaïques à fond d'or qui décoraient l'église primitive. À l'intérieur, la Vierge noire, surnommée Notre-Dame la Noire, est considérée comme la protectrice de la ville, particulièrement des femmes enceintes.",
       "histoire": "Vous êtes devant la basilique Notre-Dame de la Daurade, au bord de la Garonne, l'une des plus anciennes églises de Toulouse.\n\nD'après la tradition, elle remonte à l'année 410, quand l'empereur Honorius autorise la transformation des temples païens en églises ; le bâtiment d'origine aurait été un temple d'Apollon. L'église est ensuite décorée de mosaïques à fond d'or, d'où son nom, tiré du latin « deaurata », dorée. Au IXᵉ siècle, des moines bénédictins bâtissent un monastère à ses côtés.\n\nSon trésor le plus célèbre est une Vierge noire. Connue dès le Xᵉ siècle sous le nom de Notre-Dame la Brune, elle a été noircie par les nombreuses chandelles : dès le XVIᵉ siècle, on l'appelle Notre-Dame la Noire. La statue d'origine a brûlé et, en 1807, une nouvelle statue a été sculptée d'après les souvenirs que l'on en avait. La Vierge est considérée comme la protectrice de la ville, en particulier des femmes enceintes. En 2009 et 2010, des couturiers lui ont offert des robes, dont Christian Lacroix et Jean-Charles de Castelbajac.\n\nAu XVIIIᵉ siècle, un projet de reconstruction lancé en 1764 est arrêté pour permettre la construction des quais de la Garonne, car la basilique débordait sur leur emplacement. Élevée au rang de basilique mineure par Pie IX en 1876, classée monument historique en 1963, elle abrite aussi les restes du poète Pierre Goudouli.",
       "sources": [
-        {"title": "Basilique de la Daurade (Techno-Science, d'après Wikipédia)", "url": "https://www.techno-science.net/fr/definitions/basilique-de-la-daurade"},
-        {"title": "Notre-Dame de la Daurade (Structurae, d'après Wikipedia)", "url": "https://structurae.net/en/structures/eglise-notre-dame-de-la-daurade"},
-        {"title": "Basilique Notre-Dame de la Daurade (Routard)", "url": "https://www.routard.com/fr/guide/france/midi-toulousain-occitanie/toulouse/rives-de-la-garonne/basilique-notre-dame-de-la-daurade"},
-        {"title": "Basilique de la Daurade (Cityzeum)", "url": "https://www.cityzeum.com/basilique-de-la-daurade-notre-dame-de-la-daurade-sainte-marie-de-la-daurade-12748"},
-        {"title": "Notre-Dame de la Daurade (Visit Occitanie)", "url": "https://visit-occitanie.com/en/fiche/patrimoine-culturel/basilique-notre-dame-de-la-daurade-toulouse_TFOPCUMID031FS00961"}
+        {
+          "title": "Basilique de la Daurade (Techno-Science, d'après Wikipédia)",
+          "url": "https://www.techno-science.net/fr/definitions/basilique-de-la-daurade"
+        },
+        {
+          "title": "Notre-Dame de la Daurade (Structurae, d'après Wikipedia)",
+          "url": "https://structurae.net/en/structures/eglise-notre-dame-de-la-daurade"
+        },
+        {
+          "title": "Basilique Notre-Dame de la Daurade (Routard)",
+          "url": "https://www.routard.com/fr/guide/france/midi-toulousain-occitanie/toulouse/rives-de-la-garonne/basilique-notre-dame-de-la-daurade"
+        },
+        {
+          "title": "Basilique de la Daurade (Cityzeum)",
+          "url": "https://www.cityzeum.com/basilique-de-la-daurade-notre-dame-de-la-daurade-sainte-marie-de-la-daurade-12748"
+        },
+        {
+          "title": "Notre-Dame de la Daurade (Visit Occitanie)",
+          "url": "https://visit-occitanie.com/en/fiche/patrimoine-culturel/basilique-notre-dame-de-la-daurade-toulouse_TFOPCUMID031FS00961"
+        }
       ],
       "facts": [
         "L'église Notre-Dame de la Daurade est une basilique toulousaine le long des quais de la Garonne.",
@@ -186,6 +366,10 @@
     },
     {
       "id": "pont-neuf",
+      "city": "toulouse",
+      "cats": [
+        "histoire"
+      ],
       "name": "Le Pont-Neuf",
       "tagline": "Le plus ancien pont de Toulouse sur la Garonne",
       "lat": 43.5993,
@@ -194,11 +378,26 @@
       "express": "Le Pont-Neuf, malgré son nom, est le plus ancien pont encore debout sur la Garonne à Toulouse. Sa construction commence au milieu du XVIᵉ siècle, et il ne sera achevé qu'en 1632, après près de quatre-vingt-dix ans de travaux, par l'architecte parisien Jacques Lemercier. Long de 220 mètres, il repose sur sept arches. Contrairement aux ponts médiévaux, il n'a ni maisons ni boutiques sur son tablier. Dès le départ, il a été étudié pour résister aux assauts de la Garonne.",
       "histoire": "Vous êtes devant le Pont-Neuf, qui, malgré son nom, est le plus ancien pont encore debout sur la Garonne à Toulouse.\n\nAvant lui, la ville n'avait que des ponts de bois, dont le pont couvert de la Daurade, sans cesse endommagé par les crues. Un vestige d'une pile de ce pont est encore visible à côté du Pont-Neuf. Pour changer d'échelle, on lance au milieu du XVIᵉ siècle un chantier en pierre : les travaux débutent en 1541, ou en 1542 selon les sources, et ne s'achèveront qu'en 1632, près de quatre-vingt-dix ans plus tard. Commencé par des artisans toulousains, le pont est terminé par l'architecte parisien Jacques Lemercier.\n\nIl mesure 220 mètres de long et compte sept arches. C'est un pont d'avant-garde : comme le Pont-Neuf de Paris, il est libéré des maisons et des boutiques qui encombraient les ponts médiévaux. Dès le début, il a été étudié pour résister aux assauts de la Garonne.\n\nÀ son entrée se dressait autrefois un arc de triomphe de Jules Hardouin-Mansart, détruit en 1860. L'ingénieur en chef des Ponts et Chaussées Fernand de Dartein jugeait que c'était l'un des plus beaux ponts de France, et le plus beau du Midi.\n\nPlacez-vous au milieu du pont et observez les piles : certaines sont percées d'un oculus.",
       "sources": [
-        {"title": "Pont-Neuf de Toulouse (Techno-Science, d'après Wikipédia)", "url": "https://www.techno-science.net/fr/definitions/pont-neuf-de-toulouse"},
-        {"title": "Pont-Neuf (Structurae, d'après Wikipédia)", "url": "https://structurae.net/fr/ouvrages/pont-neuf-1632"},
-        {"title": "Pont Neuf, Toulouse (Wikiwand)", "url": "https://www.wikiwand.com/en/articles/Pont_Neuf,_Toulouse"},
-        {"title": "Pont Neuf (Structurae, version allemande)", "url": "https://structurae.net/de/bauwerke/20004650"},
-        {"title": "Pont Neuf (AAA TripCanvas)", "url": "https://www.aaa.com/tripcanvas/attraction/pont-neuf-VA2265"}
+        {
+          "title": "Pont-Neuf de Toulouse (Techno-Science, d'après Wikipédia)",
+          "url": "https://www.techno-science.net/fr/definitions/pont-neuf-de-toulouse"
+        },
+        {
+          "title": "Pont-Neuf (Structurae, d'après Wikipédia)",
+          "url": "https://structurae.net/fr/ouvrages/pont-neuf-1632"
+        },
+        {
+          "title": "Pont Neuf, Toulouse (Wikiwand)",
+          "url": "https://www.wikiwand.com/en/articles/Pont_Neuf,_Toulouse"
+        },
+        {
+          "title": "Pont Neuf (Structurae, version allemande)",
+          "url": "https://structurae.net/de/bauwerke/20004650"
+        },
+        {
+          "title": "Pont Neuf (AAA TripCanvas)",
+          "url": "https://www.aaa.com/tripcanvas/attraction/pont-neuf-VA2265"
+        }
       ],
       "facts": [
         "Le Pont-Neuf est la plus ancienne pont encore conservé sur la Garonne à Toulouse (die älteste noch erhaltene Brücke).",
@@ -215,6 +414,10 @@
     },
     {
       "id": "hotel-dieu",
+      "city": "toulouse",
+      "cats": [
+        "histoire"
+      ],
       "name": "Hôtel-Dieu Saint-Jacques",
       "tagline": "Hôpital de pèlerins devenu site UNESCO",
       "lat": 43.5992,
@@ -223,11 +426,26 @@
       "express": "Sur la rive gauche de la Garonne, l'Hôtel-Dieu Saint-Jacques est un ancien hôpital qui a accueilli pauvres et pèlerins pendant des siècles. Il naît vers 1130, quand le prieur de la Daurade fonde l'hôpital Sainte-Marie pour les pauvres. Toulouse étant sur le chemin de Saint-Jacques-de-Compostelle, le lieu s'ouvre aux pèlerins, d'où les coquilles Saint-Jacques qui le décorent encore. Le dernier malade est parti en 1987 ; aujourd'hui, c'est le centre administratif du CHU, et l'on y trouve le musée d'histoire de la médecine. L'UNESCO l'a inscrit en 1998.",
       "histoire": "Vous voyez l'Hôtel-Dieu Saint-Jacques, sur la rive gauche de la Garonne, avec sa majestueuse façade de brique.\n\nTout commence vers 1130, quand le prieur de la Daurade fonde l'hôpital Sainte-Marie pour accueillir les pauvres. Il est relié au monastère par le pont de la Daurade, construit en 1179, aujourd'hui disparu. Au XIIIᵉ siècle, un second établissement, l'hôpital Novel, est géré par la confrérie de Saint-Jacques pour recevoir les pèlerins en route vers Compostelle. Les deux sont réunis au XIVᵉ siècle sous le nom d'hôpital Saint-Jacques.\n\nSelon certaines sources, c'est vers 1554, quand l'abandon du pont de la Daurade suit la construction du Pont-Neuf, que le site prend le nom d'Hôtel-Dieu. Aux XVIIᵉ et XVIIIᵉ siècles, il s'agrandit et devient le plus grand hôpital de Toulouse. Regardez bien les murs : de nombreuses coquilles Saint-Jacques le décorent encore.\n\nEn 1987, le dernier malade quitte les lieux, et l'Hôtel-Dieu devient le centre administratif du CHU de Toulouse. Il abrite aussi le musée d'histoire de la médecine. Depuis 1998, il fait partie des sites inscrits par l'UNESCO au titre des chemins de Compostelle.",
       "sources": [
-        {"title": "Hôtel-Dieu Saint-Jacques (Ville de Toulouse)", "url": "https://metropole.toulouse.fr/annuaire/hotel-dieu-saint-jacques"},
-        {"title": "Hôtel Dieu, Toulouse (RYO)", "url": "https://ryo.co/fr/destinations/france/lieux/hotel-dieu-toulouse/"},
-        {"title": "Hôtel-Dieu (Musée du Patrimoine)", "url": "https://museedupatrimoine.fr/hotel-dieu-haute-garonne/42366.html?lang=fr"},
-        {"title": "Hôtel-Dieu, salles patrimoniales (Guide Tourisme France)", "url": "https://www.guide-tourisme-france.com/VISITER/hotel-dieu-saint-jacques-salles-patrimoniales-chapelle--29187.htm"},
-        {"title": "Toulouse, Hôtel-Dieu (Ipernity)", "url": "https://www.ipernity.com/tag/323415/keyword/599355"}
+        {
+          "title": "Hôtel-Dieu Saint-Jacques (Ville de Toulouse)",
+          "url": "https://metropole.toulouse.fr/annuaire/hotel-dieu-saint-jacques"
+        },
+        {
+          "title": "Hôtel Dieu, Toulouse (RYO)",
+          "url": "https://ryo.co/fr/destinations/france/lieux/hotel-dieu-toulouse/"
+        },
+        {
+          "title": "Hôtel-Dieu (Musée du Patrimoine)",
+          "url": "https://museedupatrimoine.fr/hotel-dieu-haute-garonne/42366.html?lang=fr"
+        },
+        {
+          "title": "Hôtel-Dieu, salles patrimoniales (Guide Tourisme France)",
+          "url": "https://www.guide-tourisme-france.com/VISITER/hotel-dieu-saint-jacques-salles-patrimoniales-chapelle--29187.htm"
+        },
+        {
+          "title": "Toulouse, Hôtel-Dieu (Ipernity)",
+          "url": "https://www.ipernity.com/tag/323415/keyword/599355"
+        }
       ],
       "facts": [
         "Situé sur la rive gauche de la Garonne, l'Hôtel-Dieu Saint-Jacques doit son origine à la fondation vers 1130, par le prieur de la Daurade, de l'hôpital Sainte-Marie destiné à l'accueil des pauvres.",
@@ -242,6 +460,10 @@
     },
     {
       "id": "abattoirs",
+      "city": "toulouse",
+      "cats": [
+        "culture"
+      ],
       "name": "Les Abattoirs",
       "tagline": "D'anciens abattoirs devenus musée d'art contemporain",
       "lat": 43.6009,
@@ -250,11 +472,26 @@
       "express": "Les Abattoirs, aujourd'hui musée d'art moderne et contemporain, étaient bien à l'origine des abattoirs. Le bâtiment est construit entre 1828 et 1831 par l'architecte Urbain Vitry, qui s'est inspiré de la basilique Saint-Sernin. En 1991, la Ville et la Région décident d'en faire un espace d'art, inauguré en 2000. Il réunit un musée et le Frac, la collection régionale d'art contemporain, soit environ 3 880 œuvres.",
       "histoire": "Vous êtes devant les Abattoirs, un musée d'art moderne et contemporain qui était bien, à l'origine, un abattoir.\n\nEn 1828, l'architecte Urbain Vitry, qui deviendra plus tard architecte en chef de la ville de Toulouse, reçoit la commande d'un grand bâtiment en bordure de la Garonne. Les travaux durent de 1828 à 1831. Le plan est simple et efficace : un bâtiment principal avec un grand espace couvert au centre, des pavillons d'entrée, des bouveries et des bergeries de chaque côté, et un hémicycle de toitures en sheds à l'arrière. Selon le parcours officiel du musée, Vitry a conçu l'ensemble sur le modèle de la basilique Saint-Sernin.\n\nLe 2 décembre 1991, la Ville de Toulouse et la Région Midi-Pyrénées décident d'y créer un espace d'art moderne et contemporain. Les architectes Antoine Stinco et Rémi Papillault préservent l'unité extérieure du bâtiment, mémoire du lieu, et adaptent l'intérieur aux contraintes d'un musée. Le lieu est inauguré le 23 juin 2000. Il réunit un musée et le Frac Occitanie, une collection régionale d'art contemporain, soit environ 3 880 œuvres. Ses espaces hauts et ouverts se prêtent à l'exposition d'œuvres monumentales.",
       "sources": [
-        {"title": "Parcours d'œuvres autour des Abattoirs (Les Abattoirs, 2026)", "url": "https://www.lesabattoirs.org/wp-content/uploads/2026/05/parcours-exterieur-maj-mars-2026.pdf"},
-        {"title": "Les Abattoirs (Cityzeum)", "url": "https://www.cityzeum.com/les-abattoirs"},
-        {"title": "Les Abattoirs (Wikipedia)", "url": "https://en.wikipedia.org/wiki/Les_Abattoirs"},
-        {"title": "Les abattoirs (Lonely Planet)", "url": "https://www.lonelyplanet.fr/destinations/france/toulouse/que-faire/les-abattoirs"},
-        {"title": "A historical monument (Les Abattoirs)", "url": "https://lesabattoirs.org/en/a-historical-monument"}
+        {
+          "title": "Parcours d'œuvres autour des Abattoirs (Les Abattoirs, 2026)",
+          "url": "https://www.lesabattoirs.org/wp-content/uploads/2026/05/parcours-exterieur-maj-mars-2026.pdf"
+        },
+        {
+          "title": "Les Abattoirs (Cityzeum)",
+          "url": "https://www.cityzeum.com/les-abattoirs"
+        },
+        {
+          "title": "Les Abattoirs (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Les_Abattoirs"
+        },
+        {
+          "title": "Les abattoirs (Lonely Planet)",
+          "url": "https://www.lonelyplanet.fr/destinations/france/toulouse/que-faire/les-abattoirs"
+        },
+        {
+          "title": "A historical monument (Les Abattoirs)",
+          "url": "https://lesabattoirs.org/en/a-historical-monument"
+        }
       ],
       "facts": [
         "Les Abattoirs, Musée - Frac Occitanie Toulouse, combine un musée d'art moderne et contemporain et une collection régionale d'art contemporain (Frac); environ 3 880 œuvres.",
@@ -269,6 +506,11 @@
     },
     {
       "id": "cathedrale",
+      "city": "toulouse",
+      "cats": [
+        "histoire",
+        "wtf"
+      ],
       "name": "Cathédrale Saint-Étienne",
       "tagline": "La cathédrale inachevée",
       "lat": 43.5999,
@@ -277,11 +519,26 @@
       "express": "La cathédrale Saint-Étienne est la cathédrale inachevée de Toulouse, et cela se voit : le chœur a été construit sans tenir compte de la nef, qui devait être détruite, ce qui donne un ensemble très hétérogène. La nef, de style gothique méridional, date du début du XIIIᵉ siècle. Le chœur, d'inspiration gothique du nord, est commencé après 1275. Levez les yeux vers l'orgue, suspendu à 20 mètres de hauteur comme un nid d'hirondelle.",
       "histoire": "Vous êtes devant la cathédrale Saint-Étienne, que l'on pourrait surnommer la cathédrale inachevée de Toulouse.\n\nSes origines sont mal connues, mais son histoire est faite de reconstructions. Au début du XIIIᵉ siècle, on élève la nef, dite raymondine, dans le style gothique méridional, sur les vestiges de la cathédrale romane. Quelques décennies plus tard, l'évêque Bertrand de L'Isle-Jourdain veut une cathédrale qui rivaliserait avec les grandes églises gothiques du nord de la France. Un chœur monumental est lancé après 1275, mais sans tenir compte de la nef existante, qui devait être détruite. Le résultat est un ensemble très hétérogène, que les siècles suivants ont tenté de terminer, notamment au XVIIIᵉ siècle.\n\nCherchez trois détails. L'orgue d'abord, suspendu à 20 mètres de haut « en nid d'hirondelle », avec un buffet du début du XVIIᵉ siècle, le plus ancien de Toulouse. Les vitraux ensuite : c'est la seule église de la ville à avoir conservé ses vitraux d'origine, dont les plus anciens datent du XIVᵉ siècle. Et le clocher roman fortifié, qui abrite un carillon.\n\nDu cloître, détruit à la Révolution, les chapiteaux les plus remarquables sont aujourd'hui conservés au musée des Augustins. Classée monument historique en 1862, la cathédrale est aussi, dit-on, le lieu de repos de Pierre-Paul Riquet, le créateur du canal du Midi.",
       "sources": [
-        {"title": "Cathédrale Saint-Étienne (Ville de Toulouse)", "url": "https://metropole.toulouse.fr/annuaire/cathedrale-saint-etienne"},
-        {"title": "Cathédrale Saint-Étienne de Toulouse (Techno-Science, d'après Wikipédia)", "url": "https://www.techno-science.net/fr/definitions/cathedrale-saint-etienne-de-toulouse"},
-        {"title": "Cathédrale Saint-Étienne (ministère de la Culture)", "url": "https://www.culture.gouv.fr/switchToLanguage/104913/fre-FR"},
-        {"title": "Cathédrale Saint-Étienne (Monumentum, base Mérimée)", "url": "https://monumentum.fr/monument-historique/PA00094498/toulouse-cathedrale-saint-etienne/edit-localisation"},
-        {"title": "Toulouse Cathedral (Wikipedia)", "url": "https://en.wikipedia.org/wiki/Toulouse_Cathedral"}
+        {
+          "title": "Cathédrale Saint-Étienne (Ville de Toulouse)",
+          "url": "https://metropole.toulouse.fr/annuaire/cathedrale-saint-etienne"
+        },
+        {
+          "title": "Cathédrale Saint-Étienne de Toulouse (Techno-Science, d'après Wikipédia)",
+          "url": "https://www.techno-science.net/fr/definitions/cathedrale-saint-etienne-de-toulouse"
+        },
+        {
+          "title": "Cathédrale Saint-Étienne (ministère de la Culture)",
+          "url": "https://www.culture.gouv.fr/switchToLanguage/104913/fre-FR"
+        },
+        {
+          "title": "Cathédrale Saint-Étienne (Monumentum, base Mérimée)",
+          "url": "https://monumentum.fr/monument-historique/PA00094498/toulouse-cathedrale-saint-etienne/edit-localisation"
+        },
+        {
+          "title": "Toulouse Cathedral (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Toulouse_Cathedral"
+        }
       ],
       "facts": [
         "L'histoire de cette église est tellement émaillée de modifications qu'on pourrait la surnommer la cathédrale inachevée. On ne connaît pas les origines de la cathédrale.",
@@ -299,6 +556,10 @@
     },
     {
       "id": "port-saint-sauveur",
+      "city": "toulouse",
+      "cats": [
+        "histoire"
+      ],
       "name": "Port Saint-Sauveur",
       "tagline": "Le canal du Midi en plein centre-ville",
       "lat": 43.5953,
@@ -307,10 +568,22 @@
       "express": "Vous êtes au port Saint-Sauveur, sur le canal du Midi, ce chef-d'œuvre de l'ingénieur Pierre-Paul Riquet qui relie l'Atlantique à la Méditerranée. Le canal est construit sous Louis XIV, entre 1666 et 1681. Le port est développé à partir de 1830, quand le port voisin de Saint-Étienne, devenu trop petit, ne suffit plus au trafic. On y chargeait et déchargeait des marchandises. Aujourd'hui, il accueille plaisanciers et cyclotouristes.",
       "histoire": "Vous êtes au port Saint-Sauveur, l'un des deux ports de Toulouse sur le canal du Midi, classé au patrimoine mondial de l'UNESCO.\n\nLe canal, conçu par l'ingénieur Pierre-Paul Riquet sous Louis XIV, est construit entre 1666 et 1681 pour relier l'Atlantique à la Méditerranée. À Toulouse, le canal est élargi en 1708 pour créer le port Saint-Étienne. Le port Saint-Sauveur, son prolongement naturel, est développé à partir de 1830, quand le premier devient trop petit pour tout le trafic. Les sources divergent sur la date exacte de sa première création.\n\nOn y chargeait et déchargeait les marchandises, et des charpentiers y réparaient les bateaux. Le port tient son nom de la chapelle Saint-Sauveur, toute proche, où les bateliers venaient prier. Un orphelinat tenu par des sœurs franciscaines y est construit en 1862, pour accueillir les enfants dont les parents naviguaient sur le canal.\n\nLe transport sur le canal décline vers le milieu du XIXᵉ siècle : la Compagnie du canal du Midi met fin au service de navigation accélérée en 1858. Aujourd'hui, le port est tourné vers les loisirs : il accueille plaisanciers et cyclotouristes en plein centre-ville.",
       "sources": [
-        {"title": "Port Saint-Sauveur (canal-du-midi.com)", "url": "https://www.canal-du-midi.com/en/explore/along-the-waters/toulouse-to-naurouze/port-st-sauveur"},
-        {"title": "Les douze visages du canal du Midi (Archives de Toulouse)", "url": "https://www.archives.toulouse.fr/documents/10184/331515/12visagesducanal_dossierdepresse.pdf/1b9f2d46-3da9-4101-aa78-75fa5c83203a"},
-        {"title": "Port Saint-Sauveur (Audiala)", "url": "https://audiala.com/en/france/toulouse/port-saint-sauveur/"},
-        {"title": "Port Saint-Sauveur (franco.wiki, d'après Wikipédia)", "url": "https://franco.wiki/fr/Port_Saint-Sauveur.html"}
+        {
+          "title": "Port Saint-Sauveur (canal-du-midi.com)",
+          "url": "https://www.canal-du-midi.com/en/explore/along-the-waters/toulouse-to-naurouze/port-st-sauveur"
+        },
+        {
+          "title": "Les douze visages du canal du Midi (Archives de Toulouse)",
+          "url": "https://www.archives.toulouse.fr/documents/10184/331515/12visagesducanal_dossierdepresse.pdf/1b9f2d46-3da9-4101-aa78-75fa5c83203a"
+        },
+        {
+          "title": "Port Saint-Sauveur (Audiala)",
+          "url": "https://audiala.com/en/france/toulouse/port-saint-sauveur/"
+        },
+        {
+          "title": "Port Saint-Sauveur (franco.wiki, d'après Wikipédia)",
+          "url": "https://franco.wiki/fr/Port_Saint-Sauveur.html"
+        }
       ],
       "facts": [
         "Le canal du Midi a été conçu sous Louis XIV et réalisé par Pierre-Paul Riquet; construit entre 1666 et 1681; il relie l'océan Atlantique à la mer Méditerranée.",
@@ -320,6 +593,838 @@
         "Le port doit son nom à la chapelle Saint-Sauveur voisine où les bateliers venaient prier; un orphelinat tenu par les sœurs franciscaines y fut construit en 1862 pour accueillir les enfants dont les parents naviguaient sur le canal.",
         "Le transport sur le canal a connu un déclin rapide et la Compagnie du canal du Midi a mis fin au service de navigation accélérée en 1858 (XIXᵉ siècle).",
         "Le port Saint-Sauveur accueille aujourd'hui les plaisanciers et les cyclotouristes; canal classé au patrimoine mondial de l'UNESCO."
+      ]
+    },
+    {
+      "id": "bazacle",
+      "city": "toulouse",
+      "cats": [
+        "anecdote",
+        "histoire"
+      ],
+      "name": "Le Bazacle",
+      "tagline": "Le berceau de la société par actions ?",
+      "lat": 43.6055,
+      "lon": 1.434,
+      "radius": 70,
+      "express": "Vous êtes au Bazacle, au bord de la Garonne. Ici tournaient autrefois les moulins d'une drôle d'entreprise : la Société des moulins du Bazacle. Ses parts se vendaient librement, sans demander l'avis des autres propriétaires. Pour beaucoup d'historiens, c'est l'une des toutes premières sociétés par actions au monde, avec une charte souvent datée de 1372, bien avant les grandes compagnies hollandaises. En 1888, les moulins sont devenus une centrale électrique. Montez sur la terrasse : la vue sur le fleuve est superbe.",
+      "histoire": "Vous êtes au Bazacle, là où la Garonne se calme derrière une longue chaussée. Ce coin tranquille cache une histoire économique étonnante.\n\nAu Moyen Âge, des moulins à grain tournent ici grâce au courant. Leurs propriétaires se regroupent dans une société, l'Honor dels molis del Bazacle. Sa particularité : chacun peut vendre ses parts librement, sans l'accord des autres. Pendant longtemps, les spécialistes ont donné le titre de première société par actions à la Compagnie hollandaise des Indes orientales, fondée au début du XVIIᵉ siècle. Mais en 1952, l'historien Germain Sicard publie une thèse qui situe la naissance de la société toulousaine vers 1372. Les sources divergent sur la date exacte, et certaines la font remonter plus haut encore, mais l'idée est restée : l'entreprise moderne serait un peu née à Toulouse.\n\nLa société fonctionne presque sans changement du XIVᵉ au XIXᵉ siècle. En 1888, les moulins sont transformés en centrale hydroélectrique, et l'ensemble finit par rejoindre Électricité de France.\n\nAujourd'hui, l'Espace EDF Bazacle est ouvert au public. Cherchez la passe à poissons, construite en 1989 : par un hublot, avec un peu de chance, vous verrez les poissons remonter le fleuve.",
+      "sources": [
+        {
+          "title": "Bazacle Milling Company (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Bazacle_Milling_Company"
+        },
+        {
+          "title": "L'entreprise moderne est née à Toulouse (Toulouse School of Economics)",
+          "url": "https://www.tse-fr.eu/fr/column/lentreprise-moderne-est-nee-toulouse"
+        },
+        {
+          "title": "Un peu d'histoire (Espace EDF Bazacle)",
+          "url": "https://www.edf.fr/groupe-edf/agir-en-entreprise-responsable/fondation-et-mecenat-patrimoine-sport/espace-edf-bazacle/nos-espaces"
+        },
+        {
+          "title": "Espaces EDF Bazacle (Tourisme Occitanie)",
+          "url": "https://www.tourisme-occitanie.com/fr/fiche/patrimoine-culturel/espaces-edf-bazacle-toulouse_TFOPCUMID031FS0003B/"
+        },
+        {
+          "title": "The fascinating 600 year history of a French mill (Yale SOM)",
+          "url": "https://som.yale.edu/news/2014/08/the-fascinating-600-year-history-of-french-mill-the-world-s-oldest-shareholding-company"
+        }
+      ],
+      "facts": [
+        "Société des moulins du Bazacle, souvent présentée comme la première société par actions; charte de 1372 dite « Honor dels molis del Bazacle ».",
+        "Les parts étaient librement cessibles sans le consentement des autres actionnaires.",
+        "Thèse de l'historien Germain Sicard en 1952 situant la naissance de la société en 1372; d'autres sources donnent 1374 ou une date plus ancienne (XIIᵉ ou XIIIᵉ siècle): les sources divergent.",
+        "Les spécialistes attribuaient auparavant le titre à la Compagnie hollandaise des Indes orientales, fondée au début du XVIIᵉ siècle.",
+        "La société fonctionne presque inchangée du XIVᵉ au XIXᵉ siècle; en 1888 les moulins sont convertis en centrale hydroélectrique; aujourd'hui filiale d'EDF.",
+        "Espace EDF Bazacle, 11 quai Saint-Pierre: entrée et visites gratuites; terrasse avec vue sur la Garonne; passe à poissons construite en 1989, visible par un hublot."
+      ]
+    },
+    {
+      "id": "chateau-deau",
+      "city": "toulouse",
+      "cats": [
+        "wtf",
+        "culture"
+      ],
+      "name": "Le Château d'Eau",
+      "tagline": "Une tour à eau devenue temple de la photo",
+      "lat": 43.5982,
+      "lon": 1.4368,
+      "radius": 40,
+      "express": "Cette drôle de tour ronde en brique, au pied du Pont-Neuf, n'a jamais été un château. C'est un château d'eau du XIXᵉ siècle, qui servait à alimenter les fontaines publiques de Toulouse. En 1974, le photographe Jean Dieuzaide en fait la première galerie municipale de photographie, inaugurée avec une exposition de Robert Doisneau, en sa présence. Un réservoir d'eau transformé en lieu d'images : c'est tout Toulouse.",
+      "histoire": "Vous êtes devant le Château d'Eau, sur la rive gauche, juste au bout du Pont-Neuf. Ne cherchez ni donjon ni chevalier : le mot château désigne ici un réservoir.\n\nCette tour du XIXᵉ siècle avait une mission très concrète : alimenter les fontaines publiques de la ville. Le bâtiment et sa station de pompage sont protégés au titre des monuments historiques depuis le 28 septembre 1987.\n\nSa seconde vie commence en 1974. Le photographe toulousain Jean Dieuzaide y crée la première galerie municipale de photographie. Pour l'inauguration, il frappe fort : une exposition de Robert Doisneau, en présence de l'artiste. De 1985 à 2019, la galerie est gérée par une association, puis elle revient à la Ville en 2020.\n\nAprès un an et demi de chantier, le lieu a rouvert ses portes le 22 novembre 2025. Prenez le temps de regarder la forme du bâtiment : une tour pensée pour l'eau, qui accueille aujourd'hui des photographies du monde entier.",
+      "sources": [
+        {
+          "title": "Le Château d'Eau, pôle photographique de Toulouse (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Le_ch%C3%A2teau_d%27eau,_p%C3%B4le_photographique_de_Toulouse"
+        },
+        {
+          "title": "Le Château d'Eau (Ville de Toulouse)",
+          "url": "https://metropole.toulouse.fr/annuaire/le-chateau-deau"
+        },
+        {
+          "title": "Le Château d'Eau (Toulouse Tourisme)",
+          "url": "https://www.toulouse-tourisme.com/activite/le-chateau-deau/"
+        },
+        {
+          "title": "Le Château d'Eau de Jean Dieuzaide (Culture 31)",
+          "url": "https://blog.culture31.com/2012/07/14/le-chateau-deau-de-jean-dieuzaide-a-ex-nugis-seria-la-photographie-comme-art-a-part-entiere/"
+        }
+      ],
+      "facts": [
+        "Château d'eau du XIXᵉ siècle, près du cours Dillon, au pied du Pont-Neuf; destiné autrefois à alimenter les fontaines publiques de la ville.",
+        "Le bâtiment et sa station de pompage sont inscrits monuments historiques depuis le 28 septembre 1987.",
+        "En 1974, Jean Dieuzaide crée la première galerie municipale de photographie, inaugurée avec une exposition de Robert Doisneau, en présence de l'artiste.",
+        "Gestion confiée à l'association PACE de 1985 à 2019; retour en gestion municipale en 2020.",
+        "Le samedi 22 novembre 2025, le Château d'Eau rouvre ses portes après un an et demi de chantier."
+      ]
+    },
+    {
+      "id": "halle-machine",
+      "city": "toulouse",
+      "cats": [
+        "wtf",
+        "culture"
+      ],
+      "name": "Halle de La Machine",
+      "tagline": "Un minotaure mécanique de 47 tonnes",
+      "lat": 43.5748,
+      "lon": 1.4886,
+      "radius": 80,
+      "express": "Ici vit Astérion, un minotaure mécanique de 47 tonnes, haut d'environ 14 mètres. Il a été imaginé par François Delarozière et sa compagnie de théâtre de rue, La Machine. La Halle a ouvert en novembre 2018 sur l'ancienne piste de l'Aéropostale, à Montaudran. Le plus fou : on peut monter sur son dos et se promener à bord pendant qu'il marche. Si vous le voyez sortir, écoutez le bruit de ses vérins.",
+      "histoire": "Vous êtes à Montaudran, devant la Halle de La Machine. Le lieu abrite un résident hors norme : Astérion, un minotaure mécanique.\n\nSes mesures donnent le vertige : 47 tonnes, environ 14 mètres de haut selon la Ville et le Guinness des records, 13 mètres selon d'autres documents. Les sources divergent, mais une chose est sûre, il est immense. Il est l'œuvre de François Delarozière et de La Machine, une compagnie de théâtre de rue fondée en 1999. En 2018, Astérion a déambulé dans les rues de Toulouse lors d'un grand spectacle, avant de s'installer ici.\n\nLe décor n'est pas choisi au hasard. La Halle fait partie de la Piste des Géants, aménagée sur l'ancienne piste de l'Aéropostale, ces pionniers qui transportaient le courrier par avion. Le dernier vol de l'ancien aéroport de Montaudran date de 2003. La Halle a été inaugurée du 9 au 11 novembre 2018.\n\nLe plus étonnant reste l'expérience : on peut grimper dans le temple posé sur son dos et voyager à bord pendant qu'il marche. Si une sortie est prévue, regardez ses yeux et écoutez le souffle de la machine.",
+      "sources": [
+        {
+          "title": "Halle de La Machine (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Halle_de_La_Machine"
+        },
+        {
+          "title": "Astérion, un Minotaure à Toulouse (Ville de Toulouse)",
+          "url": "https://metropole.toulouse.fr/actualites/asterion-un-minotaure-toulouse"
+        },
+        {
+          "title": "Dossier de presse 2023 (Halle de La Machine)",
+          "url": "https://www.halledelamachine.fr/wp-content/uploads/2024/04/DOSSIER_PRESSE_HDLM_FR_2023_web.pdf"
+        },
+        {
+          "title": "Tallest mechanical puppet (Guinness World Records)",
+          "url": "https://www.guinnessworldrecords.com/world-records/732785-tallest-mechanical-puppet"
+        }
+      ],
+      "facts": [
+        "Astérion: 47 tonnes, jusqu'à 14 mètres de haut (Ville de Toulouse, Guinness), 13 mètres selon le dossier de presse: les sources divergent.",
+        "Créé par François Delarozière et la compagnie La Machine, fondée en 1999.",
+        "Spectacle dans les rues de Toulouse en 2018; Astérion réside ensuite à la Halle, à Montaudran.",
+        "On peut monter dans le temple sur son dos pendant qu'il marche.",
+        "La Halle fait partie de la Piste des Géants, sur l'ancienne piste de l'Aéropostale; dernier vol de l'aéroport de Montaudran en 2003.",
+        "Inauguration de la Halle du 9 au 11 novembre 2018."
+      ]
+    },
+    {
+      "id": "taur",
+      "city": "toulouse",
+      "cats": [
+        "anecdote",
+        "histoire"
+      ],
+      "name": "Notre-Dame du Taur",
+      "tagline": "Là où la corde du taureau aurait cédé",
+      "lat": 43.6061,
+      "lon": 1.4427,
+      "radius": 40,
+      "express": "Le nom de cette rue cache une scène terrible. Taur veut dire taureau en occitan. Selon la légende, vers 250, saint Saturnin, premier évêque de Toulouse, fut attaché à un taureau qui le traîna à travers la ville. La corde aurait cédé ici même, à l'endroit de cette église. Regardez sa façade : un grand clocher-mur en brique, typique de la région. Elle est monument historique depuis 1840.",
+      "histoire": "Vous êtes rue du Taur, devant l'église Notre-Dame du Taur, entre la place du Capitole et Saint-Sernin.\n\nTout commence par une légende sanglante. Vers 250, Saturnin, que l'on appelle Sernin, premier évêque de Toulouse, refuse de sacrifier aux dieux païens. Il est attaché à un taureau, qui le traîne violemment à travers la ville. Selon le récit, la corde finit par se rompre à l'endroit où se dresse aujourd'hui l'église. Taur signifie taureau en occitan, et le supplice a donné son nom à toute la rue.\n\nLa tradition place ici la première sépulture du saint. Aucune fouille ne l'a pourtant confirmée : c'est une histoire à écouter comme une légende. L'église actuelle date du XIVᵉ siècle. Son nom aussi a une histoire : selon une source, elle s'appelait Saint-Sernin du Taur jusqu'à l'arrivée d'une statue de la Vierge en 1783. Les sources ne sont pas toutes d'accord sur ce point.\n\nAvant de repartir, levez les yeux vers la façade. C'est un clocher-mur en brique : un simple mur percé d'ouvertures pour les cloches, très typique du Midi. L'église est classée monument historique depuis 1840.",
+      "sources": [
+        {
+          "title": "Notre-Dame du Taur (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Notre-Dame_du_Taur"
+        },
+        {
+          "title": "Notre-Dame du Taur (Toulouse Tourisme)",
+          "url": "https://www.toulouse-tourisme.com/activite/notre-dame-du-taur/"
+        },
+        {
+          "title": "Notre-Dame du Taur (Tourisme Occitanie)",
+          "url": "https://www.tourisme-occitanie.com/fr/fiche/patrimoine-culturel/notre-dame-du-taur-toulouse_TFOPCUMID031FS000A8/"
+        },
+        {
+          "title": "Notre-Dame du Taur (Ville de Toulouse)",
+          "url": "https://metropole.toulouse.fr/annuaire/notre-dame-du-taur"
+        }
+      ],
+      "facts": [
+        "Saint Saturnin (Sernin), premier évêque de Toulouse, martyrisé vers 250, attaché à un taureau qui le traîna à travers la ville.",
+        "Selon la légende, la corde se rompit à l'emplacement de l'actuelle église Notre-Dame du Taur.",
+        "Taur signifie taureau en occitan; le supplice a donné son nom à la rue du Taur.",
+        "L'église se trouve rue du Taur, entre la place du Capitole et la basilique Saint-Sernin; elle date du XIVᵉ siècle; façade en clocher-mur de brique.",
+        "Monument historique depuis 1840.",
+        "Selon une source, appelée Saint-Sernin du Taur jusqu'au transfert d'une statue de la Vierge en 1783; une autre source donne un autre historique: les sources divergent.",
+        "La tradition y place la première sépulture du saint, mais aucune fouille ne l'a confirmé."
+      ]
+    },
+    {
+      "id": "rempart-romain",
+      "city": "toulouse",
+      "cats": [
+        "secret",
+        "histoire"
+      ],
+      "name": "Le rempart romain",
+      "tagline": "Tolosa cachée sous un institut",
+      "lat": 43.5958,
+      "lon": 1.444,
+      "radius": 50,
+      "express": "Sous vos pieds dort une ville romaine, Tolosa, à environ 5 mètres de profondeur. Il en reste peu de traces visibles. L'une des plus belles se cache ici, à l'Institut catholique : un morceau du rempart gallo-romain du Iᵉʳ siècle, conservé sous la façade arrière du bâtiment et protégé comme monument historique. Petit détail insolite : le bâtiment a été une fonderie de canons. Le rempart se visite dans l'espace muséographique Georges Baccrabère.",
+      "histoire": "Vous êtes rue de la Fonderie, devant l'Institut catholique de Toulouse. Derrière ces murs se cache l'un des rares témoins de la ville romaine.\n\nLa Toulouse antique s'appelait Tolosa. Elle se trouve aujourd'hui à environ 5 mètres sous nos pieds, et il en reste très peu de vestiges visibles. Au Iᵉʳ siècle, la ville est entourée d'un rempart. Selon une source, il mesurait environ 3,5 km. On connaît bien son tracé : il passait par la place Saint-Pierre, le Capitole, la place Wilson, Saint-Étienne et le palais de justice.\n\nIci, une portion du rempart gallo-romain est conservée sous la façade arrière de l'Institut catholique. Elle est protégée au titre des monuments historiques. On peut la voir dans l'espace muséographique Georges Baccrabère, du nom du chercheur qui l'a étudiée et lui a consacré un article en 1974. D'autres morceaux réapparaissent parfois : en 1973, la démolition d'un immeuble rue Bida a révélé la base d'une tour.\n\nDernier clin d'œil : le bâtiment qui protège ce rempart a été une fonderie de canons. Vérifiez les horaires avant de venir, et guettez les visites du musée Saint-Raymond, qui ouvrent parfois des lieux habituellement fermés.",
+      "sources": [
+        {
+          "title": "Fonderie de canons, actuellement Institut catholique (Monumentum, base Mérimée)",
+          "url": "https://monumentum.fr/monument-historique/pa00094632/fonderie-canons-actuellement-institut-catholique"
+        },
+        {
+          "title": "Le rempart antique de l'Institut catholique (CCFr, BnF)",
+          "url": "https://ccfr.bnf.fr/portailccfr/ark:/16871/004b79795815"
+        },
+        {
+          "title": "Sur les traces du rempart (musée Saint-Raymond)",
+          "url": "https://saintraymond.toulouse.fr/wp-content/uploads/sites/8/2024/10/msr_sur_les_traces_du_rempart_descriptif.pdf"
+        },
+        {
+          "title": "Cahier d'art hors-série (Institut catholique de Toulouse)",
+          "url": "https://www.ict-toulouse.fr/wp-content/uploads/2025/10/Cahier-dart-hors-serie-mail.pdf"
+        },
+        {
+          "title": "Le rempart romain de Toulouse (Aquitania, université Bordeaux-Montaigne)",
+          "url": "https://aquitania.u-bordeaux-montaigne.fr/_jumi/pdf/785.pdf"
+        }
+      ],
+      "facts": [
+        "Le rempart gallo-romain est visible dans l'espace muséographique Georges Baccrabère de l'Institut catholique; partie conservée sous la façade postérieure; protégé au titre des monuments historiques.",
+        "Georges Baccrabère publie en 1974 « Le rempart antique de l'Institut catholique, Toulouse ».",
+        "Enceinte romaine du Iᵉʳ siècle; en 1973, la démolition d'un immeuble rue Bida révèle la base d'une tour et une partie de la muraille.",
+        "Tracé connu: place Saint-Pierre, Capitole, Wilson, Saint-Étienne, palais de justice. Selon une source, l'enceinte mesurait environ 3,5 km.",
+        "La ville antique se trouve à environ 5 mètres sous nos pieds; peu de vestiges visibles.",
+        "Monument historique enregistré comme « Fonderie de canons, actuellement Institut catholique ».",
+        "Le musée Saint-Raymond propose des visites des vestiges, avec accès exceptionnel à des lieux habituellement fermés au public."
+      ]
+    },
+    {
+      "id": "paris-catacombes",
+      "city": "paris",
+      "cats": [
+        "secret",
+        "wtf"
+      ],
+      "name": "Les Catacombes",
+      "tagline": "Six millions de Parisiens sous vos pieds",
+      "lat": 48.8339,
+      "lon": 2.3324,
+      "radius": 60,
+      "express": "Sous ce quartier s'étend l'un des lieux les plus étranges de Paris. Dans d'anciennes carrières de calcaire, la ville a créé à partir de 1786 un ossuaire municipal. On y a transporté les restes de Parisiens exhumés des cimetières qui débordaient, dont celui des Innocents. On parle d'environ six millions de personnes. Le réseau de galeries mesure entre 250 et 300 kilomètres, mais la visite n'en montre qu'une infime partie. S'y aventurer hors du parcours est interdit depuis 1955.",
+      "histoire": "Vous êtes à l'entrée des Catacombes de Paris. Sous vos pieds, un autre monde.\n\nPendant des siècles, on a extrait sous Paris le calcaire qui a servi à bâtir la ville. Il en reste un immense réseau de galeries, estimé entre 250 et 300 kilomètres. À la fin du XVIIIᵉ siècle, un autre problème se pose : les cimetières de la capitale débordent, à commencer par celui des Innocents. On décide alors de vider ces cimetières et de transférer les ossements dans les anciennes carrières.\n\nLes premiers transferts ont lieu le 7 avril 1786, et ils se poursuivent jusqu'en 1814. Certaines sources datent le projet de 1785. Le résultat est un ossuaire municipal où reposeraient environ six millions de Parisiens. Personne ne connaît le nombre exact d'os. Les crânes et les fémurs sont rangés en murs, parfois en motifs, ce qui donne au lieu son atmosphère si particulière.\n\nLe parcours ouvert au public ne représente qu'un tout petit morceau du réseau. Le reste est interdit : depuis 1955, explorer les carrières sans autorisation est illégal, même si des passionnés, les cataphiles, continuent de s'y faufiler. Pensez à réserver avant de venir.",
+      "sources": [
+        {
+          "title": "Les catacombes de Paris (Ville de Paris)",
+          "url": "https://www.paris.fr/pages/les-catacombes-de-paris-ames-sensibles-s-abstenir-18906"
+        },
+        {
+          "title": "Catacombs of Paris (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Catacombs_of_Paris"
+        },
+        {
+          "title": "Catacombes de Paris (Visit Paris Region)",
+          "url": "https://www.visitparisregion.com/fr/catacombes-de-paris"
+        },
+        {
+          "title": "Les catacombes interdites (Sortir à Paris)",
+          "url": "https://www.sortiraparis.com/arts-culture/histoire-patrimoine/articles/349498-les-catacombes-interdites-que-cache-vraiment-le-plus-grand-labyrinthe-souterrain-de-paris"
+        }
+      ],
+      "facts": [
+        "Ossuaire municipal aménagé dans d'anciennes carrières de calcaire, créé à partir de 1786; restes de Parisiens exhumés des anciens cimetières, notamment celui des Innocents. Fin du XVIIIᵉ siècle.",
+        "Premiers transferts le 7 avril 1786; transferts jusqu'en 1814; certaines sources datent la création de 1785.",
+        "Environ six millions de personnes; le nombre exact d'os est inconnu.",
+        "Réseau de carrières estimé entre 250 et 300 kilomètres; la visite n'en couvre qu'une infime partie.",
+        "L'exploration non officielle des carrières (cataphilie) est illégale depuis 1955.",
+        "Ossements rangés en murs de crânes et de fémurs, parfois en motifs décoratifs (description courante de l'ossuaire)."
+      ]
+    },
+    {
+      "id": "paris-passe-muraille",
+      "city": "paris",
+      "cats": [
+        "wtf",
+        "culture"
+      ],
+      "name": "Le Passe-Muraille",
+      "tagline": "Un homme coincé dans un mur",
+      "lat": 48.8873,
+      "lon": 2.3367,
+      "radius": 40,
+      "express": "Regardez ce mur : un homme en bronze est en train d'en sortir, ou d'y rester coincé. C'est Dutilleul, le héros de la nouvelle de Marcel Aymé, Le Passe-Muraille, un employé qui découvre qu'il peut traverser les murs. La sculpture a été réalisée en 1989 par l'acteur Jean Marais. Détail savoureux : il a donné au personnage le visage de Marcel Aymé lui-même, qui vivait dans le quartier.",
+      "histoire": "Vous êtes place Marcel-Aymé, à Montmartre. Sur le mur de pierre, un homme semble jaillir de la paroi, une main tendue vers vous.\n\nIl s'appelle Dutilleul. C'est le héros d'une nouvelle de Marcel Aymé, Le Passe-Muraille. Un petit employé de bureau sans histoire découvre un jour qu'il peut passer à travers les murs. Il s'en sert d'abord pour des farces, puis pour bien pire, jusqu'au jour où son don l'abandonne au mauvais moment : il reste prisonnier de la pierre. C'est exactement ce que montre la sculpture.\n\nL'œuvre a été inaugurée le 25 février 1989. Son auteur n'est pas un sculpteur de métier, mais l'acteur Jean Marais. En hommage à l'écrivain, il a donné à Dutilleul le visage de Marcel Aymé. L'écrivain habitait tout près, même si les sources ne s'accordent pas sur les dates exactes.\n\nAvant de partir, regardez bien la main et le genou qui dépassent du mur : ce sont les endroits les plus brillants du bronze, polis par les passants.",
+      "sources": [
+        {
+          "title": "Le Passe-Muraille de la place Marcel-Aymé (Sortir à Paris)",
+          "url": "https://sortiraparis.com/en/what-to-visit-in-paris/history-heritage/articles/171843-the-passe-muraille-walker-through-walls-of-place-marcel-ayme-in-paris"
+        },
+        {
+          "title": "La plus étonnante statue de Montmartre (Paris Zigzag)",
+          "url": "https://www.pariszigzag.fr/lieux-insolites/la-plus-etonnante-statue-de-montmartre/"
+        },
+        {
+          "title": "Le Passe-Muraille (Lonely Planet)",
+          "url": "https://www.lonelyplanet.com/points-of-interest/le-passe-muraille/1535927"
+        },
+        {
+          "title": "Le passe-muraille (French Glimpses)",
+          "url": "https://frenchglimpses.com/2023/10/10/le-passe-muraille-the-mysterious-statue-of-montmartre/"
+        }
+      ],
+      "facts": [
+        "Sculpture Le Passe-Muraille, place Marcel-Aymé (Montmartre, 18ᵉ arrondissement), réalisée par Jean Marais en 1989; inaugurée le 25 février 1989.",
+        "Elle représente Dutilleul, héros de la nouvelle de Marcel Aymé, un employé qui peut traverser les murs et finit prisonnier d'un mur.",
+        "Jean Marais a donné à Dutilleul le visage de Marcel Aymé.",
+        "Bronze encastré dans un mur de pierre; le personnage semble sortir du mur.",
+        "Marcel Aymé habitait l'immeuble voisin; les sources divergent sur les dates.",
+        "Note de rédaction: la brillance de la main et du genou est une observation courante, à vérifier sur place.",
+        "Dans la nouvelle, Dutilleul se sert de son don pour des farces puis des cambriolages, avant de rester prisonnier d'un mur."
+      ]
+    },
+    {
+      "id": "paris-metre",
+      "city": "paris",
+      "cats": [
+        "anecdote",
+        "histoire"
+      ],
+      "name": "Le mètre étalon",
+      "tagline": "Le dernier mètre de la Révolution à sa place",
+      "lat": 48.8489,
+      "lon": 2.3355,
+      "radius": 40,
+      "express": "Sur ce mur de la rue de Vaugirard, une plaque de marbre porte une ligne : elle mesure exactement un mètre. Sous la Révolution, le mètre est une invention toute neuve. Pour que les Parisiens l'adoptent, on installe 16 mètres en marbre dans la ville, à partir de 1796. Celui-ci est le seul resté à son emplacement d'origine. Approchez-vous : l'inscription est presque effacée par le temps.",
+      "histoire": "Vous êtes au 36 rue de Vaugirard, près du Sénat. Sous les arcades, une modeste plaque de marbre raconte une révolution des mesures.\n\nAvant la Révolution, chaque région ou presque avait ses propres unités : pieds, toises, aunes. Le commerce s'y perdait. Les révolutionnaires inventent alors une mesure universelle, le mètre. Encore fallait-il que les gens s'y habituent.\n\nL'Agence temporaire des poids et mesures, chargée d'appliquer ce nouveau système, commande 16 mètres étalons en marbre. Ils sont installés en 1796 sur les murs de Paris, dans des lieux fréquentés, pour que chacun puisse comparer sa propre règle. La plupart ont disparu ou ont été déplacés. Celui-ci est le seul resté à son emplacement d'origine. Un autre, place Vendôme, a été restauré et réinstallé par le ministère de la Justice.\n\nLa référence officielle, elle, n'était pas en marbre : un mètre en platine est déposé aux Archives nationales en 1799. Avant de partir, cherchez la ligne horizontale gravée dans la pierre. Elle mesure un mètre, à quelques poussières près.",
+      "sources": [
+        {
+          "title": "Le mètre étalon de la place Vendôme restauré et réinstallé (ministère de la Justice)",
+          "url": "https://www.justice.gouv.fr/actualites/actualite/metre-etalon-place-vendome-restaure-reinstalle"
+        },
+        {
+          "title": "Savez-vous à quoi servait cet étalon rue de Vaugirard ? (Paris Zigzag)",
+          "url": "https://www.pariszigzag.fr/insolite/lieux-insolites/savez-vous-a-quoi-servait-cet-etalon-original-rue-de-vaugirard"
+        },
+        {
+          "title": "The last original standard metre (Atlas Obscura)",
+          "url": "https://assets.atlasobscura.com/places/the-last-original-standard-metre-paris-france"
+        },
+        {
+          "title": "The Last Meter: A Hidden Monument in Paris (Bonjour Paris)",
+          "url": "https://bonjourparis.com/history/the-last-meter-a-hidden-monument-in-paris/"
+        }
+      ],
+      "facts": [
+        "L'Agence temporaire des poids et mesures commande 16 mètres en marbre pour diffuser le système métrique.",
+        "Seul mètre resté à son emplacement d'origine: celui du 36 rue de Vaugirard, sous les arcades près du Sénat.",
+        "Installés en 1796 sur les murs de Paris.",
+        "Ligne horizontale représentant un mètre; inscription en grande partie effacée.",
+        "Le mètre de la place Vendôme a été restauré et réinstallé par le ministère de la Justice.",
+        "Un mètre étalon en platine est déposé aux Archives nationales en 1799."
+      ]
+    },
+    {
+      "id": "paris-flamel",
+      "city": "paris",
+      "cats": [
+        "anecdote",
+        "histoire"
+      ],
+      "name": "Maison de Nicolas Flamel",
+      "tagline": "La plus vieille maison datée de Paris",
+      "lat": 48.8634,
+      "lon": 2.3538,
+      "radius": 40,
+      "express": "Cette façade de pierre date de 1407 : c'est la plus ancienne maison datée de Paris. Elle a été construite par Nicolas Flamel, un riche bourgeois parisien, pour loger les pauvres. Lui-même n'y a jamais habité. Après sa mort, sa réputation a pris un tour étrange : on en a fait un alchimiste légendaire, jusqu'à le citer dans Harry Potter. Regardez l'inscription en ancien français gravée sur la façade.",
+      "histoire": "Vous êtes au 51 rue de Montmorency, devant une façade sombre et un peu austère. C'est pourtant un record : la plus ancienne maison datée de Paris.\n\nElle a été bâtie en 1407. Son commanditaire, Nicolas Flamel, était un bourgeois parisien aisé. Selon une source, il l'a fait construire après la mort de sa femme Pernelle, pour héberger des personnes dans le besoin. Il n'y a jamais vécu. Une inscription en ancien français, sur la façade, rappelle sa vocation charitable. Les sources ne s'accordent pas toutes sur la date de début des travaux, mais 1407 est la plus citée.\n\nPendant longtemps, le titre de plus vieille maison de Paris revenait à une maison à colombages de la rue Volta, à cause de son allure médiévale. Les recherches ont montré qu'elle était plus récente, et elle a perdu ce titre en 1979.\n\nQuant à Flamel, sa mémoire a connu une seconde vie. Des siècles après sa mort, on lui a prêté le secret de la pierre philosophale, au point d'en faire un personnage de Harry Potter. Aujourd'hui, le rez-de-chaussée abrite un restaurant. Levez les yeux vers les lettres gravées sur la pierre.",
+      "sources": [
+        {
+          "title": "House of Nicolas Flamel (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/House_of_Nicolas_Flamel"
+        },
+        {
+          "title": "La plus vieille maison de Paris est dans le 3e arrondissement (Offi)",
+          "url": "https://www.offi.fr/tendances/a-travers-paris/la-plus-vieille-maison-de-paris-est-dans-le-3e-arrondissement-126.html"
+        },
+        {
+          "title": "La plus vieille maison de Paris n'a rien d'un conte (Futura Sciences)",
+          "url": "https://www.futura-sciences.com/maison/actualites/architecture-plus-vieille-maison-paris-na-rien-conte-pourtant-son-histoire-incroyable-124100/"
+        },
+        {
+          "title": "The oldest house in Paris, from medieval Paris to Harry Potter (French Glimpses)",
+          "url": "https://frenchglimpses.com/2025/12/16/the-oldest-house-in-paris-from-medieval-paris-to-harry-potter/"
+        }
+      ],
+      "facts": [
+        "51 rue de Montmorency: maison datée de 1407, plus ancienne maison datée de Paris; monument historique.",
+        "Le titre revenait auparavant à la maison à colombages du 3 rue Volta, jusqu'en 1979.",
+        "Inscription en ancien français sur la façade; selon Futura Sciences, Nicolas Flamel l'a fait bâtir après la mort de sa femme Pernelle pour abriter des personnes dans le besoin; une source donne 1397 pour le début: les sources divergent.",
+        "Flamel n'y a jamais vécu; la maison était destinée aux pauvres.",
+        "Le rez-de-chaussée abrite le restaurant Auberge Nicolas Flamel.",
+        "Flamel est devenu après sa mort une figure légendaire d'alchimiste (pierre philosophale), cité dans Harry Potter."
+      ]
+    },
+    {
+      "id": "paris-zouave",
+      "city": "paris",
+      "cats": [
+        "anecdote",
+        "wtf"
+      ],
+      "name": "Le Zouave du pont de l'Alma",
+      "tagline": "La statue qui mesure les crues",
+      "lat": 48.8628,
+      "lon": 2.3015,
+      "radius": 60,
+      "express": "Penchez-vous au-dessus du parapet : sur une pile du pont, un soldat de pierre regarde la Seine. C'est le Zouave, sculpté par Georges Diebolt en 1856, en souvenir de la guerre de Crimée. Les Parisiens l'utilisent comme repère des crues : quand l'eau lui touche les pieds, on surveille la Seine de près. Lors de la grande crue de 1910, l'eau lui est montée jusqu'aux épaules.",
+      "histoire": "Vous êtes au pont de l'Alma. Penchez-vous vers l'eau : sur l'une des piles, un soldat de pierre en uniforme fixe la Seine.\n\nC'est le Zouave, un soldat d'un régiment d'infanterie de l'armée d'Afrique. Il a été sculpté par Georges Diebolt en 1856. À l'origine, il faisait partie de 4 statues de soldats qui décoraient l'ancien pont, en hommage à la bataille de l'Alma, pendant la guerre de Crimée.\n\nLes Parisiens lui ont trouvé un autre métier : mesurer les crues. Quand l'eau atteint ses pieds, on surveille la Seine de près. Lors de la grande crue de 1910, la Seine lui est arrivée jusqu'aux épaules.\n\nAttention pourtant, ce n'est pas un instrument officiel. En 1974, lors de la reconstruction du pont, le Zouave a été replacé plus bas qu'à l'origine. Ses marques ne correspondent donc plus exactement aux anciennes crues. Il reste le baromètre préféré des Parisiens. Regardez où l'eau arrive aujourd'hui.",
+      "sources": [
+        {
+          "title": "Le Zouave du pont de l'Alma (Fondation Napoléon)",
+          "url": "https://www.napoleon.org/histoire-des-2-empires/objets/le-zouave-du-pont-de-lalma-paris/"
+        },
+        {
+          "title": "Zouave (Pont de l'Alma) (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Zouave_(Pont_de_l%27Alma)"
+        },
+        {
+          "title": "Le rôle de cette statue dans la sécurité des Parisiens (Paris Zigzag)",
+          "url": "https://www.pariszigzag.fr/insolite/histoire-insolite-paris/zouave-pont-alma"
+        },
+        {
+          "title": "The statue that warns Parisians about Seine floods (The Connexion)",
+          "url": "https://www.connexionfrance.com/article/French-news/The-statue-that-warns-Parisians-about-Seine-floods"
+        }
+      ],
+      "facts": [
+        "Statue de pierre de Georges Diebolt, 1856, une des 4 statues de soldats de la guerre de Crimée (bataille de l'Alma) qui ornaient l'ancien pont de l'Alma.",
+        "Le zouave: soldat d'un régiment d'infanterie de l'armée d'Afrique.",
+        "Repère populaire des crues: pieds atteints = vigilance; aux cuisses, fermeture des voies sur berge.",
+        "Lors de la crue de 1910, l'eau atteint les épaules de la statue.",
+        "Lors de la reconstruction du pont, la statue est replacée en 1974, plus bas qu'à l'origine; ses marques ne correspondent plus aux relevés officiels."
+      ]
+    },
+    {
+      "id": "paris-lutece",
+      "city": "paris",
+      "cats": [
+        "histoire",
+        "secret"
+      ],
+      "name": "Arènes de Lutèce",
+      "tagline": "Un amphithéâtre romain caché derrière les immeubles",
+      "lat": 48.8451,
+      "lon": 2.3528,
+      "radius": 60,
+      "express": "Derrière ces immeubles se cache un amphithéâtre romain. Les arènes de Lutèce, l'ancien nom de Paris, datent des premiers siècles de notre ère. Elles pouvaient accueillir, selon les sources, entre 15 000 et 17 000 spectateurs. Oubliées pendant des siècles, elles ont été retrouvées à partir de 1869 lors du percement de la rue Monge. Aujourd'hui, c'est un square gratuit : on y joue à la pétanque là où combattaient les gladiateurs.",
+      "histoire": "Vous êtes aux arènes de Lutèce, un secret bien gardé du Quartier latin. On y entre par un simple passage, et soudain s'ouvre un amphithéâtre antique.\n\nLutèce, c'est le nom de Paris à l'époque gallo-romaine. Les arènes ont été construites vers la fin du Iᵉʳ siècle, ou un peu plus tard selon d'autres sources. Elles mesurent environ 130 mètres sur 100. C'était un édifice mixte, à la fois amphithéâtre et théâtre, avec une scène. Les estimations varient, mais on parle de 15 000 à 17 000 spectateurs.\n\nPuis les arènes disparaissent sous la ville. On les redécouvre à partir de 1869, au moment du percement de la rue Monge. Elles sont aujourd'hui classées monument historique, et seules dix rangées de gradins restent visibles.\n\nAvant de repartir, asseyez-vous sur les gradins et regardez la piste. Les joueurs de pétanque et les enfants y ont remplacé les spectacles antiques. Ce mélange de vie de quartier et de vieilles pierres est tout le charme du lieu.",
+      "sources": [
+        {
+          "title": "Arènes de Lutèce (Larousse)",
+          "url": "https://www.larousse.fr/encyclopedie/divers/Ar%C3%A8nes_de_Lut%C3%A8ce/178347"
+        },
+        {
+          "title": "L'amphithéâtre (ministère de la Culture, archéologie)",
+          "url": "https://archeologie.culture.gouv.fr/paris/en/amphitheatre"
+        },
+        {
+          "title": "Arènes de Lutèce (Vikidia)",
+          "url": "https://fr.vikidia.org/wiki/Ar%C3%A8nes_de_Lut%C3%A8ce"
+        },
+        {
+          "title": "Les Arènes de Lutèce (Sortir à Paris)",
+          "url": "https://www.sortiraparis.com/arts-culture/histoire-patrimoine/articles/163790-les-arenes-de-lutece-un-amphitheatre-gallo-romain-au-coeur-de-paris"
+        }
+      ],
+      "facts": [
+        "Amphithéâtre gallo-romain; Larousse: fin du Iᵉʳ siècle après J.-C., ou vers l'an 200; d'autres sources: Iᵉʳ ou IIᵉ siècle. Lutèce est l'ancien nom de Paris.",
+        "Découvert lors du percement de la rue Monge, à partir de 1869.",
+        "Dimensions environ 130 m sur 100 m.",
+        "Capacité: plus de 17 000 spectateurs selon Vikidia; 15 000 selon un historien cité: les sources divergent.",
+        "Édifice mixte: amphithéâtre avec une scène.",
+        "Seules dix rangées de gradins restent visibles; square public gratuit; monument historique.",
+        "Note de rédaction: la pétanque sur la piste est un usage courant du square, à vérifier sur place."
+      ]
+    },
+    {
+      "id": "paris-robinier",
+      "city": "paris",
+      "cats": [
+        "anecdote"
+      ],
+      "name": "Le plus vieil arbre de Paris",
+      "tagline": "Un robinier planté sous Henri IV",
+      "lat": 48.8524,
+      "lon": 2.347,
+      "radius": 40,
+      "express": "Cet arbre penché, soutenu par des béquilles de béton, est le plus vieil arbre de Paris. C'est un robinier, planté vers 1601 par Jean Robin, herboriste du roi Henri IV. L'arbre porte d'ailleurs son nom, Robinia en latin. Il a donc plus de quatre siècles et a vu passer toute l'histoire de Paris, à deux pas de Notre-Dame. Regardez bien ses appuis : sans eux, il serait sans doute tombé depuis longtemps.",
+      "histoire": "Vous êtes dans le square René-Viviani, face à Notre-Dame. Près de l'église Saint-Julien-le-Pauvre, un arbre un peu tordu s'appuie sur des béquilles. Il mérite le respect : c'est le plus vieil arbre de Paris.\n\nIl s'agit d'un robinier faux-acacia, une espèce venue d'Amérique du Nord. Selon la tradition, il a été planté en 1601, ou en 1602 selon une source, par Jean Robin, herboriste du roi Henri IV. C'est lui qui a donné son nom à l'espèce : Robinia, en latin. Aucune source primaire ne confirme la date, mais c'est une tradition bien établie.\n\nL'arbre mesure environ 15 mètres de haut et 3,50 mètres de tour. Avec l'âge, il s'est penché, et il a fallu le soutenir. Le square, lui, est bien plus jeune : il a été créé en 1928 et porte le nom de René Viviani, homme politique et député de l'arrondissement.\n\nPrenez un instant pour regarder l'écorce, profondément creusée, puis la vue sur Notre-Dame. Ce robinier était déjà là sous Louis XIV, sous la Révolution et pendant tous les grands événements de Paris.",
+      "sources": [
+        {
+          "title": "Square René Viviani (Ville de Paris)",
+          "url": "https://www.paris.fr/lieux/square-rene-viviani-2441"
+        },
+        {
+          "title": "Le plus vieil arbre de Paris (Time Out)",
+          "url": "https://www.timeout.fr/paris/le-blog/le-plus-vieil-arbre-de-paris"
+        },
+        {
+          "title": "Le square René-Viviani, un jardin insolite (Sortir à Paris)",
+          "url": "https://www.sortiraparis.com/arts-culture/balades/articles/254487-le-square-rene-viviani-un-jardin-insolite-ou-se-trouve-le-plus-vieil-arbre-de-paris"
+        },
+        {
+          "title": "Le plus vieil arbre de Paris (Paris Zigzag)",
+          "url": "https://www.pariszigzag.fr/insolite/lieux-insolites/plus-vieil-arbre-paris/"
+        }
+      ],
+      "facts": [
+        "Robinier faux-acacia du square René-Viviani (5ᵉ arrondissement), considéré comme le plus vieil arbre de Paris.",
+        "Planté en 1601 (ou 1602 selon une source) par Jean Robin, herboriste du roi Henri IV, qui a donné son nom latin Robinia à l'espèce; espèce originaire d'Amérique du Nord.",
+        "Aucune source primaire pour la date de 1601: tradition bien établie.",
+        "Soutenu par des béquilles (Paris.fr).",
+        "Time Out: 15 mètres de haut, 3,50 mètres de circonférence.",
+        "Square créé en 1928 autour de l'église Saint-Julien-le-Pauvre, face à Notre-Dame; nommé d'après René Viviani, député de l'arrondissement.",
+        "L'arbre a donc plus de quatre siècles."
+      ]
+    },
+    {
+      "id": "paris-jetaime",
+      "city": "paris",
+      "cats": [
+        "culture",
+        "anecdote"
+      ],
+      "name": "Le mur des je t'aime",
+      "tagline": "« Je t'aime » dans plus de 250 langues",
+      "lat": 48.8847,
+      "lon": 2.3385,
+      "radius": 40,
+      "express": "Sur ce grand mur bleu sombre, des centaines de « je t'aime » sont écrits à la main, dans plus de 250 langues. L'œuvre a été imaginée par Frédéric Baron, avec la calligraphe Claire Kito, et installée en octobre 2000. Le mur couvre 40 mètres carrés et compte 612 carreaux de lave émaillée. Cherchez les éclats rouges dispersés sur le mur : réunis, ils formeraient un cœur brisé.",
+      "histoire": "Vous êtes dans le square Jehan-Rictus, place des Abbesses, à Montmartre. Devant vous, un mur entier dit je t'aime.\n\nL'idée vient de Frédéric Baron, auteur et compositeur. Il a collecté la formule auprès de personnes du monde entier, dans des centaines de langues et de dialectes. Avec la calligraphe Claire Kito, il en a fait une œuvre installée en octobre 2000.\n\nLes chiffres varient selon les sources, mais l'office de tourisme de Paris décrit un mur de 40 mètres carrés, composé de 612 carreaux de lave émaillée, sur lesquels figurent 311 je t'aime en 250 langues. D'autres sources parlent de plus de 300 langues. Le square porte le nom de Jehan Rictus, un écrivain populaire.\n\nAmusez-vous à chercher votre langue, puis celles que vous ne reconnaissez pas. Et repérez les taches rouges qui parsèment le mur : on les présente souvent comme les morceaux d'un cœur brisé, que l'amour viendrait recoller.",
+      "sources": [
+        {
+          "title": "Le mur des je t'aime (Paris je t'aime, office de tourisme)",
+          "url": "https://parisjetaime.com/culture/le-mur-des-je-t-aime-p985"
+        },
+        {
+          "title": "Square Jehan Rictus (Ville de Paris)",
+          "url": "https://www.paris.fr/lieux/square-jehan-rictus-2658"
+        },
+        {
+          "title": "Le mur (Les je t'aime, site de l'œuvre)",
+          "url": "https://www.lesjetaime.com/english/lemur.html"
+        },
+        {
+          "title": "Wall of Love (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Wall_of_Love"
+        }
+      ],
+      "facts": [
+        "Œuvre imaginée par Frédéric Baron (auteur-compositeur) avec la calligraphe Claire Kito; installée depuis octobre 2000, square Jehan-Rictus, place des Abbesses, Montmartre.",
+        "Paris je t'aime: mur de 40 m², 612 carreaux de lave émaillée bleu sombre, 311 « je t'aime » en 250 langues; d'autres sources: plus de 250 ou plus de 300 langues et dialectes.",
+        "Jehan Rictus (1867-1933), écrivain populaire français.",
+        "Les éclats rouges du mur sont présentés comme les morceaux d'un cœur brisé (lesjetaime.com, Wikipedia).",
+        "Accès: rouvert le 18 mai 2024 selon Paris je t'aime; Paris.fr le dit inaccessible: à vérifier."
+      ]
+    },
+    {
+      "id": "paris-petite-ceinture",
+      "city": "paris",
+      "cats": [
+        "secret",
+        "histoire"
+      ],
+      "name": "La Petite Ceinture du 15ᵉ",
+      "tagline": "Marcher sur une voie ferrée abandonnée",
+      "lat": 48.8337,
+      "lon": 2.299,
+      "radius": 80,
+      "express": "Ici, on se promène sur une ancienne voie ferrée. La Petite Ceinture faisait le tour de Paris en train. Elle a fonctionné à plein entre 1869 et 1934, avant de perdre ses voyageurs, puis toute exploitation commerciale en 1993. Depuis le 24 août 2013, ce tronçon du 15ᵉ arrondissement est ouvert à la promenade, sur environ 1,3 kilomètre. Les rails sont toujours là, envahis par les herbes : c'est la nature qui a repris la ligne.",
+      "histoire": "Vous êtes au bord de la Petite Ceinture, dans le 15ᵉ arrondissement. Sous vos pieds, des rails rouillés au milieu des herbes folles.\n\nLa Petite Ceinture est une ancienne ligne de chemin de fer qui faisait le tour de Paris, à l'intérieur des fortifications. Selon la Ville de Paris, elle a connu sa pleine exploitation entre 1869 et 1934. Ensuite, le métro et l'autobus lui ont pris ses voyageurs. Les trains de marchandises ont continué un temps, puis l'exploitation commerciale a été suspendue en 1993.\n\nAbandonnée, la ligne est devenue un refuge pour la nature et un terrain de jeu pour les explorateurs urbains. Pendant des années, on y entrait sans autorisation. Puis la Ville a ouvert des tronçons au public. Celui-ci a ouvert le 24 août 2013, sur environ 1,3 kilomètre. Avec un tronçon plus récent, on peut désormais marcher environ 2 kilomètres d'un seul tenant depuis le parc Georges-Brassens.\n\nRestez sur les parties ouvertes : ailleurs, la voie reste interdite. Ici, profitez du calme, observez les plantes qui poussent entre les traverses et imaginez les trains à vapeur qui passaient autrefois.",
+      "sources": [
+        {
+          "title": "Petite Ceinture du 15e (Ville de Paris)",
+          "url": "https://www.paris.fr/lieux/petite-ceinture-du-15e-pc-15-16841"
+        },
+        {
+          "title": "Un nouveau tronçon de la petite ceinture ouvre dans le 15e (Ville de Paris)",
+          "url": "https://www.paris.fr/pages/un-nouveau-troncon-de-la-petite-ceinture-ouvre-dans-le-15e-36094"
+        },
+        {
+          "title": "La petite ceinture et ses promenades écologiques (Ville de Paris)",
+          "url": "https://www.paris.fr/pages/la-petite-ceinture-et-ses-promenades-ecologiques-7855"
+        },
+        {
+          "title": "Petite Ceinture, 15e (Time Out)",
+          "url": "https://www.timeout.fr/paris/quoi-faire-a-paris/promenades-dans-le-paris-bucolique-6"
+        }
+      ],
+      "facts": [
+        "Ligne de chemin de fer faisant le tour de Paris; pleine exploitation entre 1869 et 1934 (Ville de Paris); exploitation commerciale suspendue en 1993.",
+        "Tronçon du 15ᵉ arrondissement ouvert au public le 24 août 2013 (Time Out); environ 1,3 km et 3,5 hectares (Ville de Paris).",
+        "Avec le nouveau tronçon, promenade continue d'environ 2 km depuis le parc Georges-Brassens, plus long tronçon continu.",
+        "Promenade écologique: la nature a repris la voie.",
+        "Note de rédaction: la fin du trafic voyageurs est liée à la concurrence du métro et de l'autobus (fait historique courant, non vérifié dans ces sources).",
+        "La ligne circulait à l'intérieur des fortifications de Paris (fait historique courant)."
+      ]
+    },
+    {
+      "id": "paris-deyrolle",
+      "city": "paris",
+      "cats": [
+        "wtf",
+        "culture"
+      ],
+      "name": "Deyrolle",
+      "tagline": "Un cabinet de curiosités caché dans une boutique",
+      "lat": 48.856,
+      "lon": 2.3258,
+      "radius": 30,
+      "express": "Poussez la porte de cette boutique de la rue du Bac, montez l'escalier, et vous tomberez nez à nez avec des animaux naturalisés, des plus petits aux plus grands. Deyrolle est un cabinet de curiosités vivant, spécialisé dans la taxidermie et les insectes. La maison est née en 1831 et s'est installée ici en 1888. En février 2008, un incendie a ravagé l'étage, mais Deyrolle a rouvert. Cherchez le paon brûlé, gardé en souvenir.",
+      "histoire": "Vous êtes au 46 rue du Bac, devant une boutique d'apparence sage. À l'étage se cache l'un des lieux les plus étranges de Paris.\n\nDeyrolle a été fondée en 1831 par Jean-Baptiste Deyrolle. La maison s'est installée rue du Bac en 1888. Elle s'est spécialisée dans la taxidermie, l'art de naturaliser les animaux, et dans l'entomologie, l'étude des insectes. Des générations d'écoliers ont appris les sciences naturelles avec ses grandes planches illustrées.\n\nLe 1er février 2008, un incendie, probablement dû à un court-circuit, ravage le cabinet de curiosités. Une grande partie des boiseries et des collections est détruite. De nombreux soutiens se mobilisent pour faire renaître la maison de ses cendres. Elle a rouvert, et elle garde quelques animaux brûlés comme souvenir, dont un paon carbonisé, devenu une sorte de phénix.\n\nAujourd'hui, on peut y entrer librement et circuler entre les animaux, les papillons et les coquillages. C'est à la fois une boutique et un musée sans en être un. Vérifiez les horaires avant de venir, et levez les yeux : certains visiteurs à poils et à plumes vous regardent d'en haut.",
+      "sources": [
+        {
+          "title": "Maison Deyrolle (Time Out)",
+          "url": "https://www.timeout.fr/paris/musees/maison-deyrolle"
+        },
+        {
+          "title": "Deyrolle (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Deyrolle"
+        },
+        {
+          "title": "Anges du bizarre : les cabinets de curiosités à Paris (Ville de Paris)",
+          "url": "https://www.paris.fr/pages/anges-du-bizarre-les-cabinets-de-curiosites-a-paris-18773"
+        },
+        {
+          "title": "Deyrolle, cabinet de curiosités unique au monde (Village de la Justice)",
+          "url": "https://www.village-justice.com/articles/selection-liberalis-pour-week-end-deyrolle-cabinet-curiosites-unique-monde,53861.html"
+        },
+        {
+          "title": "Deyrolle: A Natural Curiosity in Paris (Bonjour Paris)",
+          "url": "https://bonjourparis.com/paris-day-trips/deyrolle-natural-curiosity-paris/"
+        }
+      ],
+      "facts": [
+        "Deyrolle fondée en 1831 par Jean-Baptiste Deyrolle; installée au 46 rue du Bac depuis 1888 (Time Out); une source donne 1881: les sources divergent.",
+        "Spécialités: taxidermie et entomologie; cabinet de curiosités vivant; planches pédagogiques de sciences naturelles.",
+        "Incendie le 1er février 2008, cause probable un court-circuit; boiseries et collections touchées.",
+        "Renaissance grâce à de nombreux soutiens; un paon carbonisé conservé comme un phénix renaissant de ses cendres.",
+        "Note de rédaction: présence d'ours, lion, zèbre évoquée par les visiteurs; à vérifier sur place (les animaux changent)."
+      ]
+    },
+    {
+      "id": "cm-place-ducale",
+      "city": "charleville",
+      "cats": [
+        "histoire"
+      ],
+      "name": "La place Ducale",
+      "tagline": "La cousine ardennaise de la place des Vosges",
+      "lat": 49.7735,
+      "lon": 4.7209,
+      "radius": 70,
+      "express": "Vous êtes sur la place Ducale, le cœur de Charleville. En 1606, le prince Charles de Gonzague fonde une ville nouvelle, à laquelle il donne son nom. Il confie la place à l'architecte Clément Métezeau, frère de Louis Métezeau, l'architecte de la place des Vosges à Paris. D'où l'air de famille : mêmes arcades, mêmes façades de brique et de pierre. Mais ici, pas de jardin au centre : une fontaine.",
+      "histoire": "Vous êtes au centre de la place Ducale, à Charleville. Tournez sur vous-même : arcades, pavillons de brique et de pierre, toits d'ardoise. Si vous connaissez Paris, cela vous rappellera quelque chose.\n\nEn 1606, le prince Charles de Gonzague, duc de Nevers et de Rethel, décide de fonder une ville toute neuve au bord de la Meuse. Elle portera son nom : Charleville. Il commande la place principale à l'architecte Clément Métezeau. Or son frère, Louis Métezeau, conçoit à la même époque la place Royale de Paris, l'actuelle place des Vosges. Les deux places sont donc presque jumelles.\n\nSelon une source, la place est construite entre 1606 et 1624. Une autre parle de 1612 à 1628. Elle mesure environ 127 mètres sur 90. Grande différence avec Paris : pas de jardin central. Au milieu se trouvait une fontaine, remplacée en 1899 par une statue de Charles de Gonzague.\n\nAujourd'hui, la fontaine historique a retrouvé sa place au centre, et la statue du fondateur a été déplacée un peu plus loin. Regardez les arcades : elles abritaient autrefois les commerces, et c'est toujours le cas.",
+      "sources": [
+        {
+          "title": "Place Ducale (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Place_Ducale"
+        },
+        {
+          "title": "La place Ducale, un joyau du XVIIe siècle (Ardennes Tourisme)",
+          "url": "https://www.ardennes.com/en/la-destination/les-incontournables-culture-patrimoine/la-place-ducale-un-joyau-17e-siecle-au-coeur-de-charleville-mezieres/"
+        },
+        {
+          "title": "Place Ducale (Structurae)",
+          "url": "https://structurae.net/fr/ouvrages/place-ducale"
+        },
+        {
+          "title": "Les Métezeau (Encyclopædia Universalis)",
+          "url": "https://www.universalis.fr/encyclopedie/metezeau-les/"
+        }
+      ],
+      "facts": [
+        "En 1606, le prince Charles Iᵉʳ de Gonzague, duc de Nevers et de Rethel, commande à l'architecte Clément II Métezeau la conception d'une place, centre de la ville nouvelle de Charleville, qui porte son nom.",
+        "Clément Métezeau est le frère de Louis Métezeau, auteur de la place Royale (place des Vosges) à Paris en 1607.",
+        "Construite entre 1606 et 1624 selon une source française; 1612-1628 selon une source allemande: les sources divergent.",
+        "Environ 127 m sur 90 m; pas de terre-plein central contrairement à la place des Vosges; fontaine remplacée par une statue de Gonzague en 1899.",
+        "La fontaine historique a été réinstallée au centre et la statue déplacée en haut de la rue Pierre-Bérégovoy.",
+        "Pavillons de brique et de pierre, toits d'ardoise, arcades commerçantes."
+      ]
+    },
+    {
+      "id": "cm-marionnettiste",
+      "city": "charleville",
+      "cats": [
+        "wtf",
+        "culture"
+      ],
+      "name": "Le Grand Marionnettiste",
+      "tagline": "Une horloge géante qui joue toutes les heures",
+      "lat": 49.7744,
+      "lon": 4.7222,
+      "radius": 40,
+      "express": "Levez les yeux vers cette façade : un marionnettiste géant y tient ses fils. Chaque heure, il s'anime et joue l'une des 12 scènes de la légende des quatre fils Aymon, un grand récit des Ardennes. Cette horloge animée est l'œuvre de Jacques Monestier, sur la façade de l'Institut international de la marionnette. Charleville est en effet une capitale mondiale de la marionnette. Restez jusqu'à l'heure pile.",
+      "histoire": "Vous êtes place Winston-Churchill, à deux pas de la place Ducale. Sur la façade de l'Institut international de la marionnette, un personnage immense vous observe : le Grand Marionnettiste.\n\nC'est une horloge animée, conçue par l'artiste Jacques Monestier. Chaque heure, le géant s'éveille. Ses mains bougent, des marionnettes apparaissent, et il raconte l'une des 12 scènes de la légende des quatre fils Aymon. Ces quatre frères, et leur cheval magique Bayard, sont les héros d'une célèbre chanson de geste liée aux Ardennes.\n\nSi vous voulez voir toute l'histoire d'un coup, il faut venir le samedi soir : le cycle complet est joué à 21 h 15.\n\nCe n'est pas un hasard si ce géant vit ici. Charleville accueille un grand festival mondial des théâtres de marionnettes et une école supérieure consacrée à cet art. Placez-vous face à la façade quelques minutes avant l'heure pile, et regardez bien le visage du marionnettiste quand il commence à bouger.",
+      "sources": [
+        {
+          "title": "Le Grand Marionnettiste (Jacques Monestier)",
+          "url": "https://www.jacques-monestier.com/?p=300"
+        },
+        {
+          "title": "Le Grand Marionnettiste (MyCityHunt)",
+          "url": "https://www.mycityhunt.co.uk/cities/charleville-mezieres-fr-11143/poi/le-grand-marionnettiste-41969"
+        },
+        {
+          "title": "Charleville-Mézières (Les Globe Blogueurs)",
+          "url": "https://lesglobeblogueurs.com/?p=114434"
+        },
+        {
+          "title": "Festival mondial des théâtres de marionnettes (marionnette.com)",
+          "url": "https://marionnette.com/app/uploads/2025/07/DP-FMTM-Web-ok.pdf"
+        }
+      ],
+      "facts": [
+        "Horloge animée réalisée par Jacques Monestier, sur la façade de l'Institut international de la marionnette, place Winston-Churchill.",
+        "Chaque heure, présente l'une des 12 scènes de la légende des quatre fils Aymon; cycle complet le samedi à 21 h 15.",
+        "Charleville-Mézières accueille le Festival mondial des théâtres de marionnettes et l'École supérieure des arts de la marionnette; se présente comme capitale mondiale de la marionnette.",
+        "Les quatre fils Aymon et le cheval Bayard: chanson de geste liée aux Ardennes (fait littéraire courant)."
+      ]
+    },
+    {
+      "id": "cm-rimbaud",
+      "city": "charleville",
+      "cats": [
+        "culture",
+        "anecdote"
+      ],
+      "name": "Le Vieux Moulin et la maison de Rimbaud",
+      "tagline": "Là où Rimbaud a écrit, de 15 à 21 ans",
+      "lat": 49.7769,
+      "lon": 4.7211,
+      "radius": 60,
+      "express": "Ce grand moulin posé sur la Meuse date de 1626. Il abrite aujourd'hui le musée Arthur Rimbaud, le poète né à Charleville. Juste en face, au 7 quai Arthur-Rimbaud, se trouve la Maison des Ailleurs. La famille Rimbaud y a vécu de 1869 à 1875, l'époque où le jeune poète a écrit une grande partie de son œuvre. Imaginez-le à 15 ans, rêvant de partir, devant ce même fleuve.",
+      "histoire": "Vous êtes quai Arthur-Rimbaud, au bord de la Meuse. Deux bâtiments se font face et racontent le même poète.\n\nD'un côté, le Vieux Moulin. Il a été construit en 1626, au XVIIᵉ siècle, sur un bras de la Meuse, et il est classé monument historique. En 1969, la collection consacrée à Rimbaud s'installe à son deuxième étage. Depuis 1991, le musée Arthur Rimbaud occupe tout le bâtiment.\n\nDe l'autre côté du quai, au numéro 7, la Maison des Ailleurs. C'est l'appartement où la famille Rimbaud a vécu de 1869 à 1875, au premier étage. Une source parle de 1876. Pendant ces années, entre 15 et 21 ans, Arthur écrit une grande partie de son œuvre, avant de tout abandonner pour partir au loin. La maison a ouvert au public en 2004, pour les 150 ans de sa naissance, et elle porte le label Maison des Illustres depuis 2011.\n\nPlacez-vous entre les deux bâtiments et regardez la Meuse. C'est ici qu'un adolescent de province a rêvé de voyages, avant de devenir l'un des poètes les plus célèbres au monde.",
+      "sources": [
+        {
+          "title": "Deux musées pour un poète (Charleville-Sedan Tourisme)",
+          "url": "https://charleville-sedan-tourisme.fr/en/arthur-rimbaud-museum"
+        },
+        {
+          "title": "Vieux moulin, actuellement musées Rimbaud (Monumentum, base Mérimée)",
+          "url": "https://monumentum.fr/monument-historique/pa00078419/charleville-mezieres-vieux-moulin-actuellement-musees-rimbaud-et-de-lardenne"
+        },
+        {
+          "title": "Maison des Ailleurs (Monumentum, Maisons des Illustres)",
+          "url": "https://monumentum.fr/maisons-des-illustres/MI048/charleville-mezieres-maison-des-ailleurs"
+        },
+        {
+          "title": "La Maison des Ailleurs (Musée du Patrimoine)",
+          "url": "https://museedupatrimoine.fr/la-maison-des-ailleurs-a-charleville-mezieres-ardennes/33752.html?lang=en"
+        },
+        {
+          "title": "Maison d'Arthur Rimbaud (Ardennes Tourisme)",
+          "url": "https://www.ardennes.com/en/cultural-heritage/house-of-arthur-rimbaud-house-from-elsewhere/"
+        }
+      ],
+      "facts": [
+        "Le Vieux Moulin, édifice du XVIIᵉ siècle (1626), classé monument historique, sur un bras de la Meuse, quai Arthur-Rimbaud.",
+        "En 1969, la collection Rimbaud s'installe au deuxième étage du Vieux Moulin; le musée Arthur Rimbaud occupe tout le bâtiment depuis 1991.",
+        "Maison des Ailleurs, 7 quai Arthur-Rimbaud, en face du musée: la famille Rimbaud y vit de 1869 à 1875 (premier étage); La Libre Belgique donne 1876.",
+        "Rimbaud y a vécu entre 15 et 21 ans et y a écrit une grande partie de son œuvre.",
+        "Ouverte au public en 2004, pour les 150 ans de la naissance de Rimbaud; label Maison des Illustres en 2011.",
+        "Arthur Rimbaud est né à Charleville."
+      ]
+    },
+    {
+      "id": "cm-basilique",
+      "city": "charleville",
+      "cats": [
+        "culture",
+        "anecdote"
+      ],
+      "name": "Basilique Notre-Dame-d'Espérance",
+      "tagline": "Un mariage royal et 1 000 m² de vitraux abstraits",
+      "lat": 49.7623,
+      "lon": 4.7185,
+      "radius": 70,
+      "express": "Cette basilique gothique de Mézières cache une surprise : ses vitraux sont abstraits. Ils ont été dessinés par René Dürrbach, ami de Picasso, et posés entre 1955 et 1979 : 62 vitraux et 6 oculi, environ 1 000 mètres carrés de verre. Autre surprise : c'est ici que le roi Charles IX a épousé Élisabeth d'Autriche, le 26 novembre 1570. Entrez et regardez la lumière colorée sur les piliers.",
+      "histoire": "Vous êtes devant la basilique Notre-Dame-d'Espérance, dans le vieux Mézières. De l'extérieur, une église gothique classique. À l'intérieur, une tout autre ambiance.\n\nLa construction commence en 1499. Selon une source, elle dure 120 ans. Un siècle plus tard, l'église est le théâtre d'un mariage royal. Le 26 novembre 1570, le roi Charles IX y épouse Élisabeth d'Autriche. Pourquoi Mézières ? Parce que des pluies incessantes avaient rendu les routes impraticables. On a donc choisi cette ville frontière pour la cérémonie, célébrée par le cardinal de Bourbon.\n\nLe vrai choc est à l'intérieur. Les vitraux ne racontent pas de scènes bibliques : ils sont abstraits, faits de formes et de couleurs. Ils sont l'œuvre de René Dürrbach, peintre et sculpteur, ami de Picasso, qui les considérait comme son œuvre majeure. Selon les sources, ils ont été réalisés entre 1954 ou 1955 et 1979 : 62 vitraux et 6 oculi, soit environ 1 000 mètres carrés. Les verrières ont été fabriquées par le maître-verrier André Seurre, de Besançon.\n\nEntrez si vous le pouvez, de préférence par beau temps, et regardez les taches de couleur se poser sur la pierre.",
+      "sources": [
+        {
+          "title": "Basilique Notre-Dame d'Espérance (Techno-Science, d'après Wikipédia)",
+          "url": "https://www.techno-science.net/fr/definitions/basilique-notre-dame-d-esperance-charleville-mezieres"
+        },
+        {
+          "title": "Basilique Notre-Dame d'Espérance (Charleville-Sedan Tourisme)",
+          "url": "https://charleville-sedan-tourisme.fr/?p=52922"
+        },
+        {
+          "title": "Visite guidée de la basilique de Mézières (Ardennes Tourisme)",
+          "url": "https://www.ardennes.com/en/calendar/guided-tour-of-the-basilica-of-mezi%C3%A8res-its-stained-glass-windows-and-its-treasure-of-sacred-art/"
+        },
+        {
+          "title": "Elisabeth of Austria, Queen of France (Wikipedia)",
+          "url": "https://en.wikipedia.org/wiki/Elisabeth_of_Austria,_Queen_of_France"
+        }
+      ],
+      "facts": [
+        "Vitraux d'après les cartons de René Dürrbach (1911-1999), peintre et sculpteur, collaborateur et ami de Picasso, qui les considérait comme son œuvre majeure; vitraux abstraits.",
+        "Entre 1954 et 1979: 62 vitraux et 6 oculi, soit une surface de 1 000 m²; d'autres sources: 1955 à 1979 ou 1980.",
+        "Verrières réalisées par le maître-verrier de Besançon André Seurre.",
+        "Construction commencée en 1499, ayant duré 120 ans selon une source; entre 1499 et 1615 selon une autre. Église gothique.",
+        "Mariage de Charles IX et Élisabeth d'Autriche le 26 novembre 1570 à Mézières, célébré par le cardinal Charles de Bourbon; choix de Mézières car les pluies avaient rendu les routes impraticables; ville frontière."
+      ]
+    },
+    {
+      "id": "cm-tombe-rimbaud",
+      "city": "charleville",
+      "cats": [
+        "wtf",
+        "anecdote"
+      ],
+      "name": "La tombe de Rimbaud",
+      "tagline": "La boîte aux lettres d'un poète mort",
+      "lat": 49.7787,
+      "lon": 4.7108,
+      "radius": 80,
+      "express": "À l'entrée de ce cimetière, une boîte aux lettres jaune porte un nom : Arthur Rimbaud. Le poète est mort à Marseille le 10 novembre 1891, et il repose ici, dans le caveau familial. Pourtant, il reçoit toujours du courrier. Des admirateurs du monde entier lui écrivent, et les lettres sont relevées plusieurs fois par semaine. Si vous avez un mot à lui dire, c'est le moment.",
+      "histoire": "Vous êtes au cimetière de Charleville. Avant même d'entrer, regardez à l'entrée : une boîte aux lettres jaune, au nom d'Arthur Rimbaud.\n\nLe poète, né à Charleville, a fui sa ville natale dès l'adolescence. Après une vie d'errance, de Paris jusqu'en Afrique, il meurt à Marseille le 10 novembre 1891. Son corps est pourtant ramené ici, dans cette ville qu'il voulait tant quitter. Il repose dans le caveau familial, avec sa mère, Vitalie, et sa jeune sœur.\n\nPlus d'un siècle après sa mort, Rimbaud reçoit encore des lettres. Des admirateurs du monde entier lui écrivent, sans espoir de réponse. Selon une source, le courrier est déposé deux ou trois fois par semaine dans cette boîte jaune. Une correspondance à sens unique, entre des lecteurs d'aujourd'hui et un poète qui écrivait : je est un autre.\n\nSi vous entrez, cherchez la tombe familiale. Elle est souvent entourée de petits mots, de fleurs ou de stylos laissés par les visiteurs.",
+      "sources": [
+        {
+          "title": "Insolite : des lettres anonymes sont encore adressées à Rimbaud (Paris Zigzag)",
+          "url": "https://www.pariszigzag.fr/?p=139520"
+        },
+        {
+          "title": "Arthur Rimbaud: A Brilliant Poet (Charleville-Sedan Tourisme)",
+          "url": "https://charleville-sedan-tourisme.fr/?p=14182"
+        },
+        {
+          "title": "Arthur Rimbaud (Poets' Graves)",
+          "url": "https://poetsgraves.co.uk/rimbaud.htm"
+        },
+        {
+          "title": "Le lettere che ancora arrivano a Rimbaud (Domani)",
+          "url": "https://www.editorialedomani.it/idee/cultura/maledetto-poeta-ti-scrivo-le-lettere-che-ancora-arrivano-a-rimbaud-d5e9jpi8"
+        }
+      ],
+      "facts": [
+        "Rimbaud meurt à Marseille le 10 novembre 1891; inhumé au cimetière de Charleville, dans le caveau familial, avec sa mère Vitalie et sa jeune sœur.",
+        "Boîte aux lettres jaune à son nom à l'entrée du cimetière; courrier livré deux ou trois fois par semaine selon une source.",
+        "Des admirateurs du monde entier lui écrivent encore.",
+        "Citation célèbre de Rimbaud: « Je est un autre ».",
+        "Note de rédaction: la présence de mots et objets sur la tombe est une observation courante, à vérifier sur place; coordonnées du cimetière approximatives.",
+        "Rimbaud quitte Charleville adolescent, vit à Paris puis voyage jusqu'en Afrique (biographie courante)."
       ]
     }
   ]

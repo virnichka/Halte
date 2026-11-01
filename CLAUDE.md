@@ -1,6 +1,7 @@
-# Toulouse à l'écoute — consignes pour Claude
+# Les murs parlent — consignes pour Claude
 
-Audioguide géolocalisé en PWA statique (sans serveur ni compte) : 11 lieux du centre de Toulouse,
+Audioguide géolocalisé en PWA statique (sans serveur ni compte) : 31 lieux « hors des clous »
+(Toulouse 16, Paris 10, Charleville-Mézières 5), filtrables par catégorie (Histoire, Culture, WTF, Anecdote, Caché),
 récits « express » (~30-40 s) et « histoire » (~1-2 min) lus par la voix du téléphone.
 Le propriétaire n'est pas programmeur : explique simplement, sans jargon inutile.
 
@@ -18,13 +19,13 @@ Le propriétaire n'est pas programmeur : explique simplement, sans jargon inutil
 ## Où sont les choses
 | Chemin | Rôle |
 |---|---|
-| `data/places.json` | **Source de vérité** : lieux, coordonnées, rayon, récits, `sources`, `facts` (notes sourcées). On modifie ici. |
-| `app/data/toulouse.json` | **Généré** par `build.py` (sans `facts`). Ne pas éditer à la main. |
+| `data/places.json` | **Source de vérité** : `cities` (centre + zone), `categories`, lieux (`city`, `cats`), coordonnées, rayon, récits, `sources`, `facts` (notes sourcées). On modifie ici. |
+| `app/data/lieux.json` | **Généré** par `build.py` (sans `facts`). Ne pas éditer à la main. |
 | `app/index.html`, `styles.css`, `app.js`, `map.js` | L'app (HTML/CSS/JS sans bibliothèque ni framework). |
 | `app/sw.js` | Service worker (hors ligne). Stratégie cache d'abord + mise à jour en arrière-plan. |
-| `pipeline/verify.py` | Chaque chiffre/date/siècle d'un récit doit figurer dans `facts`. |
-| `pipeline/build.py` | verify → `app/data/toulouse.json` → `dist/` (fichier unique + zip, ignorés par git). |
-| `pipeline/e2e_test.py` | 32 tests navigateur (carte, GPS simulé, proximité, lecteur, pause/reprise). |
+| `pipeline/verify.py` | Chaque chiffre/date/siècle d'un récit doit figurer dans `facts` ; lieu dans la zone de sa ville ; catégories connues. |
+| `pipeline/build.py` | verify → `app/data/lieux.json` → `dist/` (fichier unique + zip, ignorés par git). |
+| `pipeline/e2e_test.py` | 43 tests navigateur (carte, filtres, villes, GPS simulé, proximité, lecteur, pause/reprise). |
 | `pipeline/prompt_template.md` | Consigne pour rédiger un récit à partir de notes. |
 | `.github/workflows/deploy.yml` | CI : build + tests sur toute branche/PR ; publication GitHub Pages sur `main` seulement. |
 

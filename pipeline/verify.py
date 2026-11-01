@@ -41,6 +41,9 @@ def romans(text: str) -> set[str]:
 def main(path: str) -> int:
     data = json.loads(Path(path).read_text(encoding="utf-8"))
     problems = 0
+    cities = {c["id"]: c for c in data["cities"]}
+    cat_ids = {c["id"] for c in data["categories"]}
+    seen = set()
     for p in data["places"]:
         facts = " ".join(p["facts"])
         facts_nums = numbers(norm_digits(facts))
@@ -48,8 +51,21 @@ def main(path: str) -> int:
         issues = []
         if len(p["sources"]) < 3:
             issues.append(f"moins de 3 sources ({len(p['sources'])})")
-        if not (41.0 < p["lat"] < 44.5 and 0.5 < p["lon"] < 2.5):
-            issues.append("coordonnées hors zone")
+        if p["id"] in seen:
+            issues.append("identifiant en double")
+        seen.add(p["id"])
+        city = cities.get(p.get("city"))
+        if not city:
+            issues.append(f"ville inconnue « {p.get('city')} »")
+        else:
+            la0, la1, lo0, lo1 = city["bbox"]
+            if not (la0 < p["lat"] < la1 and lo0 < p["lon"] < lo1):
+                issues.append(f"coordonnées hors de la zone de {city['name']}")
+        if not p.get("cats"):
+            issues.append("aucune catégorie")
+        for c in p.get("cats", []):
+            if c not in cat_ids:
+                issues.append(f"catégorie inconnue « {c} »")
         for field in ("express", "histoire"):
             text = p[field]
             for n in sorted(numbers(text) - facts_nums):

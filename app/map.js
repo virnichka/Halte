@@ -181,6 +181,16 @@
     if (m) m.el.classList.toggle(cls, !!on);
   };
 
+  TileMap.prototype.setMarkerVisible = function (id, on) {
+    var m = this.markers[id];
+    if (m) m.el.hidden = !on;
+  };
+
+  TileMap.prototype.setMarkerHtml = function (id, html) {
+    var m = this.markers[id];
+    if (m) m.el.innerHTML = html;
+  };
+
   TileMap.prototype.setUser = function (lat, lon, acc) {
     this.userPos = lat == null ? null : { lat: lat, lon: lon, acc: acc || 0 };
     this.render();
