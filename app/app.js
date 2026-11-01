@@ -1,4 +1,4 @@
-/* Les murs parlent — prototype d'audioguide géolocalisé (sans serveur, sans compte). */
+/* Halte — prototype d'audioguide géolocalisé (sans serveur, sans compte). */
 (function () {
   'use strict';
 

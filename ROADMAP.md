@@ -1,4 +1,4 @@
-# Feuille de route — Les murs parlent
+# Feuille de route — Halte
 
 Une ligne = une brique = une session. Ne commencer une brique « à faire » qu'avec l'accord du propriétaire.
 
@@ -7,7 +7,7 @@ Une ligne = une brique = une session. Ne commencer une brique « à faire » qu'
 - [x] Projet rangé dans GitHub (`virnichka/toulouse-a-lecoute`)
 - [x] Publication automatique sur GitHub Pages (vérification + tests avant chaque mise en ligne)
 - [x] `CLAUDE.md` et `ROADMAP.md`
-- [x] Nouveau nom « Les murs parlent » ; plusieurs villes (Toulouse, Paris, Charleville-Mézières)
+- [x] Nouveau nom « Halte » ; plusieurs villes (Toulouse, Paris, Charleville-Mézières)
 - [x] Filtres par catégorie : Histoire, Culture, WTF, Anecdote, Caché ; interface épurée
 - [x] +20 lieux (5 Toulouse insolites, 10 Paris, 5 Charleville) ; 43 tests navigateur
 

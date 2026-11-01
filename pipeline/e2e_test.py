@@ -50,7 +50,7 @@ def main():
         page.goto(f"http://127.0.0.1:{port}/index.html")
         page.wait_for_selector(".card")
 
-        check("nouveau nom « Les murs parlent »", "Les murs parlent" in page.inner_text("h1") and page.title() == "Les murs parlent")
+        check("nouveau nom « Halte »", "Halte" in page.inner_text("h1") and page.title() == "Halte")
         check("bouton principal « Me localiser pour commencer »", "Me localiser pour commencer" in page.inner_text(".cta"))
         check("Toulouse par défaut : 16 lieux affichés", page.locator(".card").count() == 16)
         check("16 marqueurs visibles (sur 31)", page.locator(".tm-marker:not([hidden])").count() == 16 and page.locator(".tm-marker").count() == 31)

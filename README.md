@@ -1,4 +1,4 @@
-# Les murs parlent — prototype d'audioguide géolocalisé
+# Halte — prototype d'audioguide géolocalisé
 
 Une web app installable (PWA), sans serveur ni compte : des lieux qui sortent de l'ordinaire, classés par catégorie
 (Histoire, Culture, WTF, Anecdote, Caché), dans plusieurs villes (Toulouse 16, Paris 10, Charleville-Mézières 5).

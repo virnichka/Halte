@@ -1,6 +1,6 @@
 {
-  "name": "Les murs parlent",
-  "short_name": "Les murs parlent",
+  "name": "Halte",
+  "short_name": "Halte",
   "description": "Audioguide géolocalisé : des lieux qui sortent de l'ordinaire, racontés à voix haute.",
   "lang": "fr",
   "start_url": "./",

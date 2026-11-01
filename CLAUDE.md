@@ -1,4 +1,4 @@
-# Les murs parlent — consignes pour Claude
+# Halte — consignes pour Claude
 
 Audioguide géolocalisé en PWA statique (sans serveur ni compte) : 31 lieux « hors des clous »
 (Toulouse 16, Paris 10, Charleville-Mézières 5), filtrables par catégorie (Histoire, Culture, WTF, Anecdote, Caché),
