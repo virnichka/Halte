@@ -1,9 +1,9 @@
 /* Service worker : application utilisable hors ligne (texte + voix de l'appareil).
    Les tuiles de carte déjà vues sont mises en cache ; aucun téléchargement en masse. */
-var VER = 'ta-v2';
+var VER = 'ta-v3';
 var TILES = 'ta-tiles-v1';
 var MAX_TILES = 600;
-var SHELL = ['./', 'index.html', 'styles.css', 'app.js', 'map.js', 'data/toulouse.json',
+var SHELL = ['./', 'index.html', 'styles.css', 'app.js', 'map.js', 'data/lieux.json',
   'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', function (e) {

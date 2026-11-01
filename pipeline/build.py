@@ -2,9 +2,9 @@
 """Construit l'application à partir de data/places.json.
 
 1. vérifie les chiffres (verify.py) ; arrêt si un point est à revoir ;
-2. écrit app/data/toulouse.json (sans les notes de sources internes) ;
-3. produit dist/toulouse-audioguide.html (un seul fichier, pour un aperçu rapide)
-   et dist/toulouse-audioguide-app.zip (le dossier à héberger tel quel).
+2. écrit app/data/lieux.json (sans les notes de sources internes) ;
+3. produit dist/audioguide.html (un seul fichier, pour un aperçu rapide)
+   et dist/audioguide-app.zip (le dossier à héberger tel quel).
 
 Usage : python3 pipeline/build.py
 """
@@ -26,7 +26,9 @@ def main() -> int:
         return 1
 
     data = json.loads(src.read_text(encoding="utf-8"))
-    public = {"city": data["city"], "generated_by": data["generated_by"], "places": []}
+    public = {k: data[k] for k in ("app", "generated_by", "categories")}
+    public["cities"] = [{k: v for k, v in c.items() if k != "bbox"} for c in data["cities"]]
+    public["places"] = []
     for p in data["places"]:
         q = {k: v for k, v in p.items() if k != "facts"}
         public["places"].append(q)
@@ -34,7 +36,7 @@ def main() -> int:
     out = ROOT / "app" / "data"
     out.mkdir(parents=True, exist_ok=True)
     payload = json.dumps(public, ensure_ascii=False, indent=1)
-    (out / "toulouse.json").write_text(payload, encoding="utf-8")
+    (out / "lieux.json").write_text(payload, encoding="utf-8")
 
     # --- fichier unique ---
     app = ROOT / "app"
@@ -57,16 +59,16 @@ def main() -> int:
 
     dist = ROOT / "dist"
     dist.mkdir(exist_ok=True)
-    (dist / "toulouse-audioguide.html").write_text(html, encoding="utf-8")
+    (dist / "audioguide.html").write_text(html, encoding="utf-8")
 
     # --- zip à héberger ---
-    zpath = dist / "toulouse-audioguide-app.zip"
+    zpath = dist / "audioguide-app.zip"
     with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED) as z:
         for f in sorted(app.rglob("*")):
             if f.is_file():
                 z.write(f, f.relative_to(app))
     print(f"\nOK : {len(public['places'])} lieux")
-    print(f"  {dist / 'toulouse-audioguide.html'} ({(dist / 'toulouse-audioguide.html').stat().st_size // 1024} Ko)")
+    print(f"  {dist / 'audioguide.html'} ({(dist / 'audioguide.html').stat().st_size // 1024} Ko)")
     print(f"  {zpath} ({zpath.stat().st_size // 1024} Ko)")
     return 0
 

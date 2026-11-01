@@ -1,4 +1,4 @@
-/* Toulouse à l'écoute — prototype d'audioguide géolocalisé (sans serveur, sans compte). */
+/* Halte — prototype d'audioguide géolocalisé (sans serveur, sans compte). */
 (function () {
   'use strict';
 
@@ -18,6 +18,10 @@
   /* ---------- État ---------- */
   var S = {
     places: [],
+    cities: [],
+    cats: [],
+    city: store.get('city', ''),
+    cat: store.get('cat', 'all'),
     pos: null,          // { lat, lon, acc, sim }
     simId: '',
     watchId: null,
@@ -26,7 +30,7 @@
     offered: {},
     visited: new Set(store.get('visited', [])),
     autoOffer: store.get('auto', true),
-    awake: store.get('awake', true),
+    awake: true,
     rate: store.get('rate', 1),
     voiceURI: store.get('voice', ''),
     bannerFor: null,
@@ -62,7 +66,7 @@
   /* ---------- Chargement ---------- */
   function load() {
     if (window.__DATA__) return Promise.resolve(window.__DATA__);
-    return fetch('data/toulouse.json').then(function (r) { return r.json(); });
+    return fetch('data/lieux.json').then(function (r) { return r.json(); });
   }
 
   load().then(init).catch(function (e) {
@@ -70,16 +74,21 @@
   });
 
   function init(data) {
-    S.places = data.places.map(function (p, i) {
-      p.order = i + 1;
+    S.cities = data.cities;
+    S.cats = data.categories;
+    var perCity = {};
+    S.places = data.places.map(function (p) {
+      perCity[p.city] = (perCity[p.city] || 0) + 1;
+      p.order = perCity[p.city];
       p.expressSec = Math.round(words(p.express) / 2.5);
       p.histoireSec = Math.round(words(p.histoire) / 2.5);
       p._d = null;
       return p;
     });
-    $('#status').textContent = 'Position non activée · ' + S.places.length + ' lieux';
+    if (!cityById(S.city)) S.city = S.cities[0].id;
 
-    map = new TileMap($('#map'), { lat: 43.6045, lon: 1.4430, zoom: 15 });
+    var c0 = cityById(S.city);
+    map = new TileMap($('#map'), { lat: c0.lat, lon: c0.lon, zoom: 15 });
     S.places.forEach(function (p) {
       map.addMarker(p.id, {
         lat: p.lat, lon: p.lon, label: p.name, html: String(p.order),
@@ -87,21 +96,29 @@
         onClick: function (id) { select(id, true); }
       });
     });
-    map.fitPoints(S.places);
-    requestAnimationFrame(function () { map._measure(); map.fitPoints(S.places); });
+
+    $('#city').innerHTML = S.cities.map(function (c) {
+      return '<option value="' + esc(c.id) + '">' + esc(c.name) + '</option>';
+    }).join('');
+    $('#city').addEventListener('change', function () { setCity(this.value, true); });
+    $('#cats').addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-cat]');
+      if (b) setCat(b.getAttribute('data-cat'));
+    });
+    applyFilter(true);
+    requestAnimationFrame(function () { map._measure(); map.fitPoints(visiblePlaces()); });
 
     $('#zin').addEventListener('click', function () { map.zoomBy(1); });
     $('#zout').addEventListener('click', function () { map.zoomBy(-1); });
     $('#recenter').addEventListener('click', function () {
-      if (S.pos) map.setView(S.pos.lat, S.pos.lon, Math.max(map.z, 16));
-      else map.fitPoints(S.places);
+      if (S.pos && nearCity(S.pos) === S.city) map.setView(S.pos.lat, S.pos.lon, Math.max(map.z, 16));
+      else map.fitPoints(visiblePlaces());
     });
     $('#btn-locate').addEventListener('click', toggleTracking);
     $('#btn-settings').addEventListener('click', function () { openSettings(); });
     $('#list').addEventListener('click', onListClick);
 
     setupSettings();
-    renderList();
 
     if ('serviceWorker' in navigator && !window.__INLINE__ && /^https?:$/.test(location.protocol)) {
       navigator.serviceWorker.register('sw.js').catch(function () {});
@@ -130,66 +147,132 @@
     if (document.visibilityState === 'visible' && (S.tracking || S.player.state === 'playing')) keepAwake(true);
   });
 
+  /* ---------- Villes et catégories ---------- */
+  function cityById(id) {
+    for (var i = 0; i < S.cities.length; i++) if (S.cities[i].id === id) return S.cities[i];
+    return null;
+  }
+  function catById(id) {
+    for (var i = 0; i < S.cats.length; i++) if (S.cats[i].id === id) return S.cats[i];
+    return null;
+  }
+  // Ville la plus proche d'une position (à moins de 40 km), sinon null.
+  function nearCity(pos) {
+    var best = null, bd = Infinity;
+    S.cities.forEach(function (c) {
+      var d = haversine(pos, c);
+      if (d < bd) { bd = d; best = c; }
+    });
+    return bd < 40000 ? best.id : null;
+  }
+  function visiblePlaces() {
+    return S.places.filter(function (p) {
+      return p.city === S.city && (S.cat === 'all' || p.cats.indexOf(S.cat) >= 0);
+    });
+  }
+  function cityPlaces() {
+    return S.places.filter(function (p) { return p.city === S.city; });
+  }
+
+  function renderChips() {
+    var inCity = cityPlaces();
+    var used = S.cats.filter(function (c) {
+      return inCity.some(function (p) { return p.cats.indexOf(c.id) >= 0; });
+    });
+    if (S.cat !== 'all' && !used.some(function (c) { return c.id === S.cat; })) S.cat = 'all';
+    $('#cats').innerHTML = '<button type="button" data-cat="all" aria-pressed="' + (S.cat === 'all') + '">Tout</button>' +
+      used.map(function (c) {
+        return '<button type="button" data-cat="' + esc(c.id) + '" title="' + esc(c.hint) + '" aria-pressed="' + (S.cat === c.id) + '">' +
+          c.icon + ' ' + esc(c.label) + '</button>';
+      }).join('');
+  }
+
+  function applyFilter(fit) {
+    $('#city').value = S.city;
+    renderChips();
+    var vis = {};
+    visiblePlaces().forEach(function (p) { vis[p.id] = true; });
+    S.places.forEach(function (p) { map.setMarkerVisible(p.id, !!vis[p.id]); });
+    if (S.selected && !vis[S.selected]) { map.setMarkerClass(S.selected, 'sel', false); S.selected = null; }
+    if (fit) map.fitPoints(visiblePlaces());
+    renderListKeepScroll();
+    defaultStatus();
+  }
+
+  function setCity(id, fit) {
+    if (!cityById(id) || id === S.city) return;
+    S.city = id; store.set('city', id);
+    S.offered = {};
+    applyFilter(fit);
+  }
+  function setCat(id) {
+    S.cat = id; store.set('cat', id);
+    S.offered = {};
+    applyFilter(false);
+    $('#list').scrollTop = 0;
+  }
+
+  function defaultStatus() {
+    if (S.pos) { posStatus(); return; }
+    var n = cityPlaces().length;
+    setStatus(n + ' lieux');
+  }
+
   /* ---------- Liste ---------- */
   function ctaHtml() {
-    var h = '';
-    if (!store.get('hint', false)) {
-      h += '<div class="hint"><strong>Comment ça marche</strong><ol>' +
-        '<li>Touchez <b>Me localiser</b>.</li>' +
-        '<li>Marchez : l\'app vous propose chaque lieu quand vous en approchez.</li>' +
-        '<li>Gardez le son activé ; l\'écran reste allumé pendant l\'écoute.</li></ol>' +
-        '<button type="button" data-act="hint-ok">Compris</button></div>';
-    }
-    if (S.pos) {
-      var n = sortedPlaces()[0];
-      h += '<button type="button" class="cta" data-act="nearest">▶ Écouter le plus proche' +
+    var arr = sortedPlaces();
+    if (!arr.length) return '';
+    if (S.pos && arr[0]._d != null && arr[0]._d < 40000) {
+      var n = arr[0];
+      return '<button type="button" class="cta" data-act="nearest">▶ Écouter le plus proche' +
         '<span class="cta-sub">' + esc(n.name) + ' · ' + fmtDist(n._d) + '</span></button>';
-    } else {
-      h += '<button type="button" class="cta" data-act="locate">Me localiser pour commencer' +
-        '<span class="cta-sub">ou ⚙ Réglages → mode démo</span></button>';
     }
-    return h;
+    if (S.pos) return '';
+    return '<button type="button" class="cta" data-act="locate">Me localiser pour commencer' +
+      '<span class="cta-sub">L\'app vous propose chaque lieu quand vous en approchez</span></button>';
   }
 
   function sortedPlaces() {
-    var arr = S.places.slice();
+    var arr = visiblePlaces();
     if (S.pos) arr.sort(function (a, b) { return a._d - b._d; });
     else arr.sort(function (a, b) { return a.order - b.order; });
     return arr;
   }
 
+  function tagsHtml(p) {
+    return p.cats.map(function (id) {
+      var c = catById(id);
+      return c ? '<span class="tag">' + c.icon + ' ' + esc(c.label) + '</span>' : '';
+    }).join('');
+  }
+
   function renderList() {
-    var html = sortedPlaces().map(function (p) {
+    var list = sortedPlaces();
+    var html = list.map(function (p) {
       var done = S.visited.has(p.id);
-      var dist = p._d == null ? '' :
+      var dist = p._d == null || p._d > 40000 ? '' :
         '<div class="dist">' + fmtDist(p._d) + (fmtWalk(p._d) ? '<small>' + fmtWalk(p._d) + '</small>' : '') + '</div>';
-      var src = p.sources.map(function (s) {
-        return '<li><a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.title) + '</a></li>';
-      }).join('');
       return '<article class="card' + (done ? ' done' : '') + (S.selected === p.id ? ' sel' : '') + '" data-id="' + esc(p.id) + '">' +
         '<div class="card-head"><span class="num">' + (done ? '✓' : p.order) + '</span>' +
-        '<div class="card-title"><h2>' + esc(p.name) + '</h2><p>' + esc(p.tagline) + '</p></div>' + dist + '</div>' +
+        '<div class="card-title"><h2>' + esc(p.name) + '</h2><p>' + esc(p.tagline) + '</p>' +
+        '<div class="tags">' + tagsHtml(p) + '</div></div>' + dist + '</div>' +
         '<div class="card-actions">' +
         '<button type="button" data-act="play" data-mode="express">▶ Express<small>' + fmtDur(p.expressSec) + '</small></button>' +
-        '<button type="button" data-act="play" data-mode="histoire">▶ Histoire<small>' + fmtDur(p.histoireSec) + '</small></button>' +
-        '<button type="button" class="ghost" data-act="map">Carte</button></div>' +
-        '<details class="src"><summary>Sources (' + p.sources.length + ')</summary><ul>' + src + '</ul></details>' +
+        '<button type="button" data-act="play" data-mode="histoire">▶ Histoire<small>' + fmtDur(p.histoireSec) + '</small></button></div>' +
         '</article>';
     }).join('');
+    if (!list.length) html = '<p class="empty">Aucun lieu dans cette catégorie ici.</p>';
     $('#list').innerHTML = ctaHtml() + html;
   }
 
   function onListClick(e) {
     var btn = e.target.closest('button[data-act]');
-    if (!btn) return;
+    var card = e.target.closest('.card');
+    if (!btn) { if (card) select(card.getAttribute('data-id'), true); return; }
     var act = btn.getAttribute('data-act');
-    if (act === 'hint-ok') { store.set('hint', true); renderListKeepScroll(); return; }
     if (act === 'locate') { toggleTracking(); return; }
     if (act === 'nearest') { startPlayback(sortedPlaces()[0].id, 'express'); return; }
-    var card = btn.closest('.card');
-    var id = card.getAttribute('data-id');
-    if (act === 'play') startPlayback(id, btn.getAttribute('data-mode'));
-    else select(id, true);
+    if (act === 'play' && card) startPlayback(card.getAttribute('data-id'), btn.getAttribute('data-mode'));
   }
 
   function select(id, pan) {
@@ -211,7 +294,7 @@
     S.tracking = true;
     keepAwake(true);
     $('#btn-locate').classList.add('on');
-    $('#btn-locate').textContent = 'Localisation active';
+    $('#btn-locate').textContent = 'Localisé ✓';
     setStatus('Recherche de votre position…');
     S.watchId = navigator.geolocation.watchPosition(function (g) {
       if (S.simId) return;
@@ -235,7 +318,7 @@
       map.setUser(null);
       S.places.forEach(function (p) { p._d = null; });
       renderList();
-      if (!keepStatus) setStatus('Position non activée · ' + S.places.length + ' lieux');
+      if (!keepStatus) defaultStatus();
     }
   }
 
@@ -244,17 +327,27 @@
     S.pos = { lat: lat, lon: lon, acc: acc || 0, sim: !!sim };
     S.places.forEach(function (p) { p._d = haversine(S.pos, p); });
     map.setUser(lat, lon, acc);
+    // Si l'on est dans une autre ville du guide, on y bascule (une fois par changement de ville).
+    var here = nearCity(S.pos);
+    if (here && here !== S.city && here !== S.lastAutoCity) { S.lastAutoCity = here; setCity(here, false); }
+    else if (here) S.lastAutoCity = here;
     var nearest = sortedPlaces()[0];
     if (firstFix || sim) {
       firstFix = false;
-      if (nearest._d < 5000) map.setView(lat, lon, 16);
+      if (nearest && nearest._d < 5000) map.setView(lat, lon, 16);
     }
-    var txt;
-    if (nearest._d > 5000) txt = 'Vous êtes à ' + fmtDist(nearest._d) + ' du lieu le plus proche';
-    else txt = (sim ? 'Position simulée' : 'GPS') + ' · précision ' + fmtDist(acc || 0) + ' · ' + nearest.name + ' à ' + fmtDist(nearest._d);
-    setStatus(txt);
+    posStatus();
     updateList();
     checkProximity();
+  }
+
+  function posStatus() {
+    var nearest = sortedPlaces()[0];
+    var c = cityById(S.city);
+    if (!nearest) setStatus('');
+    else if (nearest._d > 40000) setStatus('à ' + fmtDist(haversine(S.pos, c)));
+    else if (S.pos.acc > 80 && !S.pos.sim) setStatus('position imprécise…');
+    else setStatus(S.pos.sim ? 'mode démo' : 'vous êtes localisé');
   }
 
   // Met à jour les distances sur place ; ne reconstruit la liste que si l'ordre change.
@@ -262,13 +355,15 @@
     var order = sortedPlaces().map(function (p) { return p.id; }).join(',');
     var cards = document.querySelectorAll('.card');
     var domOrder = Array.prototype.map.call(cards, function (c) { return c.getAttribute('data-id'); }).join(',');
-    if (order !== domOrder || !document.querySelector('.card .dist')) { renderListKeepScroll(); return; }
+    var wantCta = !!(S.pos && sortedPlaces()[0] && sortedPlaces()[0]._d < 40000);
+    if (order !== domOrder || !!document.querySelector('[data-act="nearest"]') !== wantCta ||
+        (wantCta && !document.querySelector('.card .dist'))) { renderListKeepScroll(); return; }
     Array.prototype.forEach.call(cards, function (c) {
       var p = byId(c.getAttribute('data-id')), d = c.querySelector('.dist');
       if (d) d.innerHTML = fmtDist(p._d) + (fmtWalk(p._d) ? '<small>' + fmtWalk(p._d) + '</small>' : '');
     });
-    var cs = document.querySelector('.cta-sub'), n0 = sortedPlaces()[0];
-    if (cs && S.pos) cs.textContent = n0.name + ' · ' + fmtDist(n0._d);
+    var cs = document.querySelector('[data-act="nearest"] .cta-sub'), n0 = sortedPlaces()[0];
+    if (cs && n0) cs.textContent = n0.name + ' · ' + fmtDist(n0._d);
   }
 
   function renderListKeepScroll() {
@@ -284,7 +379,7 @@
     if (!S.autoOffer || !S.pos) return;
     if (S.pos.acc > 80 && !S.pos.sim) return;
     var best = null;
-    S.places.forEach(function (p) {
+    visiblePlaces().forEach(function (p) {
       if (p._d <= p.radius) {
         if (!S.offered[p.id] && (!best || p._d < best._d)) best = p;
       } else if (p._d > p.radius * 2) {
@@ -454,7 +549,10 @@
       (noVoice ? 'Aucune voix française détectée sur cet appareil : installez-en une dans les réglages de synthèse vocale. Le texte reste lisible ci-dessous.' : '') + '</p>' +
       '<div id="pl-next" hidden></div>' +
       '<details' + (noVoice ? ' open' : '') + '><summary>Afficher le texte</summary><div class="transcript">' +
-      paras.map(function (t) { return '<p>' + t + '</p>'; }).join('') + '</div></details>';
+      paras.map(function (t) { return '<p>' + t + '</p>'; }).join('') + '</div>' +
+      '<p class="src">Sources : ' + p.sources.map(function (s) {
+        return '<a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.title) + '</a>';
+      }).join(' · ') + '</p></details>';
     $('#pl-toggle').addEventListener('click', function () {
       var st = S.player.state;
       if (st === 'playing') pausePlayback(); else resumePlayback();
@@ -472,8 +570,8 @@
   }
 
   function nextPlace() {
-    var cur = byId(S.player.placeId), ref = S.pos || cur, best = null;
-    S.places.forEach(function (p) {
+    var cur = byId(S.player.placeId), ref = (S.pos && nearCity(S.pos) === S.city) ? S.pos : cur, best = null;
+    visiblePlaces().forEach(function (p) {
       if (p.id === S.player.placeId || S.visited.has(p.id)) return;
       var d = haversine(ref, p);
       if (!best || d < best.d) best = { p: p, d: d };
@@ -519,27 +617,30 @@
     var d = $('#settings');
     $('#opt-auto').checked = S.autoOffer;
     $('#opt-auto').addEventListener('change', function () { S.autoOffer = this.checked; store.set('auto', S.autoOffer); });
-    $('#opt-awake').checked = S.awake;
-    $('#opt-awake').addEventListener('change', function () { S.awake = this.checked; store.set('awake', S.awake); if (!S.awake) keepAwake(false); else if (S.tracking) keepAwake(true); });
     $('#opt-rate').value = String(S.rate);
     $('#opt-rate').addEventListener('change', function () { S.rate = Number(this.value); store.set('rate', S.rate); });
     $('#opt-voice').addEventListener('change', function () { S.voiceURI = this.value; store.set('voice', S.voiceURI); });
     var sim = $('#opt-sim');
-    sim.innerHTML = '<option value="">GPS réel</option>' + S.places.map(function (p) {
-      return '<option value="' + esc(p.id) + '">Près de : ' + esc(p.name) + '</option>';
+    sim.innerHTML = '<option value="">Non (GPS réel)</option>' + S.cities.map(function (c) {
+      return '<optgroup label="' + esc(c.name) + '">' + S.places.filter(function (p) { return p.city === c.id; }).map(function (p) {
+        return '<option value="' + esc(p.id) + '">' + esc(p.name) + '</option>';
+      }).join('') + '</optgroup>';
     }).join('');
     sim.addEventListener('change', function () {
       S.simId = this.value;
       if (S.simId) {
         var p = byId(S.simId);
         S.offered = {};
+        if (S.cat !== 'all' && p.cats.indexOf(S.cat) < 0) { S.cat = 'all'; store.set('cat', 'all'); }
+        if (p.city !== S.city) setCity(p.city, false); else applyFilter(false);
+        S.lastAutoCity = p.city;
         setPosition(p.lat + 0.00008, p.lon, 10, true);
         d.close();
       } else {
         S.pos = null; map.setUser(null);
         S.places.forEach(function (q) { q._d = null; });
         renderList();
-        setStatus('Position non activée · ' + S.places.length + ' lieux');
+        defaultStatus();
         if (S.tracking) { stopTracking(true); toggleTracking(); }
       }
     });

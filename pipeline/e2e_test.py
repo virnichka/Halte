@@ -50,14 +50,32 @@ def main():
         page.goto(f"http://127.0.0.1:{port}/index.html")
         page.wait_for_selector(".card")
 
-        check("guide de premier lancement affiché", page.locator(".hint").count() == 1)
+        check("nouveau nom « Halte »", "Halte" in page.inner_text("h1") and page.title() == "Halte")
         check("bouton principal « Me localiser pour commencer »", "Me localiser pour commencer" in page.inner_text(".cta"))
-        page.click(".hint button")
-        check("guide masqué après « Compris »", page.locator(".hint").count() == 0)
-        check("11 lieux affichés", page.locator(".card").count() == 11)
-        check("11 marqueurs sur la carte", page.locator(".tm-marker").count() == 11)
+        check("Toulouse par défaut : 16 lieux affichés", page.locator(".card").count() == 16)
+        check("16 marqueurs visibles (sur 31)", page.locator(".tm-marker:not([hidden])").count() == 16 and page.locator(".tm-marker").count() == 31)
         check("tuiles demandées", page.locator(".tm-tile").count() > 0)
+        check("catégories affichées sur les fiches", page.locator(".card .tag").count() >= 16)
         page.screenshot(path=str(OUT / "1_accueil.png"))
+
+        # Filtre par catégorie
+        page.click("#cats button[data-cat='wtf']")
+        check("filtre WTF : 3 lieux à Toulouse", page.locator(".card").count() == 3)
+        check("filtre WTF : 3 marqueurs visibles", page.locator(".tm-marker:not([hidden])").count() == 3)
+        check("filtre WTF : bouton actif", page.get_attribute("#cats button[data-cat='wtf']", "aria-pressed") == "true")
+        page.screenshot(path=str(OUT / "1b_filtre_wtf.png"))
+        page.click("#cats button[data-cat='all']")
+        check("filtre Tout : 16 lieux", page.locator(".card").count() == 16)
+
+        # Changement de ville
+        page.select_option("#city", "paris")
+        check("Paris : 10 lieux", page.locator(".card").count() == 10 and page.input_value("#city") == "paris")
+        check("Paris : 10 marqueurs visibles", page.locator(".tm-marker:not([hidden])").count() == 10)
+        page.screenshot(path=str(OUT / "1c_paris.png"))
+        page.select_option("#city", "charleville")
+        check("Charleville-Mézières : 5 lieux", page.locator(".card").count() == 5)
+        page.select_option("#city", "toulouse")
+        check("retour à Toulouse", page.locator(".card").count() == 16)
 
         # Géolocalisation réelle (mockée) au Capitole
         page.click("#btn-locate")
@@ -94,6 +112,18 @@ def main():
         n = page.locator(".transcript span").count()
         check("récit long découpé en plusieurs segments", n >= 4)
         page.click("#pl-stop")
+
+        # Mode démo dans une autre ville : bascule automatique sur Paris
+        page.click("#btn-settings")
+        page.select_option("#opt-sim", "paris-zouave")
+        page.wait_for_selector(".banner:not([hidden])")
+        check("démo Paris : bascule sur la ville", page.input_value("#city") == "paris" and page.locator(".card").count() == 10)
+        check("démo Paris : bandeau Zouave", "Zouave" in page.inner_text("#banner"))
+        page.click("#banner button[data-b='later']")
+        page.click("#cats button[data-cat='secret']")
+        check("filtre Caché à Paris : lieux triés par distance", page.locator(".card").count() == 3 and page.locator(".card .dist").count() == 3)
+        page.click("#cats button[data-cat='all']")
+        page.screenshot(path=str(OUT / "5b_demo_paris.png"))
 
         # Zoom carte
         z0 = page.evaluate("document.querySelector('.tm-tile') && window.__ta.S.places.length")
