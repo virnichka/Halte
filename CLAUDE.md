@@ -29,7 +29,7 @@ Le propriétaire n'est pas programmeur : explique simplement, sans jargon inutil
 | `app/sw.js` | Service worker (hors ligne). Stratégie cache d'abord + mise à jour en arrière-plan. |
 | `pipeline/verify.py` | Chaque chiffre/date/siècle d'un récit doit figurer dans `facts` ; lieu dans la zone de sa ville ; catégories connues. |
 | `pipeline/build.py` | verify → `app/data/lieux.json` → `dist/` (fichier unique + zip, ignorés par git). |
-| `pipeline/e2e_test.py` | 43 tests navigateur (carte, filtres, villes, GPS simulé, proximité, lecteur, pause/reprise). |
+| `pipeline/e2e_test.py` | 44 tests navigateur (carte, filtres, villes, GPS simulé, proximité, lecteur, pause/reprise). |
 | `pipeline/prompt_template.md` | Consigne pour rédiger un récit à partir de notes. |
 | `.github/workflows/deploy.yml` | CI : build + tests sur toute branche/PR ; publication GitHub Pages sur `main` seulement. |
 

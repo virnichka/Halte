@@ -10,6 +10,7 @@ Une ligne = une brique = une session. Ne commencer une brique « à faire » qu'
 - [x] Nouveau nom « Halte » ; plusieurs villes (Toulouse, Paris, Charleville-Mézières)
 - [x] Filtres par catégorie : Histoire, Culture, WTF, Anecdote, Caché ; interface épurée
 - [x] +20 lieux (5 Toulouse insolites, 10 Paris, 5 Charleville) ; 43 tests navigateur
+- [x] Fin du renommage (mémoire du téléphone, cache hors ligne, fichiers générés) ; numéros remplacés par l'icône de catégorie, nom du lieu affiché sur la carte quand on le touche ; 44 tests
 
 ## À vérifier par le propriétaire
 - [ ] Tester sur un vrai téléphone : GPS sur place, voix, installation, mise à jour à la 2ᵉ ouverture
@@ -19,6 +20,11 @@ Une ligne = une brique = une session. Ne commencer une brique « à faire » qu'
 - [x] Dépôt GitHub renommé « Halte » (nouvelle adresse du site)
 
 ## Pistes (ne rien faire sans demander)
+- [ ] Parcours thématiques ordonnés (« 1 h dans le vieux Toulouse ») : là, des étapes 1, 2, 3 auraient du sens
+- [ ] Carte : regrouper les pastilles qui se chevauchent quand on dézoome
+- [ ] Fiche plus compacte : un seul bouton « Écouter » (version courte), la version longue en option
+- [ ] Ville choisie automatiquement à la 1ʳᵉ ouverture (la plus proche), au lieu de Toulouse
+- [ ] Fond : coordonnées vérifiées, sources primaires plutôt que miroirs de Wikipédia, 1 lieu caché de plus par ville
 - [ ] iPhone : vérifier que la voix démarre au premier toucher (risque connu)
 - [ ] Plus de lieux WTF / Caché — par lots de 5 (sources → `facts` → récits → verify → relecture humaine)
 - [ ] Voix pré-générées « ambiance podcast » en dialogue (mp3) — script à lancer sur l'ordinateur du propriétaire
