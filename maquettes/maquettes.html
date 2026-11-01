@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Halte — maquettes (étape 2)</title>
+<link rel="stylesheet" href="maquettes.css">
+</head>
+<body class="d-signal">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-histoire" viewBox="0 0 24 24"><path d="M3 9.5 12 4l9 5.5H3z"/><path d="M5.5 12.5v6M10 12.5v6M14 12.5v6M18.5 12.5v6M3 21h18"/></symbol>
+    <symbol id="i-culture" viewBox="0 0 24 24"><path d="M12 6.5C10 5 7.5 4.5 4 4.5v14c3.5 0 6 .5 8 2 2-1.5 4.5-2 8-2v-14c-3.5 0-6 .5-8 2z"/><path d="M12 6.5v14"/></symbol>
+    <symbol id="i-wtf" viewBox="0 0 24 24"><path d="M13 2.5 4.5 13.5H11l-1 8 8.5-11H12l1-8z"/></symbol>
+    <symbol id="i-anecdote" viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 0 1-12.3 7.6L3.5 21l1.4-4.5A8.5 8.5 0 1 1 20.5 12z"/></symbol>
+    <symbol id="i-secret" viewBox="0 0 24 24"><circle cx="8" cy="15.5" r="4.5"/><path d="M11.2 12.3 20.5 3M17.5 6l3 3M15 8.5l2 2"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.2v13.6c0 .8.9 1.3 1.5.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.5 4.4C8.9 3.9 8 4.4 8 5.2z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="4.5" width="4.2" height="15" rx="1.4"/><rect x="13.8" y="4.5" width="4.2" height="15" rx="1.4"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4.5V9h4.5"/></symbol>
+    <symbol id="i-fwd" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4.5V9h-4.5"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9.5l6 6 6-6"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="M6 14.5l6-6 6 6"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="M9.5 6l6 6-6 6"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2.2"/><circle cx="9" cy="17" r="2.2"/></symbol>
+    <symbol id="i-locate" viewBox="0 0 24 24"><path d="M3.5 11 20.5 3.5 13 20.5l-2-7.5-7.5-2z"/></symbol>
+    <symbol id="i-route" viewBox="0 0 24 24"><path d="M12 2.8 21.2 12 12 21.2 2.8 12z"/><path d="M9.5 14.5v-2a1.5 1.5 0 0 1 1.5-1.5h4M13 8.5l2.2 2.5-2.2 2.5"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 4.5h11a3 3 0 0 1 3 3v12H8a3 3 0 0 1-3-3z"/><path d="M5 16.5a3 3 0 0 1 3-3h11"/></symbol>
+    <symbol id="i-logo" viewBox="0 0 24 24"><path d="M12 21.5s6.5-5.6 6.5-11a6.5 6.5 0 1 0-13 0c0 5.4 6.5 11 6.5 11z"/><path d="M9.5 9v3M12 7.5v6M14.5 9v3"/></symbol>
+  </defs>
+</svg>
+
+<nav class="switch" id="switch">
+  <a href="?d=signal">A · Signal</a><a href="?d=carnet">B · Carnet</a><a href="?d=pop">C · Pop</a>
+</nav>
+
+<main class="screens">
+
+<!-- 1. Accueil : carte plein écran + panneau replié -->
+<figure><div class="phone" id="s-accueil">
+  <div class="map" data-sel="capitole"><div class="map-bg"></div><div class="fade"></div></div>
+  <div class="status"><span>9:41</span><span class="bat"></span></div>
+  <div class="topbar">
+    <div class="brand"><span class="logo"><svg class="ic"><use href="#i-logo"/></svg></span>Halte</div>
+    <button class="fab" aria-label="Réglages"><svg class="ic"><use href="#i-settings"/></svg></button>
+  </div>
+  <button class="fab locate" style="bottom:318px" aria-label="Me recentrer"><svg class="ic"><use href="#i-locate"/></svg></button>
+  <div class="sheet">
+    <div class="handle"></div>
+    <div class="rowtop"><span class="badge"><i></i>Vous y êtes</span><span class="prog"><span class="ring"></span>2 sur 16 écoutés</span></div>
+    <h2 class="t-title">Le Capitole</h2>
+    <p class="t-tag">Le pouvoir municipal depuis plus de 800 ans</p>
+    <div class="ctas">
+      <button class="btn primary"><svg class="ic f"><use href="#i-play"/></svg>Écouter <span class="dur">40 s</span></button>
+      <button class="btn sec stack">Version longue<span class="dur">1 min 40</span></button>
+    </div>
+    <button class="more">Voir les 16 lieux autour <svg class="ic"><use href="#i-up"/></svg></button>
+  </div>
+  <div class="homebar"></div>
+</div><figcaption>1 · Accueil (localisé)</figcaption></figure>
+
+<!-- 2. Liste : panneau à mi-hauteur + mini-lecteur -->
+<figure><div class="phone" id="s-liste">
+  <div class="map"><div class="map-bg"></div><div class="fade"></div></div>
+  <div class="status"><span>9:41</span><span class="bat"></span></div>
+  <div class="topbar">
+    <div class="brand"><span class="logo"><svg class="ic"><use href="#i-logo"/></svg></span>Halte</div>
+    <button class="fab" aria-label="Réglages"><svg class="ic"><use href="#i-settings"/></svg></button>
+  </div>
+  <div class="sheet" style="top:300px">
+    <div class="handle"></div>
+    <div class="lhead"><div><h2 class="t-h">Autour de vous</h2><p class="t-sub">16 lieux · 2 écoutés</p></div></div>
+    <div class="chips">
+      <button class="chip on">Tout</button>
+      <button class="chip" data-cat="histoire"><svg class="ic"><use href="#i-histoire"/></svg>Histoire</button>
+      <button class="chip" data-cat="culture"><svg class="ic"><use href="#i-culture"/></svg>Culture</button>
+      <button class="chip" data-cat="wtf"><svg class="ic"><use href="#i-wtf"/></svg>WTF</button>
+      <button class="chip" data-cat="anecdote"><svg class="ic"><use href="#i-anecdote"/></svg>Anecdote</button>
+    </div>
+    <ul class="rows">
+      <li class="place here"><span class="tile" data-cat="histoire"><svg class="ic"><use href="#i-histoire"/></svg></span>
+        <span class="ptxt"><b>Le Capitole</b><span><em>Vous y êtes</em> · Le pouvoir municipal depuis plus de 800 ans</span></span>
+        <button class="playsm" aria-label="Écouter"><svg class="ic f"><use href="#i-pause"/></svg></button></li>
+      <li class="place"><span class="tile" data-cat="anecdote"><svg class="ic"><use href="#i-anecdote"/></svg></span>
+        <span class="ptxt"><b>Notre-Dame du Taur</b><span><em>170 m</em> · Là où la corde du taureau aurait cédé</span></span>
+        <button class="playsm" aria-label="Écouter"><svg class="ic f"><use href="#i-play"/></svg></button></li>
+      <li class="place"><span class="tile" data-cat="histoire"><svg class="ic"><use href="#i-histoire"/></svg></span>
+        <span class="ptxt"><b>Couvent des Jacobins</b><span><em>310 m</em> · Chef-d'œuvre du gothique méridional</span></span>
+        <button class="playsm" aria-label="Écouter"><svg class="ic f"><use href="#i-play"/></svg></button></li>
+      <li class="place"><span class="tile done" data-cat="histoire"><svg class="ic"><use href="#i-histoire"/></svg></span>
+        <span class="ptxt"><b>Basilique Saint-Sernin</b><span><em>430 m</em> · Écouté ✓</span></span>
+        <button class="playsm" aria-label="Réécouter"><svg class="ic f"><use href="#i-play"/></svg></button></li>
+      <li class="place"><span class="tile" data-cat="culture"><svg class="ic"><use href="#i-culture"/></svg></span>
+        <span class="ptxt"><b>Musée des Augustins</b><span><em>460 m</em> · Un couvent devenu l'un des plus anciens musées de France</span></span>
+        <button class="playsm" aria-label="Écouter"><svg class="ic f"><use href="#i-play"/></svg></button></li>
+    </ul>
+  </div>
+  <div class="mini">
+    <span class="tile" data-cat="histoire"><svg class="ic"><use href="#i-histoire"/></svg></span>
+    <span class="mt"><b>Le Capitole</b><span>Version courte · reste 0:26</span></span>
+    <button class="mp" aria-label="Pause"><svg class="ic f"><use href="#i-pause"/></svg></button>
+    <span class="mbar"><i></i></span>
+  </div>
+  <div class="homebar"></div>
+</div><figcaption>2 · Liste + mini-lecteur</figcaption></figure>
+
+<!-- 3. Fiche lieu -->
+<figure><div class="phone" id="s-fiche">
+  <div class="map" data-sel="taur"><div class="map-bg"></div><div class="fade"></div></div>
+  <div class="status"><span>9:41</span><span class="bat"></span></div>
+  <div class="topbar">
+    <div class="brand"><span class="logo"><svg class="ic"><use href="#i-logo"/></svg></span>Halte</div>
+    <button class="fab" aria-label="Réglages"><svg class="ic"><use href="#i-settings"/></svg></button>
+  </div>
+  <div class="sheet">
+    <div class="handle"></div>
+    <button class="fclose" aria-label="Fermer la fiche"><svg class="ic"><use href="#i-close"/></svg></button>
+    <div class="cats"><span class="cat" data-cat="anecdote"><svg class="ic"><use href="#i-anecdote"/></svg>Anecdote</span><span class="cat" data-cat="histoire"><svg class="ic"><use href="#i-histoire"/></svg>Histoire</span></div>
+    <h2 class="t-title">Notre-Dame du Taur</h2>
+    <p class="t-tag">Là où la corde du taureau aurait cédé</p>
+    <p class="meta"><b>170 m</b> · 2 min à pied</p>
+    <div class="ctas"><button class="btn primary full"><svg class="ic f"><use href="#i-play"/></svg>Écouter <span class="dur">30 s</span></button></div>
+    <div class="two">
+      <button class="btn sec stack">Version longue<span class="dur">1 min 10</span></button>
+      <button class="btn sec"><svg class="ic"><use href="#i-route"/></svg>Itinéraire</button>
+    </div>
+    <button class="srcrow"><svg class="ic"><use href="#i-book"/></svg><span>Sources (4)</span><svg class="ic"><use href="#i-right"/></svg></button>
+  </div>
+  <div class="homebar"></div>
+</div><figcaption>3 · Fiche lieu (pastille touchée)</figcaption></figure>
+
+<!-- 4. Lecteur plein écran -->
+<figure><div class="phone" id="s-lecteur">
+  <div class="status"><span>9:41</span><span class="bat"></span></div>
+  <div class="pf-top">
+    <button class="rb" aria-label="Réduire le lecteur"><svg class="ic"><use href="#i-down"/></svg></button>
+    <span class="pf-mode">Version longue</span>
+    <button class="rb" aria-label="Arrêter"><svg class="ic"><use href="#i-close"/></svg></button>
+  </div>
+  <div class="pf-head">
+    <span class="tile" data-cat="histoire"><svg class="ic"><use href="#i-histoire"/></svg></span>
+    <div><h2 class="t-title">Le Capitole</h2><p class="t-tag" style="margin-top:2px">Histoire · Culture · 40 m</p></div>
+  </div>
+  <div class="pf-text">
+    <p>Vous êtes devant le Capitole, siège du pouvoir municipal depuis plus de huit cents ans. <mark>Son histoire commence en 1190, quand les consuls de Toulouse cherchent un bâtiment pour héberger la maison commune.</mark></p>
+    <p class="fut">Le nom a une double histoire. En occitan, le chapitre, l'assemblée des magistrats qui dirigeaient la ville, se dit « capítol » : ces magistrats sont les capitouls. Et en 1522, le greffier Pierre Salmon baptise le lieu Capitole, pour rappeler le Capitole de la Rome antique.</p>
+    <p class="fut">Les siècles ont laissé leurs couches. La tour des archives, le donjon, est construite en 1525 pour protéger les archives et abriter le conseil des capitouls.</p>
+  </div>
+  <div class="pf-ctrl">
+    <div class="pbar"><i></i><b></b></div>
+    <div class="ptimes"><span>0:42</span><span>−0:58</span></div>
+    <div class="transport">
+      <button class="tb" aria-label="Phrase précédente"><svg class="ic"><use href="#i-back"/></svg></button>
+      <button class="tplay" aria-label="Pause"><svg class="ic f"><use href="#i-pause"/></svg></button>
+      <button class="tb" aria-label="Phrase suivante"><svg class="ic"><use href="#i-fwd"/></svg></button>
+    </div>
+    <div class="subrow">
+      <button>Vitesse 1×</button>
+      <button><svg class="ic"><use href="#i-book"/></svg>Sources (5)</button>
+    </div>
+  </div>
+  <div class="homebar"></div>
+</div><figcaption>4 · Lecteur plein écran</figcaption></figure>
+
+</main>
+
+<script>
+(function () {
+  var d = (location.search.match(/d=(\w+)/) || [])[1] || 'signal';
+  document.body.className = 'd-' + d;
+  [].forEach.call(document.querySelectorAll('#switch a'), function (a) { a.classList.toggle('on', a.getAttribute('href') === '?d=' + d); });
+  // Carte fixe : tuiles OSM zoom 16 assemblées (img/carte-toulouse.png), coin haut-gauche en coordonnées monde.
+  var Z = 16, LEFT = 8455684.636, TOP = 6125681.802, T = 256 * Math.pow(2, Z);
+  function px(lat, lon) {
+    var s = Math.sin(lat * Math.PI / 180);
+    return { x: (lon + 180) / 360 * T - LEFT, y: (0.5 - Math.log((1 + s) / (1 - s)) / (4 * Math.PI)) * T - TOP };
+  }
+  var ME = { lat: 43.6047, lon: 1.4436 };
+  var P = [
+    ['capitole', 'histoire', 43.6045, 1.444], ['taur', 'anecdote', 43.6061, 1.4427], ['jacobins', 'histoire', 43.6035, 1.4402],
+    ['saint-sernin', 'histoire', 43.6084, 1.442, 1], ['augustins', 'culture', 43.601, 1.446], ['assezat', 'culture', 43.6004, 1.442],
+    ['daurade', 'histoire', 43.6008, 1.4397, 1], ['pont-neuf', 'histoire', 43.5993, 1.4387], ['bazacle', 'anecdote', 43.6055, 1.434]
+  ];
+  [].forEach.call(document.querySelectorAll('.map'), function (m) {
+    var sel = m.getAttribute('data-sel');
+    P.forEach(function (p) {
+      var q = px(p[2], p[3]);
+      if (q.x < -30 || q.x > 420 || q.y < -30 || q.y > 870) return;
+      var e = document.createElement('span');
+      e.className = 'pin' + (p[4] ? ' done' : '') + (p[0] === sel ? ' sel' : '');
+      e.setAttribute('data-cat', p[1]);
+      e.style.left = q.x.toFixed(1) + 'px'; e.style.top = q.y.toFixed(1) + 'px';
+      e.innerHTML = '<svg class="ic"><use href="#i-' + p[1] + '"/></svg>';
+      m.appendChild(e);
+    });
+    var u = px(ME.lat, ME.lon), me = document.createElement('span');
+    me.className = 'me'; me.style.left = u.x + 'px'; me.style.top = u.y + 'px';
+    m.appendChild(me);
+  });
+})();
+</script>
+</body>
+</html>

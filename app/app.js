@@ -1,8 +1,9 @@
-/* Halte — prototype d'audioguide géolocalisé (sans serveur, sans compte). */
+/* Halte — audioguide géolocalisé (sans serveur, sans compte). */
 (function () {
   'use strict';
 
   var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   function esc(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
@@ -16,34 +17,43 @@
   };
   // Ancien nom du projet (préfixe « ta. ») : on récupère les réglages et lieux écoutés une seule fois.
   try {
-    ['cat', 'visited', 'auto', 'rate', 'voice'].forEach(function (k) {
+    ['cat', 'visited', 'rate', 'voice'].forEach(function (k) {
       var old = localStorage.getItem('ta.' + k);
       if (old != null && localStorage.getItem('halte.' + k) == null) localStorage.setItem('halte.' + k, old);
       localStorage.removeItem('ta.' + k);
     });
+    ['ta.auto', 'ta.city', 'halte.auto', 'halte.city'].forEach(function (k) { localStorage.removeItem(k); });
   } catch (_) {}
+  // Premier lancement : aucune trace d'une visite précédente.
+  var firstVisit = (function () {
+    try {
+      for (var i = 0; i < localStorage.length; i++) if (/^halte\./.test(localStorage.key(i))) return false;
+    } catch (_) { return false; }
+    return true;
+  })();
+
+  var RATES = [0.9, 1, 1.15, 1.3];
+  var REDUCED = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
 
   /* ---------- État ---------- */
   var S = {
-    places: [],
-    cities: [],
-    cats: [],
+    places: [], cities: [], cats: [],
     cat: store.get('cat', 'all'),
     pos: null,          // { lat, lon, acc, sim }
-    simId: '',
-    watchId: null,
-    tracking: false,
-    selected: null,
-    offered: {},
+    geo: 'off',         // off | searching | on | denied | error | unavailable
+    simId: '', watchId: null, tracking: false, follow: false,
+    view: 'home',       // home | place
+    sheet: 'peek',      // peek | half | full
+    homeSheet: 'peek',
+    selected: null, hereId: null, playerOpen: false,
     visited: new Set(store.get('visited', [])),
-    autoOffer: store.get('auto', true),
-    awake: true,
-    rate: store.get('rate', 1),
+    rate: Number(store.get('rate', 1)) || 1,
     voiceURI: store.get('voice', ''),
-    bannerFor: null,
-    player: { placeId: null, mode: null, chunks: [], i: 0, state: 'idle', token: 0 }
+    awake: true,
+    player: { placeId: null, mode: null, chunks: [], i: 0, state: 'idle', token: 0, t0: 0 }
   };
-  var map;
+  if (RATES.indexOf(S.rate) < 0) S.rate = 1;
+  var map, app = $('#app'), sheetEl = $('#sheet'), scrollEl = $('#sheet-scroll');
 
   /* ---------- Utilitaires ---------- */
   function haversine(a, b) {
@@ -60,15 +70,39 @@
   }
   function fmtWalk(m) {
     var min = Math.max(1, Math.round(m / 75));
-    if (min > 90) return '';
-    return min + ' min à pied';
+    return min > 90 ? '' : min + ' min à pied';
   }
   function fmtDur(sec) {
-    if (sec < 75) return Math.round(sec / 10) * 10 + ' s';
-    return Math.round(sec / 60) + ' min';
+    var s = Math.max(10, Math.round(sec / 10) * 10);
+    if (s < 60) return s + ' s';
+    var m = Math.floor(s / 60), r = s % 60;
+    return m + ' min' + (r ? ' ' + r : '');
+  }
+  function fmtClock(sec) {
+    sec = Math.max(0, Math.round(sec));
+    var s = sec % 60;
+    return Math.floor(sec / 60) + ':' + (s < 10 ? '0' : '') + s;
   }
   function byId(id) { for (var i = 0; i < S.places.length; i++) if (S.places[i].id === id) return S.places[i]; return null; }
   function words(t) { return (t.match(/\S+/g) || []).length; }
+  function ic(name, cls) { return '<svg class="ic' + (cls ? ' ' + cls : '') + '" aria-hidden="true"><use href="#i-' + name + '"/></svg>'; }
+  function catById(id) { for (var i = 0; i < S.cats.length; i++) if (S.cats[i].id === id) return S.cats[i]; return null; }
+  function tileHtml(p, extra) {
+    return '<span class="tile' + (S.visited.has(p.id) ? ' is-done' : '') + (extra ? ' ' + extra : '') + '" data-cat="' + esc(p.cats[0]) + '" aria-hidden="true">' + ic(p.cats[0]) + '</span>';
+  }
+  function plural(n, one, many) { return n + ' ' + (n > 1 ? many : one); }
+  function announce(msg) {
+    var l = $('#live');
+    l.textContent = '';
+    setTimeout(function () { l.textContent = msg; }, 60);
+  }
+  function setInert(on, except) {
+    ['#map', '.topbar', '#btn-locate', '#sheet', '#mini'].forEach(function (s) {
+      if (s === except) return;
+      var e = $(s);
+      if (e) { if (on) e.setAttribute('inert', ''); else e.removeAttribute('inert'); }
+    });
+  }
 
   /* ---------- Chargement ---------- */
   function load() {
@@ -77,7 +111,7 @@
   }
 
   load().then(init).catch(function (e) {
-    $('#list').innerHTML = '<p style="padding:16px">Impossible de charger les données (' + esc(e.message || e) + ').</p>';
+    $('#peek').innerHTML = '<p class="place-tagline">Impossible de charger les données (' + esc(e.message || e) + ').</p>';
   });
 
   function init(data) {
@@ -90,57 +124,60 @@
       p._d = null;
       return p;
     });
-    try { localStorage.removeItem('halte.city'); } catch (_) {}
 
     // Pas de liste de villes : la carte sert de sélecteur. Vue de la France au premier lancement,
     // puis la dernière zone regardée ; position de l'utilisateur dès qu'elle est connue.
-    map = new TileMap($('#map'), { lat: 46.6, lon: 2.4, zoom: 6, minZoom: 5, onMove: onMapMove });
+    map = new TileMap($('#map'), {
+      lat: 46.6, lon: 2.4, zoom: 6, minZoom: 5,
+      onMove: onMapMove,
+      onUserMove: function () { setFollow(false); }
+    });
     S.places.forEach(function (p) {
       map.addMarker(p.id, {
-        lat: p.lat, lon: p.lon, label: p.name, html: markerHtml(p),
-        className: S.visited.has(p.id) ? 'done' : '',
-        onClick: function (id) { select(id, true); }
+        lat: p.lat, lon: p.lon, cat: p.cats[0], label: pinLabel(p), html: ic(p.cats[0]),
+        className: S.visited.has(p.id) ? 'is-done' : '',
+        onClick: function (id) { openPlace(id); }
       });
     });
 
-    $('#cats').addEventListener('click', function (e) {
-      var b = e.target.closest('button[data-cat]');
-      if (b) setCat(b.getAttribute('data-cat'));
-    });
+    bindUI();
+    bindSheet();
+    setupSettings();
     var view = store.get('view', null);
-    applyFilter(false);
+    applyFilter();
+    measure();
     requestAnimationFrame(function () {
       map._measure();
+      measure();
       if (view && isFinite(view.lat) && isFinite(view.z)) map.setView(view.lat, view.lon, view.z);
       else map.fitPoints(filtered());
-      refreshList(true);
+      refresh(true);
     });
-
-    $('#zin').addEventListener('click', function () { map.zoomBy(1); });
-    $('#zout').addEventListener('click', function () { map.zoomBy(-1); });
-    $('#recenter').addEventListener('click', function () {
-      if (S.pos) map.setView(S.pos.lat, S.pos.lon, Math.max(map.z, 16));
-      else map.fitPoints(filtered());
-    });
-    $('#btn-locate').addEventListener('click', toggleTracking);
-    $('#btn-settings').addEventListener('click', function () { openSettings(); });
-    $('#list').addEventListener('click', onListClick);
-
-    setupSettings();
 
     if ('serviceWorker' in navigator && !window.__INLINE__ && /^https?:$/.test(location.protocol)) {
       navigator.serviceWorker.register('sw.js').catch(function () {});
     }
-    // Localisation déjà autorisée lors d'une visite précédente : on la relance sans demander.
+
+    // Localisation déjà autorisée : on la relance sans rien demander. Sinon, écran d'accueil au premier lancement.
+    var decided = false;
+    function decide(granted) {
+      if (decided) return;
+      decided = true;
+      if (granted) { store.set('onboarded', true); startTracking(); }
+      else if (firstVisit && !store.get('onboarded', false)) showWelcome();
+    }
     try {
       if (navigator.permissions && navigator.permissions.query) {
-        navigator.permissions.query({ name: 'geolocation' }).then(function (r) {
-          if (r.state === 'granted' && !S.tracking) toggleTracking();
-        }).catch(function () {});
-      }
-    } catch (_) {}
-    window.__halte = { S: S, map: map, setPosition: setPosition, startPlayback: startPlayback };
+        navigator.permissions.query({ name: 'geolocation' }).then(function (r) { decide(r.state === 'granted'); })
+          .catch(function () { decide(false); });
+        setTimeout(function () { decide(false); }, 1500);
+      } else decide(false);
+    } catch (_) { decide(false); }
+
+    window.__halte = { S: S, map: map, setPosition: setPosition, startPlayback: startPlayback, openPlace: openPlace, setSheet: setSheet };
   }
+
+  function pinLabel(p) { return p.name + (S.visited.has(p.id) ? ', déjà écouté' : ''); }
 
   /* ---------- Écran allumé ---------- */
   var wake = null;
@@ -164,36 +201,25 @@
   });
 
   /* ---------- Catégories et zone affichée ---------- */
-  function catById(id) {
-    for (var i = 0; i < S.cats.length; i++) if (S.cats[i].id === id) return S.cats[i];
-    return null;
-  }
-  // Pastille d'un lieu : icône de sa catégorie principale (✓ une fois écouté).
-  function icon(p) {
-    if (S.visited.has(p.id)) return '✓';
-    var c = catById(p.cats[0]);
-    return c ? c.icon : '•';
-  }
-  function markerHtml(p) {
-    return '<span class="tm-ico" aria-hidden="true">' + icon(p) + '</span><span class="tm-label">' + esc(p.name) + '</span>';
-  }
-
-  // Tous les lieux de la catégorie choisie, partout.
   function filtered() {
     return S.places.filter(function (p) { return S.cat === 'all' || p.cats.indexOf(S.cat) >= 0; });
   }
-  // Ceux qui sont dans la zone affichée par la carte.
   function visiblePlaces() {
-    return filtered().filter(function (p) { return map.inView(p.lat, p.lon, 8); });
+    return filtered().filter(function (p) { return map.inView(p.lat, p.lon, 4); });
   }
-  // Le plus proche d'un point (position ou centre de la carte), parmi la catégorie choisie.
-  function nearestFrom(ref) {
+  function nearestFrom(ref, list) {
     var best = null;
-    filtered().forEach(function (p) {
+    (list || filtered()).forEach(function (p) {
       var d = haversine(ref, p);
       if (!best || d < best.d) best = { p: p, d: d };
     });
     return best;
+  }
+  function sortedVisible() {
+    var arr = visiblePlaces(), ref = S.pos || map.center();
+    arr.forEach(function (p) { p._s = S.pos ? p._d : haversine(ref, p); });
+    arr.sort(function (a, b) { return a._s - b._s; });
+    return arr;
   }
 
   function renderChips() {
@@ -201,31 +227,27 @@
       return S.places.some(function (p) { return p.cats.indexOf(c.id) >= 0; });
     });
     if (S.cat !== 'all' && !used.some(function (c) { return c.id === S.cat; })) S.cat = 'all';
-    $('#cats').innerHTML = '<button type="button" data-cat="all" aria-pressed="' + (S.cat === 'all') + '">Tout</button>' +
+    $('#cats').innerHTML = '<button type="button" class="chip" data-cat-filter="all" aria-pressed="' + (S.cat === 'all') + '">Tout</button>' +
       used.map(function (c) {
-        return '<button type="button" data-cat="' + esc(c.id) + '" title="' + esc(c.hint) + '" aria-pressed="' + (S.cat === c.id) + '">' +
-          c.icon + ' ' + esc(c.label) + '</button>';
+        return '<button type="button" class="chip" data-cat="' + esc(c.id) + '" data-cat-filter="' + esc(c.id) + '" title="' + esc(c.hint) +
+          '" aria-pressed="' + (S.cat === c.id) + '">' + ic(c.id) + esc(c.label) + '</button>';
       }).join('');
   }
 
-  function applyFilter(fit) {
+  function applyFilter() {
     renderChips();
     var vis = {};
     filtered().forEach(function (p) { vis[p.id] = true; });
     S.places.forEach(function (p) { map.setMarkerVisible(p.id, !!vis[p.id]); });
-    if (S.selected && !vis[S.selected]) { map.setMarkerClass(S.selected, 'sel', false); S.selected = null; }
-    if (fit) map.fitPoints(filtered());
-    refreshList(true);
+    refresh(true);
   }
 
   function setCat(id) {
-    S.cat = id; store.set('cat', id);
-    S.offered = {};
-    applyFilter(false);
-    $('#list').scrollTop = 0;
+    S.cat = id;
+    store.set('cat', id);
+    applyFilter();
   }
 
-  // Appelé à chaque mouvement de la carte : on attend qu'elle s'arrête pour mettre la liste à jour.
   var moveT = null;
   function onMapMove() {
     if (!map) return;
@@ -233,220 +255,458 @@
     moveT = setTimeout(function () {
       var c = map.center();
       store.set('view', { lat: +c.lat.toFixed(5), lon: +c.lon.toFixed(5), z: map.z });
-      refreshList(false);
+      refresh(false);
     }, 150);
   }
 
-  function defaultStatus() {
-    if (S.pos) { posStatus(); return; }
-    var n = visiblePlaces().length;
-    setStatus(n ? n + (n > 1 ? ' lieux' : ' lieu') + ' dans cette zone' : 'aucun lieu dans cette zone');
-  }
-
-  /* ---------- Liste ---------- */
-  function ctaHtml() {
-    if (S.pos) {
-      var n = nearestFrom(S.pos);
-      if (!n) return '';
-      if (n.d < 40000) {
-        return '<button type="button" class="cta" data-act="nearest">▶ Écouter le plus proche' +
-          '<span class="cta-sub">' + esc(n.p.name) + ' · ' + fmtDist(n.d) + '</span></button>';
-      }
-      return '<button type="button" class="cta" data-act="goto" data-id="' + esc(n.p.id) + '">Aucun lieu près de vous' +
-        '<span class="cta-sub">Le plus proche : ' + esc(n.p.name) + ' · ' + fmtDist(n.d) + '</span></button>';
+  /* ---------- « Vous y êtes » : le lieu dans le rayon duquel on se trouve ---------- */
+  function computeHere() {
+    var here = null;
+    if (S.pos && (S.pos.sim || S.pos.acc <= 80)) {
+      filtered().forEach(function (p) {
+        if (p._d != null && p._d <= p.radius && (!here || p._d < here._d)) here = p;
+      });
     }
-    return '<button type="button" class="cta" data-act="locate">Me localiser pour commencer' +
-      '<span class="cta-sub">L\'app vous propose chaque lieu quand vous en approchez</span></button>';
-  }
-  function ctaKey() {
-    if (!S.pos) return 'locate';
-    var n = nearestFrom(S.pos);
-    return n ? (n.d < 40000 ? 'near:' : 'far:') + n.p.id : '';
-  }
-
-  function sortedPlaces() {
-    var arr = visiblePlaces();
-    if (S.pos) arr.sort(function (a, b) { return a._d - b._d; });
-    else arr.sort(function (a, b) { return a.order - b.order; });
-    return arr;
+    var id = here ? here.id : null;
+    if (id !== S.hereId) {
+      if (S.hereId) map.setMarkerClass(S.hereId, 'is-here', false);
+      S.hereId = id;
+      if (id) { map.setMarkerClass(id, 'is-here', true); announce('Vous êtes à : ' + here.name); }
+    }
+    return here;
   }
 
-  function tagsHtml(p) {
-    return p.cats.map(function (id) {
-      var c = catById(id);
-      return c ? '<span class="tag">' + c.icon + ' ' + esc(c.label) + '</span>' : '';
+  // Ce que propose le panneau replié : le lieu où l'on est (s'il n'est pas encore écouté),
+  // sinon le plus proche pas encore écouté, sinon le plus proche.
+  function peekModel() {
+    if (!S.pos) return { kind: S.geo === 'on' ? 'off' : S.geo };
+    var here = S.hereId ? byId(S.hereId) : null, best = null, bestU = null;
+    filtered().forEach(function (p) {
+      if (!best || p._d < best._d) best = p;
+      if (!S.visited.has(p.id) && (!bestU || p._d < bestU._d)) bestU = p;
+    });
+    if (here && !S.visited.has(here.id)) return { kind: 'here', p: here };
+    var t = bestU || best;
+    if (!t) return { kind: 'empty' };
+    if (t._d > 40000) return { kind: 'far', p: t };
+    return { kind: here === t ? 'here' : 'near', p: t };
+  }
+
+  /* ---------- Panneau : carte du haut ---------- */
+  function playLabel(p, mode) {
+    var pl = S.player;
+    if (pl.placeId === p.id && pl.mode === mode && pl.state === 'playing') return { icon: 'pause', text: 'Pause' };
+    if (pl.placeId === p.id && pl.mode === mode && pl.state === 'paused') return { icon: 'play', text: 'Reprendre' };
+    return { icon: 'play', text: mode === 'express' ? 'Écouter' : 'Version longue' };
+  }
+  function ctasHtml(p) {
+    var a = playLabel(p, 'express'), b = playLabel(p, 'histoire');
+    return '<div class="btn-row">' +
+      '<button type="button" class="btn btn--primary" data-act="play" data-mode="express" data-id="' + esc(p.id) + '">' + ic(a.icon, 'ic--fill') +
+      a.text + (a.text === 'Écouter' ? ' <span class="btn__meta">' + fmtDur(p.expressSec) + '</span>' : '') + '</button>' +
+      '<button type="button" class="btn btn--secondary btn--stack" data-act="play" data-mode="histoire" data-id="' + esc(p.id) + '">' +
+      (b.text === 'Version longue' ? 'Version longue<span class="btn__meta">' + fmtDur(p.histoireSec) + '</span>' : b.text + '<span class="btn__meta">version longue</span>') + '</button></div>';
+  }
+  function progressHtml(vis) {
+    var k = vis.filter(function (p) { return S.visited.has(p.id); }).length;
+    if (!k) return '';
+    return '<span class="progress-txt"><span class="ring" style="--p:' + Math.round(k / vis.length * 100) + '" aria-hidden="true"></span>' +
+      k + ' sur ' + vis.length + ' écouté' + (k > 1 ? 's' : '') + '</span>';
+  }
+
+  function renderPeek(m, vis) {
+    var n = vis.length, zone = n ? plural(n, 'lieu', 'lieux') + ' dans cette zone' : 'Aucun lieu dans cette zone';
+    var listBtn = '<button type="button" class="btn btn--secondary" data-act="expand">Voir la liste</button>';
+    var h = '';
+    function head(eyebrow, title, tag) {
+      return (eyebrow ? '<p class="peek__label">' + eyebrow + '</p>' : '') + '<h2 class="place-title">' + title + '</h2>' +
+        (tag ? '<p class="place-tagline">' + tag + '</p>' : '');
+    }
+    switch (m.kind) {
+      case 'off':
+        h = head(esc(zone), 'Écoutez les lieux autour de vous', 'Activez la localisation : Halte vous montre le lieu le plus proche et vous le raconte.') +
+          '<div class="btn-row"><button type="button" class="btn btn--primary" data-act="locate">' + ic('locate') + 'Me localiser</button>' + listBtn + '</div>';
+        break;
+      case 'searching':
+        h = head(esc(zone), 'Recherche de votre position…', 'Quelques secondes, de préférence à découvert.') + '<div class="btn-row">' + listBtn + '</div>';
+        break;
+      case 'denied':
+        h = head('', 'Localisation refusée', 'Autorisez-la dans les réglages du navigateur, ou explorez la carte.') + '<div class="btn-row">' + listBtn + '</div>';
+        break;
+      case 'error':
+        h = head('', 'Position indisponible', 'Réessayez dans un instant, ou explorez la carte.') +
+          '<div class="btn-row"><button type="button" class="btn btn--primary" data-act="locate">' + ic('locate') + 'Réessayer</button>' + listBtn + '</div>';
+        break;
+      case 'unavailable':
+        h = head(esc(zone), 'Localisation indisponible', 'Cet appareil ne donne pas sa position : explorez la carte.') + '<div class="btn-row">' + listBtn + '</div>';
+        break;
+      case 'empty':
+        h = head('', 'Aucun lieu pour ce filtre', '') +
+          '<div class="btn-row"><button type="button" class="btn btn--secondary" data-act="cat-all">Voir toutes les catégories</button></div>';
+        break;
+      case 'far':
+        h = '<p class="peek__label">Aucun lieu près de vous</p>' +
+          '<button type="button" class="peek__open" data-act="open" data-id="' + esc(m.p.id) + '"><h2 class="place-title">' + esc(m.p.name) + '</h2>' +
+          '<p class="place-tagline">Le plus proche, à <b data-dist>' + fmtDist(m.p._d) + '</b></p></button>' +
+          '<div class="btn-row"><button type="button" class="btn btn--primary" data-act="open" data-id="' + esc(m.p.id) + '">Voir sur la carte</button>' + listBtn + '</div>';
+        break;
+      default: // here | near
+        var p = m.p;
+        h = '<div class="peek__top">' + (m.kind === 'here'
+          ? '<span class="badge badge--here">Vous y êtes</span>'
+          : '<span class="peek__label">Le plus proche · <b data-dist>' + fmtDist(p._d) + '</b> · <span data-walk>' + fmtWalk(p._d) + '</span></span>') +
+          progressHtml(vis) + '</div>' +
+          '<button type="button" class="peek__open" data-act="open" data-id="' + esc(p.id) + '" aria-label="' + esc(p.name) + ' : voir la fiche">' +
+          '<h2 class="place-title">' + esc(p.name) + '</h2><p class="place-tagline">' + esc(p.tagline) + '</p></button>' +
+          ctasHtml(p) +
+          (n > 1 ? '<button type="button" class="more" data-act="expand">Voir les ' + n + ' lieux autour' + ic('up') + '</button>' : '');
+    }
+    $('#peek').innerHTML = '<div class="peek" data-kind="' + m.kind + '"' + (m.p ? ' data-id="' + esc(m.p.id) + '"' : '') + '>' + h + '</div>';
+  }
+
+  function updatePeekDist(m) {
+    if (!m.p) return;
+    var d = $('#peek [data-dist]'), w = $('#peek [data-walk]');
+    if (d) d.textContent = fmtDist(m.p._d);
+    if (w) w.textContent = fmtWalk(m.p._d);
+  }
+
+  /* ---------- Panneau : liste ---------- */
+  function rowSub(p) {
+    if (S.hereId === p.id) return '<span class="place__here">Vous y êtes</span> · ' + esc(p.tagline);
+    var d = p._d != null && p._d <= 40000 ? '<b class="d">' + fmtDist(p._d) + '</b> · ' : '';
+    return d + (S.visited.has(p.id) ? 'Écouté' : esc(p.tagline));
+  }
+  function rowPlay(p) {
+    var a = playLabel(p, 'express');
+    var label = a.text === 'Pause' ? 'Mettre en pause' : a.text === 'Reprendre' ? 'Reprendre' : 'Écouter ' + p.name + ' (' + fmtDur(p.expressSec) + ')';
+    return '<button type="button" class="icon-btn" data-act="play" data-mode="express" data-id="' + esc(p.id) + '" aria-label="' + esc(label) + '">' +
+      ic(a.icon, 'ic--fill') + '</button>';
+  }
+  function renderList(vis) {
+    var html = vis.map(function (p) {
+      return '<li class="place' + (S.hereId === p.id ? ' is-here' : '') + '" data-id="' + esc(p.id) + '">' +
+        '<button type="button" class="place__main" data-act="open" data-id="' + esc(p.id) + '">' + tileHtml(p) +
+        '<span class="place__text"><span class="place__name">' + esc(p.name) + '</span><span class="place__sub">' + rowSub(p) + '</span></span></button>' +
+        rowPlay(p) + '</li>';
     }).join('');
-  }
-
-  function renderList() {
-    var list = sortedPlaces();
-    var html = list.map(function (p) {
-      var done = S.visited.has(p.id);
-      var dist = p._d == null || p._d > 40000 ? '' :
-        '<div class="dist">' + fmtDist(p._d) + (fmtWalk(p._d) ? '<small>' + fmtWalk(p._d) + '</small>' : '') + '</div>';
-      return '<article class="card' + (done ? ' done' : '') + (S.selected === p.id ? ' sel' : '') + '" data-id="' + esc(p.id) + '">' +
-        '<div class="card-head"><span class="num" aria-hidden="true">' + icon(p) + '</span>' +
-        '<div class="card-title"><h2>' + esc(p.name) + '</h2><p>' + esc(p.tagline) + '</p>' +
-        '<div class="tags">' + tagsHtml(p) + '</div></div>' + dist + '</div>' +
-        '<div class="card-actions">' +
-        '<button type="button" data-act="play" data-mode="express">▶ Écouter<small>' + fmtDur(p.expressSec) + '</small></button>' +
-        '<button type="button" class="more" data-act="play" data-mode="histoire">Version longue · ' + fmtDur(p.histoireSec) + '</button></div>' +
-        '</article>';
-    }).join('');
-    if (!list.length) {
+    if (!vis.length) {
       var n = nearestFrom(S.pos || map.center());
-      html = '<p class="empty">Aucun lieu dans cette zone de la carte.</p>' + (n
-        ? '<button type="button" class="goto" data-act="goto" data-id="' + esc(n.p.id) + '">Voir le plus proche : ' +
-          esc(n.p.name) + ' · ' + fmtDist(n.d) + '</button>' : '');
+      html = '<li class="empty"><p>Aucun lieu dans cette zone de la carte.</p>' + (n
+        ? '<button type="button" class="btn btn--secondary btn--sm goto" data-act="open" data-id="' + esc(n.p.id) + '">Voir le plus proche : ' +
+          esc(n.p.name) + ' · ' + fmtDist(n.d) + '</button>' : '') + '</li>';
     }
-    $('#list').innerHTML = ctaHtml() + html;
+    $('#list').innerHTML = html;
+  }
+  function updateListDist() {
+    $$('#list .place').forEach(function (li) {
+      var p = byId(li.getAttribute('data-id')), d = li.querySelector('.d');
+      if (d && p._d != null) d.textContent = fmtDist(p._d);
+    });
+  }
+  function renderListHead(vis) {
+    $('#list-title').textContent = S.pos ? 'Autour de vous' : 'Dans cette zone';
+    var k = vis.filter(function (p) { return S.visited.has(p.id); }).length;
+    $('#list-sub').textContent = vis.length ? plural(vis.length, 'lieu', 'lieux') + (k ? ' · ' + k + ' écouté' + (k > 1 ? 's' : '') : '') : 'Aucun lieu ici';
+    var r = $('#list-ring');
+    r.hidden = !k;
+    r.style.setProperty('--p', vis.length ? Math.round(k / vis.length * 100) : 0);
   }
 
-  function onListClick(e) {
-    var btn = e.target.closest('button[data-act]');
-    var card = e.target.closest('.card');
-    if (!btn) { if (card) select(card.getAttribute('data-id'), true); return; }
-    var act = btn.getAttribute('data-act');
-    if (act === 'locate') { toggleTracking(); return; }
-    if (act === 'nearest') { var n = nearestFrom(S.pos); if (n) startPlayback(n.p.id, 'express'); return; }
-    if (act === 'goto') { select(btn.getAttribute('data-id'), true); return; }
-    if (act === 'play' && card) startPlayback(card.getAttribute('data-id'), btn.getAttribute('data-mode'));
+  var listKey = '', peekKey = '';
+  function refresh(force) {
+    if (!map) return;
+    computeHere();
+    var vis = sortedVisible(), m = peekModel(), pl = S.player;
+    var playKey = pl.placeId + ':' + pl.mode + ':' + pl.state;
+    var pk = [m.kind, m.p ? m.p.id : '', vis.length, S.visited.size, S.cat, playKey].join('|');
+    if (force || pk !== peekKey) { peekKey = pk; renderPeek(m, vis); } else updatePeekDist(m);
+    var lk = vis.map(function (p) { return p.id; }).join(',') + '|' + S.hereId + '|' + S.visited.size + '|' + playKey + '|' + !!S.pos;
+    if (force || lk !== listKey) {
+      listKey = lk;
+      var top = scrollEl.scrollTop;
+      renderList(vis);
+      if (S.view === 'home') scrollEl.scrollTop = top;
+    } else updateListDist();
+    renderListHead(vis);
+    if (S.view === 'place') updatePlaceDist();
   }
 
-  function select(id, pan) {
-    if (S.selected) map.setMarkerClass(S.selected, 'sel', false);
-    S.selected = id;
-    map.setMarkerClass(id, 'sel', true);
+  /* ---------- Panneau du bas : 3 hauteurs ---------- */
+  var H = { peek: 220, half: 420, full: 640 }, probe = null;
+  function safeBottom() {
+    if (!probe) {
+      probe = document.createElement('div');
+      probe.style.cssText = 'position:fixed;left:0;bottom:0;width:0;height:env(safe-area-inset-bottom,0px);visibility:hidden;pointer-events:none';
+      document.body.appendChild(probe);
+    }
+    return probe.offsetHeight || 0;
+  }
+  function miniSpace() { return $('#mini').hidden ? 0 : 82; }
+  function measure() {
+    var vh = app.clientHeight;
+    app.style.setProperty('--mini-space', miniSpace() + 'px');
+    H.full = sheetEl.offsetHeight || vh;
+    H.half = Math.min(H.full, Math.round(vh * 0.58));
+    var el = S.view === 'place' ? $('#place') : $('#peek');
+    H.peek = Math.min(H.full, $('#sheet-handle').offsetHeight - 8 + el.offsetHeight + safeBottom() + miniSpace() + 6);
+    if (map) {
+      var tb = $('.topbar').getBoundingClientRect(), ar = app.getBoundingClientRect();
+      map.setPadding(Math.round(tb.bottom - ar.top + 6), Math.round(H.peek));
+    }
+    applySheet();
+  }
+  function applySheet(vis) {
+    var v = vis == null ? H[S.sheet] : vis;
+    sheetEl.style.transform = 'translateY(' + Math.max(0, Math.round(H.full - v)) + 'px)';
+    app.style.setProperty('--sheet-y', Math.round(Math.min(v, H.full)) + 'px');
+  }
+  function setSheet(st) {
+    if (S.view === 'place') st = 'peek';
+    S.sheet = st;
+    sheetEl.setAttribute('data-state', st);
+    app.classList.toggle('sheet-up', st !== 'peek');
+    var h = $('#sheet-handle');
+    h.setAttribute('aria-expanded', String(st !== 'peek'));
+    h.setAttribute('aria-label', st === 'peek' ? 'Agrandir la liste des lieux' : 'Réduire la liste des lieux');
+    if (st === 'peek') { $('#list-section').setAttribute('inert', ''); scrollEl.scrollTop = 0; }
+    else $('#list-section').removeAttribute('inert');
+    applySheet();
+  }
+  function toggleSheet() {
+    if (S.view === 'place') return;
+    setSheet(S.sheet === 'peek' ? 'half' : 'peek');
+  }
+
+  function bindSheet() {
+    var d = null;
+    sheetEl.addEventListener('pointerdown', function (e) {
+      if (e.button > 0) return;
+      var onHandle = !!e.target.closest('#sheet-handle');
+      if (!onHandle) {
+        if (S.sheet !== 'peek' || S.view === 'place') return;
+        if (e.target.closest('button, a, select, summary, input')) return;
+      }
+      d = { id: e.pointerId, y0: e.clientY, v0: H[S.sheet], y: e.clientY, t: e.timeStamp, vel: 0, vis: H[S.sheet], moved: false, handle: onHandle };
+    });
+    window.addEventListener('pointermove', function (e) {
+      if (!d || e.pointerId !== d.id) return;
+      var dy = d.y0 - e.clientY;
+      if (!d.moved && Math.abs(dy) < 6) return;
+      if (!d.moved) { d.moved = true; sheetEl.classList.add('dragging'); }
+      var dt = Math.max(1, e.timeStamp - d.t);
+      d.vel = (d.y - e.clientY) / dt;
+      d.y = e.clientY; d.t = e.timeStamp;
+      var max = S.view === 'place' ? H.peek : H.full;
+      d.vis = Math.max(H.peek * 0.45, Math.min(max, d.v0 + dy));
+      applySheet(d.vis);
+    });
+    function end(e) {
+      if (!d || e.pointerId !== d.id) return;
+      var dd = d;
+      d = null;
+      sheetEl.classList.remove('dragging');
+      if (!dd.moved) { if (dd.handle && e.type === 'pointerup') toggleSheet(); return; }
+      if (S.view === 'place') {
+        if (dd.vis < H.peek * 0.72 || dd.vel < -0.6) uiBack('place'); else applySheet();
+        return;
+      }
+      var st = ['peek', 'half', 'full'].map(function (s) { return { s: s, h: H[s] }; }), t;
+      if (dd.vel > 0.45) t = st.filter(function (x) { return x.h > dd.vis + 1; })[0] || st[2];
+      else if (dd.vel < -0.45) t = st.filter(function (x) { return x.h < dd.vis - 1; }).pop() || st[0];
+      else t = st.reduce(function (a, b) { return Math.abs(b.h - dd.vis) < Math.abs(a.h - dd.vis) ? b : a; });
+      setSheet(t.s);
+    }
+    window.addEventListener('pointerup', end);
+    window.addEventListener('pointercancel', end);
+    // Clavier / lecteur d'écran (pas de pointeur) : bascule replié ↔ moitié.
+    $('#sheet-handle').addEventListener('click', function (e) { if (e.detail === 0) toggleSheet(); });
+    if (window.ResizeObserver) {
+      var ro = new ResizeObserver(function () { measure(); });
+      ro.observe($('#peek')); ro.observe($('#place')); ro.observe(app);
+    }
+    window.addEventListener('resize', measure);
+  }
+
+  /* ---------- Historique : le bouton « retour » ferme la fiche ou le lecteur ---------- */
+  var layers = [], afterPop = null;
+  function pushLayer(name) {
+    layers.push(name);
+    try { history.pushState({ halte: name }, ''); } catch (_) {}
+  }
+  function uiBack(name) {
+    var i = layers.lastIndexOf(name);
+    if (i < 0) { closeLayer(name); return; }
+    if (i === layers.length - 1 && history.state && history.state.halte === name) { history.back(); return; }
+    layers.splice(i, 1);
+    closeLayer(name);
+  }
+  function closeLayer(name) {
+    if (name === 'place') closePlace();
+    else if (name === 'player') minimizePlayer();
+  }
+  window.addEventListener('popstate', function () {
+    var name = layers.pop();
+    if (name) closeLayer(name);
+    if (afterPop) { var f = afterPop; afterPop = null; f(); }
+  });
+
+  /* ---------- Fiche lieu ---------- */
+  function routeUrl(p) {
+    var ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    return ios ? 'https://maps.apple.com/?daddr=' + p.lat + ',' + p.lon + '&dirflg=w'
+      : 'https://www.google.com/maps/dir/?api=1&destination=' + p.lat + ',' + p.lon + '&travelmode=walking';
+  }
+  function placeMeta(p) {
+    var parts = [];
+    if (S.hereId === p.id) parts.push('<span class="badge badge--here">Vous y êtes</span>');
+    else if (p._d != null) parts.push('<span><b data-dist>' + fmtDist(p._d) + '</b>' + (fmtWalk(p._d) ? ' · <span data-walk>' + fmtWalk(p._d) + '</span>' : '') + '</span>');
+    if (S.visited.has(p.id)) parts.push('<span class="done-txt">' + ic('check', 'ic--sm') + 'Écouté</span>');
+    return parts.join('');
+  }
+  function renderPlace() {
+    var p = byId(S.selected);
+    if (!p) return;
+    var tags = p.cats.map(function (id) {
+      var c = catById(id);
+      return c ? '<span class="tag" data-cat="' + esc(id) + '">' + ic(id) + esc(c.label) + '</span>' : '';
+    }).join('');
+    var a = playLabel(p, 'express'), b = playLabel(p, 'histoire');
+    $('#place').innerHTML = '<article class="fiche" data-id="' + esc(p.id) + '">' +
+      '<button type="button" class="icon-btn fiche__close" data-act="close" aria-label="Fermer la fiche">' + ic('close') + '</button>' +
+      '<div class="tags">' + tags + '</div>' +
+      '<h2 class="place-title" tabindex="-1">' + esc(p.name) + '</h2>' +
+      '<p class="place-tagline">' + esc(p.tagline) + '</p>' +
+      '<p class="place-meta">' + placeMeta(p) + '</p>' +
+      '<button type="button" class="btn btn--primary btn--block" data-act="play" data-mode="express" data-id="' + esc(p.id) + '">' + ic(a.icon, 'ic--fill') + a.text +
+      (a.text === 'Écouter' ? ' <span class="btn__meta">' + fmtDur(p.expressSec) + '</span>' : '') + '</button>' +
+      '<div class="btn-row">' +
+      '<button type="button" class="btn btn--secondary btn--stack" data-act="play" data-mode="histoire" data-id="' + esc(p.id) + '">' +
+      (b.text === 'Version longue' ? 'Version longue<span class="btn__meta">' + fmtDur(p.histoireSec) + '</span>' : b.text + '<span class="btn__meta">version longue</span>') + '</button>' +
+      '<a class="btn btn--secondary" href="' + esc(routeUrl(p)) + '" target="_blank" rel="noopener">' + ic('route') + 'Itinéraire</a></div>' +
+      '<details class="sources"><summary>' + ic('doc') + '<span>Sources (' + p.sources.length + ')</span></summary><ul>' +
+      p.sources.map(function (s) { return '<li><a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.title) + '</a></li>'; }).join('') +
+      '</ul></details></article>';
+  }
+  function updatePlaceDist() {
+    var p = byId(S.selected);
+    if (!p) return;
+    var meta = $('#place .place-meta');
+    if (!meta) return;
+    var d = meta.querySelector('[data-dist]');
+    if ((S.hereId === p.id) !== !!meta.querySelector('.badge--here') || (!d && p._d != null)) { meta.innerHTML = placeMeta(p); return; }
+    if (d) d.textContent = fmtDist(p._d);
+    var w = meta.querySelector('[data-walk]');
+    if (w) w.textContent = fmtWalk(p._d);
+  }
+  function openPlace(id) {
     var p = byId(id);
-    if (pan && p) map.setView(p.lat, p.lon, Math.max(map.z, 16));
-    var cards = document.querySelectorAll('.card');
-    for (var i = 0; i < cards.length; i++) cards[i].classList.toggle('sel', cards[i].getAttribute('data-id') === id);
-    var c = document.querySelector('.card[data-id="' + id + '"]');
-    if (c && c.scrollIntoView) c.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    if (!p) return;
+    if (S.view !== 'place') { S.homeSheet = S.sheet; pushLayer('place'); }
+    if (S.selected && S.selected !== id) map.setMarkerClass(S.selected, 'pin--sel', false);
+    S.selected = id;
+    map.setMarkerClass(id, 'pin--sel', true);
+    S.view = 'place';
+    $('#view-home').hidden = true;
+    $('#view-place').hidden = false;
+    sheetEl.setAttribute('data-view', 'place');
+    renderPlace();
+    scrollEl.scrollTop = 0;
+    setSheet('peek');
+    measure();
+    setFollow(false);
+    map.flyTo(p.lat, p.lon, Math.max(map.z, 16));
+    var t = $('#place .place-title');
+    if (t) try { t.focus({ preventScroll: true }); } catch (_) {}
+  }
+  function closePlace() {
+    if (S.view !== 'place') return;
+    S.view = 'home';
+    if (S.selected) map.setMarkerClass(S.selected, 'pin--sel', false);
+    var last = S.selected;
+    S.selected = null;
+    $('#view-place').hidden = true;
+    $('#view-home').hidden = false;
+    sheetEl.setAttribute('data-view', 'home');
+    setSheet(S.homeSheet || 'peek');
+    measure();
+    refresh(true);
+    // Rend le focus à l'élément d'où l'on venait (clavier, lecteur d'écran).
+    var b = (S.sheet !== 'peek' && $('#list [data-id="' + last + '"] .place__main')) || $('#peek .peek__open') || $('#sheet-handle');
+    if (b) try { b.focus({ preventScroll: true }); } catch (_) {}
   }
 
   /* ---------- Position ---------- */
-  function toggleTracking() {
-    if (S.tracking) { stopTracking(); return; }
-    if (!navigator.geolocation) { setStatus('La géolocalisation n\'est pas disponible sur cet appareil.'); return; }
+  function setFollow(on) {
+    S.follow = !!on && S.tracking;
+    var b = $('#btn-locate');
+    b.setAttribute('aria-pressed', String(S.follow));
+    b.setAttribute('aria-label', S.tracking ? (S.follow ? 'La carte suit votre position' : 'Recentrer sur ma position') : 'Me localiser');
+  }
+  function startTracking() {
+    if (S.tracking) return;
+    if (!navigator.geolocation) { S.geo = 'unavailable'; refresh(true); return; }
     S.tracking = true;
+    S.geo = S.pos ? 'on' : 'searching';
+    setFollow(true);
     keepAwake(true);
-    $('#btn-locate').classList.add('on');
-    $('#btn-locate').textContent = 'Localisé ✓';
-    setStatus('Recherche de votre position…');
+    refresh(true);
     S.watchId = navigator.geolocation.watchPosition(function (g) {
       if (S.simId) return;
+      S.geo = 'on';
       setPosition(g.coords.latitude, g.coords.longitude, g.coords.accuracy, false);
     }, function (err) {
-      var msg = err.code === 1 ? 'Localisation refusée : autorisez-la dans les réglages du navigateur.' :
-        err.code === 2 ? 'Position indisponible pour le moment.' : 'Délai dépassé pour la localisation.';
-      setStatus(msg);
-      if (err.code === 1) stopTracking(true);
+      if (err.code === 1) { S.geo = 'denied'; stopTracking(); }
+      else if (!S.pos) S.geo = 'error';
+      refresh(true);
     }, { enableHighAccuracy: true, maximumAge: 5000, timeout: 20000 });
   }
-
-  function stopTracking(keepStatus) {
+  function stopTracking() {
     if (S.watchId != null && navigator.geolocation) navigator.geolocation.clearWatch(S.watchId);
-    S.watchId = null; S.tracking = false;
+    S.watchId = null;
+    S.tracking = false;
+    setFollow(false);
     if (S.player.state !== 'playing') keepAwake(false);
-    $('#btn-locate').classList.remove('on');
-    $('#btn-locate').textContent = 'Me localiser';
     if (!S.simId) {
       S.pos = null;
       map.setUser(null);
       S.places.forEach(function (p) { p._d = null; });
-      var msg = $('#status').textContent;
-      renderListKeepScroll();
-      if (keepStatus) setStatus(msg);
     }
+    refresh(true);
+  }
+  function onLocate() {
+    if (!S.tracking && !S.simId) { startTracking(); return; }
+    setFollow(true);
+    if (S.pos) {
+      if (S.view === 'place') uiBack('place');
+      map.flyTo(S.pos.lat, S.pos.lon, Math.max(map.z, 16));
+    }
+  }
+
+  // Cadre de départ : vous + jusqu'à 3 lieux proches (à moins de 3 km), sinon vous + le plus proche.
+  function frameUser() {
+    var near = filtered().slice().sort(function (a, b) { return a._d - b._d; });
+    var pts = near.filter(function (p) { return p._d < 3000; }).slice(0, 3);
+    if (!pts.length && near.length && near[0]._d < 40000) pts = [near[0]];
+    if (pts.length) map.fitPoints([S.pos].concat(pts), 60, 16);
+    else map.setView(S.pos.lat, S.pos.lon, 15);
   }
 
   var firstFix = true;
   function setPosition(lat, lon, acc, sim) {
     S.pos = { lat: lat, lon: lon, acc: acc || 0, sim: !!sim };
+    S.geo = 'on';
     S.places.forEach(function (p) { p._d = haversine(S.pos, p); });
     map.setUser(lat, lon, acc);
-    var nearest = nearestFrom(S.pos);
     if (firstFix || sim) {
       firstFix = false;
-      if (nearest && nearest.d < 5000) map.setView(lat, lon, 16);
-      else if (nearest) map.fitPoints([S.pos, nearest.p], 50);
-      else map.setView(lat, lon, 14);
+      if (S.view === 'place' && sim) uiBack('place');
+      frameUser();
+      if (S.tracking) setFollow(true);
+    } else if (S.follow && S.view === 'home' && !map.inView(lat, lon, -60)) {
+      map.flyTo(lat, lon);
     }
-    refreshList(false);
-    checkProximity();
-  }
-
-  function posStatus() {
-    var nearest = nearestFrom(S.pos);
-    if (!nearest) setStatus('');
-    else if (nearest.d > 40000) setStatus('le lieu le plus proche est à ' + fmtDist(nearest.d));
-    else if (S.pos.acc > 80 && !S.pos.sim) setStatus('position imprécise…');
-    else setStatus(S.pos.sim ? 'mode démo' : 'vous êtes localisé');
-  }
-
-  // Met à jour la liste : reconstruite seulement si son contenu change, sinon distances mises à jour sur place.
-  var listKey = '';
-  function refreshList(force) {
-    if (!map) return;
-    var key = sortedPlaces().map(function (p) { return p.id; }).join(',') + '|' + ctaKey();
-    if (force || key !== listKey) {
-      listKey = key;
-      var l = $('#list'), top = l.scrollTop;
-      renderList();
-      l.scrollTop = force ? 0 : top;
-    } else {
-      Array.prototype.forEach.call(document.querySelectorAll('.card'), function (c) {
-        var p = byId(c.getAttribute('data-id')), d = c.querySelector('.dist');
-        if (d && p._d != null) d.innerHTML = fmtDist(p._d) + (fmtWalk(p._d) ? '<small>' + fmtWalk(p._d) + '</small>' : '');
-      });
-      var cs = document.querySelector('.cta .cta-sub'), n0 = S.pos && nearestFrom(S.pos);
-      if (cs && n0) cs.textContent = (n0.d < 40000 ? '' : 'Le plus proche : ') + n0.p.name + ' · ' + fmtDist(n0.d);
-    }
-    defaultStatus();
-  }
-  function renderListKeepScroll() { listKey = ''; refreshList(false); }
-
-  function setStatus(t) { $('#status').textContent = t; }
-
-  /* ---------- Proximité ---------- */
-  function checkProximity() {
-    if (!S.autoOffer || !S.pos) return;
-    if (S.pos.acc > 80 && !S.pos.sim) return;
-    var best = null;
-    filtered().forEach(function (p) {
-      if (p._d <= p.radius) {
-        if (!S.offered[p.id] && (!best || p._d < best._d)) best = p;
-      } else if (p._d > p.radius * 2) {
-        delete S.offered[p.id];
-      }
-    });
-    if (best) {
-      S.offered[best.id] = true;
-      showBanner(best);
-    }
-  }
-
-  function showBanner(p) {
-    S.bannerFor = p.id;
-    var b = $('#banner');
-    b.hidden = false;
-    b.innerHTML = '<strong>Vous êtes près de : ' + esc(p.name) + '</strong>' +
-      '<div class="row"><button type="button" data-b="express">▶ Écouter · ' + fmtDur(p.expressSec) + '</button>' +
-      '<button type="button" class="alt" data-b="histoire">Version longue · ' + fmtDur(p.histoireSec) + '</button>' +
-      '<button type="button" class="alt" data-b="later">Plus tard</button></div>';
-    b.onclick = function (e) {
-      var t = e.target.closest('button[data-b]');
-      if (!t) return;
-      var m = t.getAttribute('data-b');
-      b.hidden = true;
-      if (m !== 'later') startPlayback(p.id, m);
-    };
-    select(p.id, false);
-    try {
-      var ua = navigator.userActivation;
-      if (navigator.vibrate && (!ua || ua.hasBeenActive)) navigator.vibrate(180);
-    } catch (_) {}
+    refresh(false);
   }
 
   /* ---------- Lecture vocale ---------- */
@@ -463,6 +723,7 @@
       });
       if (cur) out.push({ text: cur, para: pi });
     });
+    out.forEach(function (c) { c.words = words(c.text); });
     return out;
   }
 
@@ -487,11 +748,13 @@
     var pl = S.player;
     pl.placeId = placeId; pl.mode = mode;
     pl.chunks = chunkText(p[mode]);
-    pl.i = 0; pl.state = 'playing';
+    pl.i = 0; pl.state = 'playing'; pl.t0 = 0;
     keepAwake(true);
     buildPlayer(p);
-    select(placeId, false);
+    showMini();
+    announce('Lecture : ' + p.name);
     setTimeout(speakCurrent, 80);
+    syncPlayingUI();
   }
 
   function stopSpeech() {
@@ -502,111 +765,144 @@
   function speakCurrent() {
     var pl = S.player;
     if (pl.state !== 'playing') return;
-    if (!('speechSynthesis' in window)) { fail('La synthèse vocale n\'est pas disponible sur ce navigateur. Vous pouvez lire le texte ci-dessous.'); return; }
+    if (!('speechSynthesis' in window)) { fail('La lecture à voix haute n\'est pas disponible sur ce navigateur. Vous pouvez lire le texte ci-dessous.'); return; }
     if (pl.i >= pl.chunks.length) { finish(); return; }
     var u = new SpeechSynthesisUtterance(pl.chunks[pl.i].text);
     var v = currentVoice();
     if (v) { u.voice = v; u.lang = v.lang; } else { u.lang = 'fr-FR'; }
     u.rate = S.rate;
     var token = ++pl.token, started = false;
-    u.onstart = function () { started = true; };
+    u.onstart = function () { started = true; if (pl.token === token) pl.t0 = performance.now(); };
     u.onend = function () {
       if (pl.token !== token || pl.state !== 'playing') return;
-      pl.i++; updatePlayer(); speakCurrent();
+      pl.i++; pl.t0 = 0;
+      updatePlayer();
+      speakCurrent();
     };
     u.onerror = function (e) {
       if (pl.token !== token) return;
       if (e.error === 'canceled' || e.error === 'interrupted') return;
-      fail('Erreur de synthèse vocale (' + e.error + '). Vous pouvez lire le texte ci-dessous.');
+      fail('La voix du téléphone ne répond pas. Vous pouvez lire le texte ci-dessous, ou réessayer.');
     };
     setTimeout(function () {
       if (pl.token === token && pl.state === 'playing' && !started) {
-        fail('La voix ne démarre pas sur cet appareil. Vous pouvez lire le texte ci-dessous.');
+        fail('La voix ne démarre pas sur cet appareil. Vous pouvez lire le texte ci-dessous, ou réessayer.');
       }
     }, 5000);
-    try { speechSynthesis.speak(u); } catch (err) { fail('Synthèse vocale indisponible.'); }
+    try { speechSynthesis.speak(u); } catch (err) { fail('La lecture à voix haute n\'est pas disponible. Vous pouvez lire le texte ci-dessous.'); }
     updatePlayer();
   }
 
   function fail(msg) {
     var pl = S.player;
-    pl.state = 'error'; pl.token++;
+    pl.state = 'error'; pl.token++; pl.t0 = 0;
     try { speechSynthesis.cancel(); } catch (_) {}
     var n = $('#pl-note');
-    if (n) { n.hidden = false; n.textContent = msg; }
-    var dt = document.querySelector('.player details'); if (dt) dt.open = true;
+    n.hidden = false;
+    n.className = 'note';
+    n.textContent = msg;
     updatePlayer();
+    syncPlayingUI();
+    openPlayer();
   }
 
   function finish() {
     var pl = S.player;
-    pl.state = 'done';
+    pl.state = 'done'; pl.t0 = 0;
     if (!S.tracking) keepAwake(false);
+    var first = !S.visited.has(pl.placeId);
     S.visited.add(pl.placeId);
     store.set('visited', Array.from(S.visited));
-    map.setMarkerClass(pl.placeId, 'done', true);
-    map.setMarkerHtml(pl.placeId, markerHtml(byId(pl.placeId)));
+    var p = byId(pl.placeId);
+    map.setMarkerClass(pl.placeId, 'is-done', true);
+    map.setMarkerLabel(pl.placeId, pinLabel(p));
+    if (first) announce('Lieu écouté : ' + p.name);
     updatePlayer();
-    renderListKeepScroll();
+    syncPlayingUI();
   }
 
   function pausePlayback() {
     var pl = S.player;
     if (pl.state !== 'playing') return;
-    pl.state = 'paused'; stopSpeech(); updatePlayer();
+    pl.state = 'paused'; pl.t0 = 0;
+    stopSpeech();
+    updatePlayer();
+    syncPlayingUI();
   }
   function resumePlayback() {
     var pl = S.player;
     if (pl.state === 'done') pl.i = 0;
-    pl.state = 'playing'; updatePlayer();
-    var n = $('#pl-note'); if (n) n.hidden = true;
+    pl.state = 'playing'; pl.t0 = 0;
+    $('#pl-note').hidden = true;
+    keepAwake(true);
+    updatePlayer();
+    syncPlayingUI();
     setTimeout(speakCurrent, 80);
   }
-  function closePlayer() {
-    S.player.state = 'idle'; stopSpeech();
-    if (!S.tracking) keepAwake(false);
-    $('#player').hidden = true;
-    $('#app').classList.remove('playing');
+  function togglePlayback() {
+    if (S.player.state === 'playing') pausePlayback(); else resumePlayback();
   }
-
-  function buildPlayer(p) {
-    var pl = S.player, el = $('#player');
-    var paras = [];
-    pl.chunks.forEach(function (c, i) {
-      paras[c.para] = (paras[c.para] || '') + '<span data-i="' + i + '">' + esc(c.text) + '</span> ';
-    });
-    var noVoice = !('speechSynthesis' in window) || (frenchVoices().length === 0);
-    el.hidden = false;
-    $('#app').classList.add('playing');
-    el.innerHTML =
-      '<div class="player-top"><div><strong>' + esc(p.name) + '</strong><span id="pl-meta"></span></div>' +
-      '<div class="ctrls"><button type="button" id="pl-speed" class="sm" aria-label="Vitesse">' + S.rate + '×</button>' +
-      '<button type="button" id="pl-toggle" aria-label="Lecture / pause">❚❚</button>' +
-      '<button type="button" id="pl-stop" aria-label="Fermer le lecteur">■</button></div></div>' +
-      '<div class="bar"><i id="pl-bar"></i></div>' +
-      '<p class="note" id="pl-note"' + (noVoice ? '' : ' hidden') + '>' +
-      (noVoice ? 'Aucune voix française détectée sur cet appareil : installez-en une dans les réglages de synthèse vocale. Le texte reste lisible ci-dessous.' : '') + '</p>' +
-      '<div id="pl-next" hidden></div>' +
-      '<details' + (noVoice ? ' open' : '') + '><summary>Afficher le texte</summary><div class="transcript">' +
-      paras.map(function (t) { return '<p>' + t + '</p>'; }).join('') + '</div>' +
-      '<p class="src">Sources : ' + p.sources.map(function (s) {
-        return '<a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.title) + '</a>';
-      }).join(' · ') + '</p></details>';
-    $('#pl-toggle').addEventListener('click', function () {
-      var st = S.player.state;
-      if (st === 'playing') pausePlayback(); else resumePlayback();
-    });
-    $('#pl-stop').addEventListener('click', closePlayer);
-    $('#pl-speed').addEventListener('click', function () {
-      var rates = [0.9, 1, 1.15, 1.3];
-      var idx = (rates.indexOf(Number(S.rate)) + 1) % rates.length;
-      S.rate = rates[idx]; store.set('rate', S.rate);
-      $('#opt-rate').value = String(S.rate);
-      this.textContent = S.rate + '×';
-      if (S.player.state === 'playing') { stopSpeech(); setTimeout(speakCurrent, 80); }
-    });
+  // Arrête la lecture et cache le mini-lecteur (le lecteur plein écran est fermé par l'appelant).
+  function stopPlayback() {
+    S.player.state = 'idle';
+    stopSpeech();
+    if (!S.tracking) keepAwake(false);
+    hideMini();
+    syncPlayingUI();
+  }
+  function restartChunk() {
+    var pl = S.player;
+    pl.t0 = 0;
+    if (pl.state === 'playing') { stopSpeech(); setTimeout(speakCurrent, 60); }
     updatePlayer();
   }
+  function prevChunk() {
+    var pl = S.player;
+    if (!pl.chunks.length) return;
+    if (pl.state === 'done') { pl.i = pl.chunks.length - 1; pl.state = 'playing'; }
+    else if (!(pl.state === 'playing' && pl.t0 && performance.now() - pl.t0 > 2500)) pl.i = Math.max(0, pl.i - 1);
+    restartChunk();
+  }
+  function nextChunk() {
+    var pl = S.player;
+    if (!pl.chunks.length || pl.state === 'done') return;
+    if (pl.i >= pl.chunks.length - 1) { stopSpeech(); finish(); return; }
+    pl.i++;
+    restartChunk();
+  }
+  function setRate(r) {
+    S.rate = r;
+    store.set('rate', r);
+    $$('#opt-rate button').forEach(function (b) { b.setAttribute('aria-pressed', String(Number(b.getAttribute('data-rate')) === r)); });
+    $('#pl-speed').textContent = 'Vitesse ' + String(r).replace('.', ',') + '×';
+    if (S.player.state === 'playing') restartChunk(); else updateTimes();
+  }
+
+  /* ---------- Lecteur : temps, mini-lecteur, plein écran ---------- */
+  function chunkSec(c) { return c.words / 2.5 / S.rate; }
+  function totalSec() { return S.player.chunks.reduce(function (s, c) { return s + chunkSec(c); }, 0); }
+  function elapsedSec() {
+    var pl = S.player, s = 0;
+    if (pl.state === 'done') return totalSec();
+    for (var j = 0; j < pl.i && j < pl.chunks.length; j++) s += chunkSec(pl.chunks[j]);
+    if (pl.state === 'playing' && pl.t0 && pl.chunks[pl.i]) s += Math.min(chunkSec(pl.chunks[pl.i]), (performance.now() - pl.t0) / 1000);
+    return s;
+  }
+  function modeLabel() { return S.player.mode === 'express' ? 'Version courte' : 'Version longue'; }
+  function updateTimes() {
+    var pl = S.player;
+    if (pl.state === 'idle' || !pl.chunks.length) return;
+    var tot = totalSec(), el = Math.min(tot, elapsedSec()), pct = tot ? el / tot * 100 : 0;
+    $('#pl-elapsed').textContent = fmtClock(el);
+    $('#pl-remain').textContent = '−' + fmtClock(tot - el);
+    $('#pl-bar').style.width = pct.toFixed(1) + '%';
+    $('#pl-knob').style.left = pct.toFixed(1) + '%';
+    $('#mini-bar').style.width = pct.toFixed(1) + '%';
+    var sub = pl.state === 'done' ? 'Écouté ✓' : pl.state === 'error' ? 'Texte seul' :
+      (pl.state === 'paused' ? 'En pause' : modeLabel()) + ' · reste ' + fmtClock(tot - el);
+    $('#mini-sub').textContent = sub;
+  }
+  setInterval(function () { if (S.player.state === 'playing') updateTimes(); }, 500);
 
   function nextPlace() {
     var cur = byId(S.player.placeId), ref = S.pos || cur, best = null;
@@ -618,47 +914,202 @@
     return best;
   }
 
+  function buildPlayer(p) {
+    var pl = S.player, paras = [];
+    pl.chunks.forEach(function (c, i) {
+      paras[c.para] = (paras[c.para] || '') + '<span data-i="' + i + '">' + esc(c.text) + '</span> ';
+    });
+    $('#pl-tile').setAttribute('data-cat', p.cats[0]);
+    $('#pl-tile').innerHTML = ic(p.cats[0]);
+    $('#mini-tile').setAttribute('data-cat', p.cats[0]);
+    $('#mini-tile').innerHTML = ic(p.cats[0]);
+    $('#pl-title').textContent = p.name;
+    $('#mini-title').textContent = p.name;
+    $('#pl-meta').textContent = p.cats.map(function (id) { var c = catById(id); return c ? c.label : ''; }).join(' · ');
+    $('#pl-mode').textContent = modeLabel();
+    $('#pl-speed').textContent = 'Vitesse ' + String(S.rate).replace('.', ',') + '×';
+    $('#pl-src').lastChild.textContent = 'Sources (' + p.sources.length + ')';
+    var noVoice = !('speechSynthesis' in window) || frenchVoices().length === 0;
+    var n = $('#pl-note');
+    n.className = 'note';
+    n.hidden = !noVoice;
+    n.textContent = noVoice ? 'Aucune voix française détectée sur ce téléphone : installez-en une dans ses réglages (synthèse vocale). Le texte reste lisible ci-dessous.' : '';
+    $('#pl-text').innerHTML = paras.map(function (t) { return '<p>' + t + '</p>'; }).join('') +
+      '<h3 class="src-title" id="pl-sources">Sources</h3><ul class="src-list">' + p.sources.map(function (s) {
+        return '<li><a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.title) + '</a></li>';
+      }).join('') + '</ul>';
+    $('#pl-text').scrollTop = 0;
+    updatePlayer();
+  }
+
   function updatePlayer() {
     var pl = S.player;
-    if ($('#player').hidden) return;
-    var p = byId(pl.placeId);
-    var label = pl.mode === 'express' ? 'Version courte' : 'Version longue';
-    var stateTxt = { playing: 'lecture', paused: 'en pause', done: 'terminé', error: 'texte seul', idle: '' }[pl.state] || '';
-    var meta = $('#pl-meta');
-    if (meta && p) meta.textContent = label + ' · ' + stateTxt + ' · ' + Math.min(pl.i + 1, pl.chunks.length) + '/' + pl.chunks.length;
-    var tg = $('#pl-toggle');
-    if (tg) tg.textContent = pl.state === 'playing' ? '❚❚' : (pl.state === 'done' ? '↻' : '▶');
-    var bar = $('#pl-bar');
-    if (bar) bar.style.width = (pl.state === 'done' ? 100 : Math.round(pl.i / Math.max(1, pl.chunks.length) * 100)) + '%';
+    if (pl.state === 'idle') return;
+    var tgIcon = pl.state === 'playing' ? 'pause' : pl.state === 'done' ? 'back' : 'play';
+    var tgLabel = pl.state === 'playing' ? 'Pause' : pl.state === 'done' ? 'Réécouter' : 'Lecture';
+    [['#pl-toggle', 'ic--fill'], ['#mini-toggle', 'ic--fill']].forEach(function (x) {
+      var b = $(x[0]);
+      b.innerHTML = ic(tgIcon, tgIcon === 'back' ? '' : x[1]);
+      b.setAttribute('aria-label', tgLabel);
+    });
+    $('#pl-mode').textContent = modeLabel();
+    var spans = $$('#pl-text span[data-i]');
+    spans.forEach(function (s) {
+      var i = Number(s.getAttribute('data-i'));
+      s.classList.toggle('cur', pl.state !== 'done' && i === pl.i);
+      s.classList.toggle('fut', pl.state !== 'done' && i > pl.i);
+    });
     var nx = $('#pl-next');
-    if (nx) {
-      if (pl.state === 'done') {
-        var nxt = nextPlace();
-        nx.hidden = false;
-        nx.innerHTML = nxt
-          ? '<button type="button" class="next" id="pl-go">Prochain lieu : ' + esc(nxt.p.name) + ' · ' + fmtDist(nxt.d) + '</button>'
-          : '<p class="note ok">Bravo, vous avez écouté tous les lieux.</p>';
-        var go = $('#pl-go');
-        if (go) go.onclick = function () { closePlayer(); select(nxt.p.id, true); };
-      } else { nx.hidden = true; nx.innerHTML = ''; }
+    if (pl.state === 'done') {
+      var nxt = nextPlace();
+      nx.hidden = false;
+      nx.innerHTML = nxt
+        ? '<button type="button" class="btn btn--primary btn--block" id="pl-go" data-id="' + esc(nxt.p.id) + '">Prochain lieu : ' + esc(nxt.p.name) + ' · ' + fmtDist(nxt.d) + '</button>'
+        : '<p class="note ok">Bravo, vous avez écouté tous les lieux.</p>';
+    } else { nx.hidden = true; nx.innerHTML = ''; }
+    scrollToCurrent();
+    updateTimes();
+  }
+  var lastScrolled = -1;
+  function scrollToCurrent(force) {
+    var pl = S.player, box = $('#pl-text');
+    if (!S.playerOpen || pl.state === 'done') return;
+    if (!force && lastScrolled === pl.i) return;
+    lastScrolled = pl.i;
+    var cur = box.querySelector('span.cur');
+    if (cur) box.scrollTop = Math.max(0, cur.offsetTop - box.clientHeight / 3);
+  }
+  // Met à jour les boutons « Écouter » de la carte du haut, de la liste et de la fiche.
+  function syncPlayingUI() {
+    refresh(false);
+    if (S.view === 'place') renderPlace();
+  }
+
+  function showMini() {
+    var m = $('#mini');
+    if (!m.hidden) return;
+    m.hidden = false;
+    measure();
+  }
+  function hideMini() {
+    var m = $('#mini');
+    if (m.hidden) return;
+    m.hidden = true;
+    measure();
+  }
+  function openPlayer() {
+    var el = $('#player');
+    if (S.playerOpen) return;
+    S.playerOpen = true;
+    pushLayer('player');
+    el.hidden = false;
+    el.getBoundingClientRect();
+    el.classList.add('open');
+    setInert(true);
+    lastScrolled = -1;
+    scrollToCurrent(true);
+    try { $('#pl-min').focus({ preventScroll: true }); } catch (_) {}
+  }
+  function minimizePlayer() {
+    var el = $('#player');
+    if (!S.playerOpen) return;
+    S.playerOpen = false;
+    el.classList.remove('open');
+    setInert(false);
+    var hide = function () { if (!S.playerOpen) el.hidden = true; };
+    if (REDUCED) hide(); else setTimeout(hide, 280);
+    var m = $('#mini-open');
+    if (!$('#mini').hidden) try { m.focus({ preventScroll: true }); } catch (_) {}
+  }
+  function goNext(id) {
+    stopPlayback();
+    if (S.playerOpen && layers[layers.length - 1] === 'player' && history.state && history.state.halte === 'player') {
+      afterPop = function () { openPlace(id); };
+      history.back();
+    } else {
+      uiBack('player');
+      openPlace(id);
     }
-    var spans = document.querySelectorAll('.transcript span');
-    for (var i = 0; i < spans.length; i++) {
-      spans[i].classList.toggle('cur', pl.state !== 'done' && Number(spans[i].getAttribute('data-i')) === pl.i);
+  }
+
+  /* ---------- Interface : événements ---------- */
+  function onSheetClick(e) {
+    var b = e.target.closest('[data-act], [data-cat-filter]');
+    if (!b) return;
+    if (b.hasAttribute('data-cat-filter')) { setCat(b.getAttribute('data-cat-filter')); return; }
+    var act = b.getAttribute('data-act'), id = b.getAttribute('data-id');
+    if (act === 'open') openPlace(id);
+    else if (act === 'play') {
+      var pl = S.player, mode = b.getAttribute('data-mode');
+      if (pl.placeId === id && pl.mode === mode && (pl.state === 'playing' || pl.state === 'paused')) togglePlayback();
+      else startPlayback(id, mode);
     }
-    var cur = document.querySelector('.transcript span.cur');
-    var box = document.querySelector('.player details');
-    if (cur && box && pl.state === 'playing') box.scrollTop = Math.max(0, cur.offsetTop - box.clientHeight / 3);
+    else if (act === 'expand') setSheet('half');
+    else if (act === 'locate') onLocate();
+    else if (act === 'close') uiBack('place');
+    else if (act === 'cat-all') setCat('all');
+  }
+
+  function bindUI() {
+    sheetEl.addEventListener('click', onSheetClick);
+    $('#btn-locate').addEventListener('click', onLocate);
+    $('#btn-settings').addEventListener('click', openSettings);
+    $('#mini-open').addEventListener('click', openPlayer);
+    $('#mini-toggle').addEventListener('click', togglePlayback);
+    $('#pl-toggle').addEventListener('click', togglePlayback);
+    $('#pl-min').addEventListener('click', function () { uiBack('player'); });
+    $('#pl-stop').addEventListener('click', function () { stopPlayback(); uiBack('player'); });
+    $('#pl-prev').addEventListener('click', prevChunk);
+    $('#pl-fwd').addEventListener('click', nextChunk);
+    $('#pl-speed').addEventListener('click', function () { setRate(RATES[(RATES.indexOf(S.rate) + 1) % RATES.length]); });
+    $('#pl-src').addEventListener('click', function () {
+      var t = $('#pl-sources');
+      if (t) $('#pl-text').scrollTop = t.offsetTop - 8;
+    });
+    $('#pl-next').addEventListener('click', function (e) {
+      var g = e.target.closest('#pl-go');
+      if (g) goNext(g.getAttribute('data-id'));
+    });
+    // Toucher la carte (sans la faire glisser) ferme la fiche.
+    var down = null;
+    $('#map').addEventListener('pointerdown', function (e) { down = { x: e.clientX, y: e.clientY }; });
+    $('#map').addEventListener('pointerup', function (e) {
+      if (!down || e.target.closest('.pin, .cluster, a')) { down = null; return; }
+      var moved = Math.abs(e.clientX - down.x) + Math.abs(e.clientY - down.y);
+      down = null;
+      if (moved < 8 && S.view === 'place') uiBack('place');
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape' || $('#settings').open) return;
+      if (S.playerOpen) uiBack('player');
+      else if (S.view === 'place') uiBack('place');
+      else if (S.sheet !== 'peek') setSheet('peek');
+    });
+    $('#welcome-locate').addEventListener('click', function () { hideWelcome(); startTracking(); });
+    $('#welcome-skip').addEventListener('click', hideWelcome);
+  }
+
+  /* ---------- Premier lancement ---------- */
+  function showWelcome() {
+    $('#welcome').hidden = false;
+    setInert(true);
+    try { $('#welcome .welcome__inner').focus({ preventScroll: true }); } catch (_) {}
+  }
+  function hideWelcome() {
+    store.set('onboarded', true);
+    $('#welcome').hidden = true;
+    setInert(false);
   }
 
   /* ---------- Réglages ---------- */
   function setupSettings() {
     var d = $('#settings');
-    $('#opt-auto').checked = S.autoOffer;
-    $('#opt-auto').addEventListener('change', function () { S.autoOffer = this.checked; store.set('auto', S.autoOffer); });
-    $('#opt-rate').value = String(S.rate);
-    $('#opt-rate').addEventListener('change', function () { S.rate = Number(this.value); store.set('rate', S.rate); });
     $('#opt-voice').addEventListener('change', function () { S.voiceURI = this.value; store.set('voice', S.voiceURI); });
+    $('#opt-rate').addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-rate]');
+      if (b) setRate(Number(b.getAttribute('data-rate')));
+    });
+    setRate(S.rate);
     var sim = $('#opt-sim');
     sim.innerHTML = '<option value="">Non (GPS réel)</option>' + S.cities.map(function (c) {
       return '<optgroup label="' + esc(c.name) + '">' + S.places.filter(function (p) { return p.city === c.id; }).map(function (p) {
@@ -669,26 +1120,44 @@
       S.simId = this.value;
       if (S.simId) {
         var p = byId(S.simId);
-        S.offered = {};
         if (S.cat !== 'all' && p.cats.indexOf(S.cat) < 0) setCat('all');
-        setPosition(p.lat + 0.00008, p.lon, 10, true);
         d.close();
+        setPosition(p.lat + 0.00008, p.lon, 10, true);
       } else {
-        S.pos = null; map.setUser(null);
+        S.pos = null;
+        S.geo = S.tracking ? 'searching' : 'off';
+        map.setUser(null);
         S.places.forEach(function (q) { q._d = null; });
-        renderListKeepScroll();
-        if (S.tracking) { stopTracking(true); toggleTracking(); }
+        refresh(true);
+        if (S.tracking) { stopTracking(); startTracking(); }
       }
     });
     $('#btn-reset').addEventListener('click', function () {
-      S.visited = new Set(); store.set('visited', []);
-      S.places.forEach(function (p) { map.setMarkerClass(p.id, 'done', false); map.setMarkerHtml(p.id, markerHtml(p)); });
-      renderListKeepScroll();
+      if (!S.visited.size) return;
+      $('#reset-q').textContent = 'Effacer ' + (S.visited.size > 1 ? 'les ' + S.visited.size + ' lieux écoutés' : 'le lieu écouté') + ' ?';
+      $('#reset-ask').hidden = true;
+      $('#reset-confirm').hidden = false;
+      $('#reset-no').focus();
     });
-    if ('speechSynthesis' in window) speechSynthesis.addEventListener('voiceschanged', fillVoices);
+    $('#reset-no').addEventListener('click', resetBox);
+    $('#reset-yes').addEventListener('click', function () {
+      S.visited = new Set();
+      store.set('visited', []);
+      S.places.forEach(function (p) { map.setMarkerClass(p.id, 'is-done', false); map.setMarkerLabel(p.id, pinLabel(p)); });
+      resetBox();
+      refresh(true);
+      if (S.view === 'place') renderPlace();
+    });
+    if ('speechSynthesis' in window && speechSynthesis.addEventListener) speechSynthesis.addEventListener('voiceschanged', fillVoices);
     fillVoices();
   }
-
+  function resetBox() {
+    var n = S.visited.size;
+    $('#visited-count').textContent = n ? plural(n, 'lieu écouté', 'lieux écoutés') : 'Aucun pour l\'instant';
+    $('#btn-reset').disabled = !n;
+    $('#reset-ask').hidden = false;
+    $('#reset-confirm').hidden = true;
+  }
   function fillVoices() {
     var sel = $('#opt-voice'), vs = frenchVoices();
     if (!vs.length) { sel.innerHTML = '<option value="">Aucune voix française détectée</option>'; return; }
@@ -698,9 +1167,9 @@
         esc(v.name) + ' (' + esc(v.lang) + ')</option>';
     }).join('');
   }
-
   function openSettings() {
     fillVoices();
+    resetBox();
     var d = $('#settings');
     if (d.showModal) d.showModal(); else d.setAttribute('open', '');
   }

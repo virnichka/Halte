@@ -1,4 +1,5 @@
-/* Mini carte à tuiles (sans dépendance) : glisser, zoom, marqueurs regroupés, position utilisateur. */
+/* Mini carte à tuiles (sans dépendance) : glisser, zoom, pastilles regroupées, position de l'utilisateur.
+   Marges haut/bas (panneau du bas) : le « centre » de la carte est le centre de la zone visible. */
 (function (global) {
   'use strict';
   var TILE = 256;
@@ -13,6 +14,9 @@
     return 180 / Math.PI * Math.atan(0.5 * (Math.exp(n) - Math.exp(-n)));
   }
   function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+  function reducedMotion() {
+    return !!(global.matchMedia && global.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  }
 
   function TileMap(el, opts) {
     opts = opts || {};
@@ -23,14 +27,17 @@
     this.z = opts.zoom || 15;
     this.cx = lon2x(opts.lon || 1.444, this.z);
     this.cy = lat2y(opts.lat || 43.6045, this.z);
+    this.pad = { top: 0, bottom: 0 };
     this.tiles = {};
     this.markers = {};
     this.userPos = null;
     this.onMove = opts.onMove || null;
-    this.clusterRadius = opts.clusterRadius || 34;
+    this.onUserMove = opts.onUserMove || null;
+    this.clusterRadius = opts.clusterRadius || 40;
     this._clusters = [];
     this._clusterKey = '';
     this._clusterEls = [];
+    this._anim = 0;
 
     el.classList.add('tm');
     this.tilePane = document.createElement('div');
@@ -41,11 +48,13 @@
     el.insertBefore(this.tilePane, el.firstChild);
 
     this.accEl = document.createElement('div');
-    this.accEl.className = 'tm-acc';
+    this.accEl.className = 'me-acc';
     this.accEl.hidden = true;
     this.dotEl = document.createElement('div');
-    this.dotEl.className = 'tm-user';
+    this.dotEl.className = 'me';
     this.dotEl.hidden = true;
+    this.dotEl.setAttribute('role', 'img');
+    this.dotEl.setAttribute('aria-label', 'Votre position');
     this.overlay.appendChild(this.accEl);
     this.overlay.appendChild(this.dotEl);
 
@@ -66,35 +75,67 @@
     this.h = r.height || 300;
   };
 
+  // Décalage vertical entre le centre de l'écran et le centre de la zone visible (hors panneau).
+  TileMap.prototype._off = function () { return (this.pad.top - this.pad.bottom) / 2; };
+
+  TileMap.prototype.setPadding = function (top, bottom) {
+    if (this.pad.top === top && this.pad.bottom === bottom) return;
+    this.pad = { top: top, bottom: bottom };
+    if (this.onMove) this.onMove();
+  };
+
   TileMap.prototype.project = function (lat, lon) {
     return { x: lon2x(lon, this.z) - this.cx + this.w / 2, y: lat2y(lat, this.z) - this.cy + this.h / 2 };
   };
 
   TileMap.prototype.center = function () {
-    return { lat: y2lat(this.cy, this.z), lon: x2lon(this.cx, this.z) };
+    return { lat: y2lat(this.cy + this._off(), this.z), lon: x2lon(this.cx, this.z) };
   };
 
   TileMap.prototype.setView = function (lat, lon, z) {
-    if (z != null) this.z = clamp(z, this.minZoom, this.maxZoom);
+    this._anim++;
+    if (z != null) this.z = clamp(Math.round(z), this.minZoom, this.maxZoom);
     this.cx = lon2x(lon, this.z);
-    this.cy = lat2y(lat, this.z);
+    this.cy = lat2y(lat, this.z) - this._off();
     this.render();
   };
 
-  TileMap.prototype.fitPoints = function (pts, pad) {
+  // Déplacement animé (même zoom, distance raisonnable) ; sinon saut direct.
+  TileMap.prototype.flyTo = function (lat, lon, z) {
+    z = z == null ? this.z : clamp(Math.round(z), this.minZoom, this.maxZoom);
+    if (z !== this.z || reducedMotion()) { this.setView(lat, lon, z); return; }
+    var tx = lon2x(lon, z), ty = lat2y(lat, z) - this._off(), sx = this.cx, sy = this.cy;
+    if (Math.hypot(tx - sx, ty - sy) > Math.max(this.w, this.h) * 2) { this.setView(lat, lon, z); return; }
+    var self = this, id = ++this._anim, t0 = null, D = 300;
+    function step(now) {
+      if (id !== self._anim) return;
+      if (t0 == null) t0 = now;
+      var k = Math.min(1, (now - t0) / D), e = 1 - Math.pow(1 - k, 3);
+      self.cx = sx + (tx - sx) * e;
+      self.cy = sy + (ty - sy) * e;
+      self.render();
+      if (k < 1) global.requestAnimationFrame(step);
+    }
+    global.requestAnimationFrame(step);
+  };
+
+  TileMap.prototype.fitPoints = function (pts, pad, maxZoom) {
     pad = pad || 36;
     if (!pts.length) return;
-    for (var z = this.maxZoom; z >= this.minZoom; z--) {
+    this._anim++;
+    var top = maxZoom ? Math.min(maxZoom, this.maxZoom) : this.maxZoom;
+    var availH = this.h - this.pad.top - this.pad.bottom;
+    for (var z = top; z >= this.minZoom; z--) {
       var minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
       for (var i = 0; i < pts.length; i++) {
         var x = lon2x(pts[i].lon, z), y = lat2y(pts[i].lat, z);
         minX = Math.min(minX, x); maxX = Math.max(maxX, x);
         minY = Math.min(minY, y); maxY = Math.max(maxY, y);
       }
-      if (maxX - minX <= this.w - pad * 2 && maxY - minY <= this.h - pad * 2) {
+      if (maxX - minX <= this.w - pad * 2 && maxY - minY <= availH - pad * 2) {
         this.z = z;
         this.cx = (minX + maxX) / 2;
-        this.cy = (minY + maxY) / 2;
+        this.cy = (minY + maxY) / 2 - this._off();
         this.render();
         return;
       }
@@ -106,7 +147,8 @@
   TileMap.prototype.zoomBy = function (dz, clientX, clientY) {
     var nz = clamp(this.z + dz, this.minZoom, this.maxZoom);
     if (nz === this.z) return;
-    var ax = this.w / 2, ay = this.h / 2;
+    this._anim++;
+    var ax = this.w / 2, ay = this.h / 2 + this._off();
     if (clientX != null) {
       var r = this.el.getBoundingClientRect();
       ax = clientX - r.left; ay = clientY - r.top;
@@ -119,19 +161,24 @@
     this.render();
   };
 
+  TileMap.prototype._userMoved = function () { if (this.onUserMove) this.onUserMove(); };
+
   TileMap.prototype._bind = function () {
-    var self = this, el = this.el, pts = {}, count = 0, lastDist = 0;
+    var self = this, el = this.el, pts = {}, count = 0, lastDist = 0, moved = 0, notified = false;
     el.style.touchAction = 'none';
     function dist() {
       var ids = Object.keys(pts);
       var a = pts[ids[0]], b = pts[ids[1]];
       return Math.hypot(a.x - b.x, a.y - b.y);
     }
+    function ignore(t) { return t.closest('.pin') || t.closest('.cluster') || t.closest('a, button'); }
     el.addEventListener('pointerdown', function (e) {
-      if (e.target.closest('.tm-ctrl') || e.target.closest('.tm-marker') || e.target.closest('.tm-cluster')) return;
+      if (ignore(e.target)) return;
+      self._anim++;
       try { el.setPointerCapture(e.pointerId); } catch (_) {}
       if (!pts[e.pointerId]) count++;
       pts[e.pointerId] = { x: e.clientX, y: e.clientY };
+      if (count === 1) { moved = 0; notified = false; }
       if (count === 2) lastDist = dist();
     });
     el.addEventListener('pointermove', function (e) {
@@ -142,11 +189,13 @@
       if (count === 1) {
         self.cx -= cur.x - prev.x;
         self.cy -= cur.y - prev.y;
+        moved += Math.abs(cur.x - prev.x) + Math.abs(cur.y - prev.y);
+        if (!notified && moved > 6) { notified = true; self._userMoved(); }
         self.render();
       } else if (count === 2 && lastDist) {
         var d = dist(), ratio = d / lastDist;
-        if (ratio > 1.6) { self.zoomBy(1); lastDist = d; }
-        else if (ratio < 0.62) { self.zoomBy(-1); lastDist = d; }
+        if (ratio > 1.4) { self.zoomBy(1); lastDist = d; self._userMoved(); }
+        else if (ratio < 0.72) { self.zoomBy(-1); lastDist = d; self._userMoved(); }
       }
     });
     function up(e) {
@@ -161,17 +210,21 @@
       self._wheelLock = true;
       setTimeout(function () { self._wheelLock = false; }, 220);
       self.zoomBy(e.deltaY < 0 ? 1 : -1, e.clientX, e.clientY);
+      self._userMoved();
     }, { passive: false });
     el.addEventListener('dblclick', function (e) {
-      if (e.target.closest('.tm-ctrl') || e.target.closest('.tm-marker') || e.target.closest('.tm-cluster')) return;
+      if (ignore(e.target)) return;
       self.zoomBy(1, e.clientX, e.clientY);
+      self._userMoved();
     });
   };
 
   TileMap.prototype.addMarker = function (id, o) {
     var b = document.createElement('button');
     b.type = 'button';
-    b.className = 'tm-marker' + (o.className ? ' ' + o.className : '');
+    b.className = 'pin' + (o.className ? ' ' + o.className : '');
+    if (o.cat) b.setAttribute('data-cat', o.cat);
+    b.setAttribute('data-id', id);
     b.setAttribute('aria-label', o.label || id);
     b.innerHTML = o.html || '';
     if (o.onClick) b.addEventListener('click', function (e) { e.stopPropagation(); o.onClick(id); });
@@ -184,9 +237,9 @@
 
   TileMap.prototype.setMarkerClass = function (id, cls, on) {
     var m = this.markers[id];
-    if (!m) return;
+    if (!m || m.el.classList.contains(cls) === !!on) return;
     m.el.classList.toggle(cls, !!on);
-    if (cls === 'sel') { this._clusterKey = ''; this.render(); }
+    if (cls === 'pin--sel' || cls === 'is-here') { this._clusterKey = ''; this.render(); }
   };
 
   TileMap.prototype.setMarkerVisible = function (id, on) {
@@ -194,9 +247,9 @@
     if (m && m.el.hidden !== !on) { m.el.hidden = !on; this._clusterKey = ''; this.render(); }
   };
 
-  TileMap.prototype.setMarkerHtml = function (id, html) {
+  TileMap.prototype.setMarkerLabel = function (id, label) {
     var m = this.markers[id];
-    if (m) m.el.innerHTML = html;
+    if (m) m.el.setAttribute('aria-label', label);
   };
 
   TileMap.prototype.setUser = function (lat, lon, acc) {
@@ -204,7 +257,7 @@
     this.render();
   };
 
-  // Regroupe les marqueurs trop proches à l'écran en une pastille « nombre ».
+  // Regroupe les pastilles trop proches à l'écran en une pastille « nombre ».
   // Calcul en coordonnées du monde au zoom courant : il ne change pas quand on fait glisser la carte.
   TileMap.prototype._cluster = function () {
     var z = this.z, R = this.clusterRadius, groups = [], ids = Object.keys(this.markers);
@@ -212,7 +265,10 @@
       var m = this.markers[ids[i]];
       if (m.el.hidden) continue;
       var x = lon2x(m.lon, z), y = lat2y(m.lat, z);
-      if (m.el.classList.contains('sel')) { groups.push({ ids: [ids[i]], x: x, y: y, solo: true }); continue; }
+      if (m.el.classList.contains('pin--sel') || m.el.classList.contains('is-here')) {
+        groups.push({ ids: [ids[i]], x: x, y: y, solo: true });
+        continue;
+      }
       var g = null;
       for (var j = 0; j < groups.length; j++) {
         if (!groups[j].solo && Math.abs(groups[j].x - x) < R && Math.abs(groups[j].y - y) < R) { g = groups[j]; break; }
@@ -231,7 +287,8 @@
       (function () {
         var b = document.createElement('button');
         b.type = 'button';
-        b.className = 'tm-cluster';
+        b.className = 'cluster';
+        b.innerHTML = '<span></span>';
         b.addEventListener('click', function (e) {
           e.stopPropagation();
           var g = b._group;
@@ -240,6 +297,7 @@
           var z0 = self.z;
           self.fitPoints(pts, 60);
           if (self.z <= z0) self.setView(y2lat(g.y, z0), x2lon(g.x, z0), z0 + 2);
+          self._userMoved();
         });
         self.overlay.appendChild(b);
         self._clusterEls.push(b);
@@ -250,17 +308,17 @@
       b._group = g || null;
       b.hidden = !g;
       if (g) {
-        b.textContent = g.ids.length;
+        b.firstChild.textContent = g.ids.length;
         b.setAttribute('aria-label', g.ids.length + ' lieux : zoomer');
       }
     });
   };
 
-  // Marqueurs dans la zone affichée (hors filtres), en tenant compte d'une petite marge.
-  TileMap.prototype.inView = function (lat, lon, pad) {
+  // Point dans la zone visible (entre les marges), avec une tolérance en pixels.
+  TileMap.prototype.inView = function (lat, lon, tol) {
     var p = this.project(lat, lon);
-    pad = pad || 0;
-    return p.x >= -pad && p.y >= -pad && p.x <= this.w + pad && p.y <= this.h + pad;
+    tol = tol || 0;
+    return p.x >= -tol && p.x <= this.w + tol && p.y >= this.pad.top - tol && p.y <= this.h - this.pad.bottom + tol;
   };
 
   TileMap.prototype.render = function () {
@@ -306,7 +364,7 @@
     if (this.userPos) {
       var u = this.project(this.userPos.lat, this.userPos.lon);
       var mpp = 156543.03392 * Math.cos(this.userPos.lat * Math.PI / 180) / n;
-      var r = Math.max(8, this.userPos.acc / mpp);
+      var r = Math.max(11, this.userPos.acc / mpp);
       this.dotEl.hidden = false;
       this.accEl.hidden = false;
       this.dotEl.style.transform = 'translate(' + u.x.toFixed(1) + 'px,' + u.y.toFixed(1) + 'px)';
