@@ -478,47 +478,114 @@
     setSheet(S.sheet === 'peek' ? 'half' : 'peek');
   }
 
+  // Glisser le panneau : depuis la poignée, ou depuis n'importe où dans le panneau quand son contenu
+  // est tout en haut (vers le bas = réduire / fermer la fiche ; vers le haut = agrandir la liste).
+  // Souris et stylet : événements « pointer ». Doigt : événements « touch » (pour reprendre la main
+  // sur le défilement du contenu quand on tire vers le bas).
   function bindSheet() {
-    var d = null;
-    sheetEl.addEventListener('pointerdown', function (e) {
-      if (e.button > 0) return;
-      var onHandle = !!e.target.closest('#sheet-handle');
-      if (!onHandle) {
-        if (S.sheet !== 'peek' || S.view === 'place') return;
-        if (e.target.closest('button, a, select, summary, input')) return;
-      }
-      d = { id: e.pointerId, y0: e.clientY, v0: H[S.sheet], y: e.clientY, t: e.timeStamp, vel: 0, vis: H[S.sheet], moved: false, handle: onHandle };
-    });
-    window.addEventListener('pointermove', function (e) {
-      if (!d || e.pointerId !== d.id) return;
-      var dy = d.y0 - e.clientY;
-      if (!d.moved && Math.abs(dy) < 6) return;
+    var d = null, suppressClick = false;
+    function begin(y, t, onHandle) {
+      d = { y0: y, v0: H[S.sheet], y: y, t: t, vel: 0, vis: H[S.sheet], moved: false, handle: onHandle };
+    }
+    function move(y, t) {
+      var dy = d.y0 - y;
       if (!d.moved) { d.moved = true; sheetEl.classList.add('dragging'); }
-      var dt = Math.max(1, e.timeStamp - d.t);
-      d.vel = (d.y - e.clientY) / dt;
-      d.y = e.clientY; d.t = e.timeStamp;
+      var dt = Math.max(1, t - d.t);
+      d.vel = 0.7 * ((d.y - y) / dt) + 0.3 * d.vel;
+      d.y = y; d.t = t;
       var max = S.view === 'place' ? H.peek : H.full;
-      d.vis = Math.max(H.peek * 0.45, Math.min(max, d.v0 + dy));
+      d.vis = Math.max(H.peek * 0.3, Math.min(max, d.v0 + dy));
       applySheet(d.vis);
-    });
-    function end(e) {
-      if (!d || e.pointerId !== d.id) return;
+    }
+    function finish() {
       var dd = d;
       d = null;
       sheetEl.classList.remove('dragging');
-      if (!dd.moved) { if (dd.handle && e.type === 'pointerup') toggleSheet(); return; }
+      if (!dd || !dd.moved) return;
+      suppressClick = true;
+      setTimeout(function () { suppressClick = false; }, 0);
       if (S.view === 'place') {
-        if (dd.vis < H.peek * 0.72 || dd.vel < -0.6) uiBack('place'); else applySheet();
+        if (dd.vis < H.peek * 0.8 || dd.vel < -0.35) uiBack('place'); else applySheet();
         return;
       }
       var st = ['peek', 'half', 'full'].map(function (s) { return { s: s, h: H[s] }; }), t;
-      if (dd.vel > 0.45) t = st.filter(function (x) { return x.h > dd.vis + 1; })[0] || st[2];
-      else if (dd.vel < -0.45) t = st.filter(function (x) { return x.h < dd.vis - 1; }).pop() || st[0];
+      if (dd.vel > 0.35) t = st.filter(function (x) { return x.h > dd.vis + 1; })[0] || st[2];
+      else if (dd.vel < -0.35) t = st[0]; // vers le bas d'un geste : on replie franchement
       else t = st.reduce(function (a, b) { return Math.abs(b.h - dd.vis) < Math.abs(a.h - dd.vis) ? b : a; });
       setSheet(t.s);
     }
-    window.addEventListener('pointerup', end);
-    window.addEventListener('pointercancel', end);
+    // Un glissé ne doit pas déclencher le bouton sous le doigt.
+    sheetEl.addEventListener('click', function (e) {
+      if (suppressClick) { e.stopPropagation(); e.preventDefault(); suppressClick = false; }
+    }, true);
+
+    /* Souris, stylet */
+    var pid = null;
+    sheetEl.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'touch' || e.button > 0) return;
+      var onHandle = !!e.target.closest('#sheet-handle');
+      if (!onHandle) {
+        if (e.target.closest('button, a, select, summary, input')) return;
+        if (scrollEl.scrollTop > 0) return;
+      }
+      pid = e.pointerId;
+      begin(e.clientY, e.timeStamp, onHandle);
+    });
+    window.addEventListener('pointermove', function (e) {
+      if (!d || e.pointerId !== pid) return;
+      if (!d.moved && Math.abs(d.y0 - e.clientY) < 6) return;
+      move(e.clientY, e.timeStamp);
+    });
+    function pend(e) {
+      if (!d || e.pointerId !== pid) return;
+      pid = null;
+      if (!d.moved) { var h = d.handle; d = null; if (h && e.type === 'pointerup') toggleSheet(); return; }
+      finish();
+    }
+    window.addEventListener('pointerup', pend);
+    window.addEventListener('pointercancel', pend);
+
+    /* Doigt */
+    var tc = null; // { id, y0, mode: null | 'sheet' | 'scroll', handle }
+    sheetEl.addEventListener('touchstart', function (e) {
+      if (e.touches.length !== 1) { tc = null; if (d) finish(); return; }
+      var t = e.touches[0];
+      tc = { id: t.identifier, y0: t.clientY, mode: null, handle: !!e.target.closest('#sheet-handle'), top: scrollEl.scrollTop <= 0 };
+    }, { passive: true });
+    sheetEl.addEventListener('touchmove', function (e) {
+      if (!tc || tc.mode === 'scroll') return;
+      var t = null;
+      for (var i = 0; i < e.touches.length; i++) if (e.touches[i].identifier === tc.id) t = e.touches[i];
+      if (!t) return;
+      var dy = t.clientY - tc.y0; // > 0 : le doigt descend
+      if (!tc.mode) {
+        var scrollable = scrollEl.scrollHeight > scrollEl.clientHeight + 1 && getComputedStyle(scrollEl).overflowY !== 'hidden';
+        var atTop = scrollEl.scrollTop <= 0 && tc.top;
+        // Le doigt descend et le contenu est en haut : on tire le panneau.
+        var wantSheet = tc.handle || !scrollable || (dy > 0 && atTop);
+        if (!wantSheet && dy > 0 && !atTop) { tc.mode = 'scroll'; return; }
+        if (!wantSheet && dy < 0 && Math.abs(dy) >= 4) {
+          // Vers le haut : on agrandit la liste tant qu'elle n'est pas en plein écran, sinon on fait défiler.
+          if (S.view === 'home' && S.sheet !== 'full') wantSheet = true; else { tc.mode = 'scroll'; return; }
+        }
+        if (e.cancelable && (wantSheet || dy >= 0)) e.preventDefault();
+        if (!wantSheet || Math.abs(dy) < 6) return;
+        tc.mode = 'sheet';
+        begin(tc.y0, e.timeStamp, tc.handle);
+      }
+      if (e.cancelable) e.preventDefault();
+      move(t.clientY, e.timeStamp);
+    }, { passive: false });
+    function tend(e) {
+      if (!tc) return;
+      var c = tc;
+      tc = null;
+      if (c.mode === 'sheet') { finish(); if (e.cancelable) e.preventDefault(); return; }
+      if (!c.mode && c.handle && e.type === 'touchend') { if (e.cancelable) e.preventDefault(); toggleSheet(); }
+    }
+    sheetEl.addEventListener('touchend', tend, { passive: false });
+    sheetEl.addEventListener('touchcancel', tend, { passive: false });
+
     // Clavier / lecteur d'écran (pas de pointeur) : bascule replié ↔ moitié.
     $('#sheet-handle').addEventListener('click', function (e) { if (e.detail === 0) toggleSheet(); });
     if (window.ResizeObserver) {
@@ -1045,6 +1112,7 @@
       else startPlayback(id, mode);
     }
     else if (act === 'expand') setSheet('half');
+    else if (act === 'collapse') setSheet('peek');
     else if (act === 'locate') onLocate();
     else if (act === 'close') uiBack('place');
     else if (act === 'cat-all') setCat('all');
@@ -1078,6 +1146,7 @@
       var moved = Math.abs(e.clientX - down.x) + Math.abs(e.clientY - down.y);
       down = null;
       if (moved < 8 && S.view === 'place') uiBack('place');
+      else if (moved < 8 && S.sheet !== 'peek') setSheet('peek');
     });
     document.addEventListener('keydown', function (e) {
       if (e.key !== 'Escape' || $('#settings').open) return;

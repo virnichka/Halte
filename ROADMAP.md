@@ -13,8 +13,10 @@ Une ligne = une brique = une session. Ne commencer une brique « à faire » qu'
 - [x] Fin du renommage (mémoire du téléphone, cache hors ligne, fichiers générés) ; numéros remplacés par l'icône de catégorie, nom du lieu affiché sur la carte quand on le touche ; 44 tests
 - [x] Plus de liste de villes : vue de la France, pastilles regroupées avec leur nombre, liste = zone affichée, dernière zone mémorisée, localisation relancée si déjà autorisée ; fiche simplifiée (« Écouter » + « Version longue ») ; 49 tests
 - [x] Refonte de l'interface, direction « Pop » (audit → 3 maquettes → design system → app) : carte plein écran, panneau du bas, fiche lieu avec itinéraire, mini-lecteur et lecteur plein écran, « Vous y êtes » (alerte de proximité supprimée), réglages simplifiés, écran d'accueil, icônes SVG, mode sombre, nouvelle icône d'app ; 81 tests (PR #8, validée par le propriétaire)
+- [x] Interface plus sobre (gris neutres, moins de couleurs et d'ombres) ; panneau du bas facile à baisser : glisser le doigt vers le bas n'importe où dans le panneau (fiche ou liste), bouton « Réduire » sur la liste, toucher la carte replie la liste ; 86 tests
 
 ## À vérifier par le propriétaire
+- [ ] Sur un vrai téléphone : glisser la fiche / la liste vers le bas pour les baisser (iPhone et Android)
 - [ ] Nouvelle interface sur un vrai téléphone : glisser le panneau, bouton « retour » (Android), itinéraire, police arrondie (iPhone), lisibilité au soleil
 - [ ] Tester sur un vrai téléphone : GPS sur place, voix, installation, mise à jour à la 2ᵉ ouverture
 - [ ] Supprimer l'ancien projet Cloudflare Pages quand la nouvelle adresse convient

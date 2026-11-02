@@ -78,6 +78,19 @@ def main():
             pg.click("#test-box summary")
         pg.select_option("#opt-sim", place)
 
+    def swipe(pg, sel, dy, steps=8):
+        """Glisse un doigt (vrais événements tactiles) depuis le centre haut de `sel`, de `dy` pixels."""
+        bb = pg.locator(sel).first.bounding_box()
+        x, y = bb["x"] + bb["width"] / 2, bb["y"] + min(30, bb["height"] / 2)
+        cdp = pg.context.new_cdp_session(pg)
+        cdp.send("Input.dispatchTouchEvent", {"type": "touchStart", "touchPoints": [{"x": x, "y": y}]})
+        for i in range(1, steps + 1):
+            cdp.send("Input.dispatchTouchEvent", {"type": "touchMove", "touchPoints": [{"x": x, "y": y + dy * i / steps}]})
+            pg.wait_for_timeout(16)
+        cdp.send("Input.dispatchTouchEvent", {"type": "touchEnd", "touchPoints": []})
+        cdp.detach()
+        pg.wait_for_timeout(400)
+
     def home(pg):
         pg.wait_for_function("window.__halte.S.view === 'home' && !document.querySelector('#view-home').hidden", timeout=5000)
 
@@ -128,6 +141,18 @@ def main():
         p0.click("#sheet-handle")
         p0.wait_for_timeout(350)
         check("toucher la poignée : panneau replié", sheet_state(p0) == "peek")
+        expand(p0)
+        p0.click("#list-collapse")
+        p0.wait_for_timeout(350)
+        check("bouton « Réduire la liste » : panneau replié", sheet_state(p0) == "peek")
+        swipe(p0, "#peek", -260)
+        check("doigt vers le haut sur le panneau : liste agrandie", sheet_state(p0) in ("half", "full"))
+        swipe(p0, "#list .place", 320)
+        check("doigt vers le bas sur la liste (en haut) : panneau replié", sheet_state(p0) == "peek")
+        expand(p0)
+        p0.mouse.click(200, 80)
+        p0.wait_for_timeout(350)
+        check("toucher la carte : la liste se replie", sheet_state(p0) == "peek")
 
         z0 = p0.evaluate("window.__halte.map.z")
         p0.evaluate("""(function(){var c=[].slice.call(document.querySelectorAll('#map .cluster:not([hidden])'));
@@ -204,6 +229,13 @@ def main():
         page.click("#place .sources summary")
         check("fiche : sources (4)", page.locator("#place .sources li a").count() == 4)
         page.screenshot(path=str(OUT / "2_fiche.png"))
+        page.click("#place .sources summary")
+        swipe(page, "#place .place-tagline", 260)
+        page.wait_for_function("window.__halte.S.view === 'home'", timeout=3000)
+        check("doigt vers le bas sur la fiche : elle se ferme", page.locator("#view-place").is_hidden())
+        page.locator("#map .pin[data-id='taur']").click()
+        page.wait_for_selector("#view-place:not([hidden])")
+        page.wait_for_timeout(400)
         page.go_back()
         home(page)
         check("bouton « retour » du téléphone : ferme la fiche sans quitter l'app", page.url.endswith("/index.html") and page.locator("#view-place").is_hidden())
