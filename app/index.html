@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#f6f5fb" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#100e1c" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121214" media="(prefers-color-scheme: dark)">
   <meta name="color-scheme" content="light dark">
   <meta name="description" content="Audioguide : des lieux insolites autour de vous, racontés à voix haute.">
   <title>Halte</title>
@@ -57,7 +57,8 @@
           <div id="list-section" class="list-section">
             <div class="list-head">
               <div><h2 class="sheet__title" id="list-title">Dans cette zone</h2><p class="sheet__sub" id="list-sub"></p></div>
-              <span class="ring" id="list-ring" aria-hidden="true"></span>
+              <span class="list-head__end"><span class="ring" id="list-ring" aria-hidden="true"></span>
+              <button id="list-collapse" class="icon-btn" type="button" data-act="collapse" aria-label="Réduire la liste"><svg class="ic" aria-hidden="true"><use href="#i-down"/></svg></button></span>
             </div>
             <div id="cats" class="chips" role="group" aria-label="Filtrer par catégorie"></div>
             <ul id="list" class="rows" aria-labelledby="list-title"></ul>
